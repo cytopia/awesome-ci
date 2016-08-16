@@ -14,12 +14,19 @@ MY_DRY=0
 MY_LST=0
 MY_CFG=
 
+# Required binaries
+REQUIRED_BINS="sed grep find"
 
 # Regex to scan for inline CSS
 MY_REG="[[:space:]]+style[[:space:]]*="
 
 
 
+################################################################################
+#
+#  F U N C T I O N S
+#
+################################################################################
 
 print_usage() {
 
@@ -64,8 +71,42 @@ print_version() {
 	echo "email:  ${MY_EMAIL}"
 }
 
+check_requirements() {
+	_ret=0
+
+	# System binaries
+	for _bin in ${REQUIRED_BINS}; do
+		if ! command -v "${_bin}" >/dev/null 2>&1; then
+			echo "[ERR] Required sys binary '${_bin}' not found."
+			_ret=1
+		#else
+		#	echo "[OK]  Required sys binary '${_bin}' found."
+		fi
+	done
+
+	return ${_ret}
+}
 
 
+
+################################################################################
+#
+#  M A I N   E N T R Y   P O I N T
+#
+################################################################################
+
+
+#
+# Check requirements
+#
+if ! check_requirements; then
+	exit 1
+fi
+
+
+#
+# Read command line arguments
+#
 while [ $# -gt 0  ]; do
 	case "${1}" in
 
@@ -127,6 +168,7 @@ done
 #
 if [ "${MY_PATH}" = "" ]; then
 	echo "--path not specified"
+	echo "Type '${MY_NAME} --help' for available options."
 	exit 1
 fi
 
