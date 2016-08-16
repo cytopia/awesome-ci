@@ -1,6 +1,6 @@
 #!/bin/sh
 
-MY_NAME="file-utf8"
+MY_NAME="syntax-php"
 MY_AUTHOR="cytopia"
 MY_EMAIL="cytopia@everythingcli.org"
 MY_VERSION="0.2"
@@ -14,9 +14,8 @@ MY_DRY=0
 MY_LST=0
 MY_CFG=
 
-
 # Required binaries
-REQUIRED_BINS="sed grep find isutf8"
+REQUIRED_BINS="sed grep find php"
 
 
 
@@ -33,8 +32,8 @@ print_usage() {
 	echo "       ${MY_NAME} --help"
 	echo "       ${MY_NAME} --version"
 	echo
-	echo "Scan files for non UTF-8 encoding."
-	echo "Will return 0, if file has UTF-8 encoding, otherwise > 0."
+	echo "Scan files for PHP syntax errors."
+	echo "Will return 0, if no PHP syntax errors were found, otherwise > 0."
 	echo
 	echo "Required arguments:"
 	echo
@@ -229,7 +228,7 @@ elif [ "${MY_CFG}" = "" ] && [ "${MY_EXT}" != "" ]; then
 
 else
 	echo "[ARG] Using all file extensions"
-	MY_EXT=
+	MY_IGN=
 fi
 
 
@@ -283,9 +282,8 @@ fi
 if [ "${MY_LST}" = "1" ]; then
 	MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} -print"
 else
-	MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} -exec isutf8 '{}' \;"
+	MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} -exec php -d display_errors=1 -d error_reporting=-1 -l '{}' 2>&1 1>/dev/null \;"
 fi
-
 
 # Dry mode?
 if [ "${MY_DRY}" = "1" ]; then
@@ -306,10 +304,10 @@ fi
 
 if [ "${output}" != "" ]; then
 	echo "${output}"
-	echo "[ERR] Non UTF-8 encoded files found."
+	echo "[ERR] PHP Syntax errors found."
 	exit 1
 else
-	echo "[OK] All files are UTF-8 encoded."
+	echo "[OK] No PHP Syntax errors found."
 	exit 0
 fi
 

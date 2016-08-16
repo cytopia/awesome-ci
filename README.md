@@ -7,7 +7,7 @@ Awesome Continuous Integration
 
 All checks have the option to only check by one or more file **extensions** as well as to **exclude** one or more folders from the whole search.
 
-## 1. File status
+## 1. File Status
 
 ### [git-conflicts](bin/git-conflicts)
 
@@ -25,7 +25,15 @@ Scan files and check if they have a non UTF-8 encoding.
 
 Scan files and check if they contain BOM (Byte Order Mark): `<U+FEFF>`.
 
-## 2. Code Conventions
+
+## 2. Syntax Error
+
+### [syntax-php](bin/syntax-php)
+
+Scan files for PHP syntax errors.
+
+
+## 3. Code Conventions
 
 ### [inline-css](bin/inline-css)
 

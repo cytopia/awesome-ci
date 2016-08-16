@@ -225,6 +225,10 @@ elif [ "${MY_CFG}" != "" ] && [ "${MY_EXT}" = "" ]; then
 elif [ "${MY_CFG}" = "" ] && [ "${MY_EXT}" != "" ]; then
 	MY_EXT="${MY_EXT}"
 	echo "[ARG] Using cmd argument: ext: ${MY_EXT}"
+
+else
+	echo "[ARG] Using all file extensions"
+	MY_EXT=
 fi
 
 
