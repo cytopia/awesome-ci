@@ -5,6 +5,6 @@ Awesome Continuous Integration
 
 ## Tools
 
-### [inline-js.sh](bin/inline-js.sh)
+### [inline-js](bin/inline-js)
 
 Scan directory for specific files (based on extensions) and check if they contain inline javascript code.
