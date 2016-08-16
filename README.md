@@ -5,7 +5,13 @@ Awesome Continuous Integration
 
 # Tools
 
-## Code Conventions
+## 1. File status
+
+### [git-conflicts](bin/git-conflicts)
+
+Scan directory for specific files (based on file extensions) and check if they contain git conflicts.
+
+## 2. Code Conventions
 
 ### [inline-css](bin/inline-css)
 
