@@ -19,8 +19,6 @@ MY_CFG=
 MY_REG="[[:space:]]+style[[:space:]]*="
 
 
-DEFAULT_EXT="htm,html,php"
-
 
 
 print_usage() {
@@ -34,7 +32,7 @@ print_usage() {
 	echo
 	echo "Required arguments:"
 	echo
-	echo "  --path=          Specify directory where to scan."
+	echo "  --path=            Specify directory where to scan."
 	echo
 	echo
 	echo "Optional arguments:"
@@ -43,7 +41,7 @@ print_usage() {
 	echo "                     Note that cmd arguments take precedence over the config file."
 	echo
 	echo "  --extension=       Comma separated list of file extensions."
-	echo "                     Defaults to 'htm,html,php' if not specified."
+	echo "                     Defaults to all files if not specified or empty."
 	echo
 	echo "  --ignore=          Comma separated list of ignore paths."
 	echo "                     Directories must be specified from the starting location of --path."
@@ -187,10 +185,6 @@ elif [ "${MY_CFG}" != "" ] && [ "${MY_EXT}" = "" ]; then
 elif [ "${MY_CFG}" = "" ] && [ "${MY_EXT}" != "" ]; then
 	MY_EXT="${MY_EXT}"
 	echo "[ARG] Using cmd argument: ext: ${MY_EXT}"
-
-else
-	echo "[ARG] Using default value for ext: ${DEFAULT_EXT}"
-	MY_EXT="${DEFAULT_EXT}"
 fi
 
 
@@ -222,8 +216,11 @@ fi
 #
 # 'find' pattern for file extensions
 #
-NAME_PATTERN="\( -iname '*.$(echo "${MY_EXT}" | sed "s/,/' -o -iname '*\./g")' \)"
-
+if [ "${MY_EXT}" != "" ]; then
+	NAME_PATTERN="\( -iname '*.$(echo "${MY_EXT}" | sed "s/,/' -o -iname '*\./g")' \)"
+else
+	NAME_PATTERN=""
+fi
 
 #
 # 'find' pattern for ignores/excludes
@@ -239,9 +236,9 @@ fi
 # Show files or grep in found files?
 #
 if [ "${MY_LST}" = "1" ]; then
-	MY_CMD="find ${MY_PATH} ${NAME_PATTERN} ${EXCL_PATTERN} -print"
+	MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} -print"
 else
-	MY_CMD="find ${MY_PATH} ${NAME_PATTERN} ${EXCL_PATTERN} -exec grep -inHE '${MY_REG}' '{}' \;"
+	MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} -exec grep -inHE '${MY_REG}' '{}' \;"
 fi
 
 # Dry mode?
