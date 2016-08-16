@@ -43,7 +43,21 @@ Scan files for PHP syntax errors.
 
 `syntax-php --extension=php,inc --path=.`
 
+### syntax-css
+
+Scan CSS files for CSS syntax errors.
+
+`find . -iname \*.css -print0 | xargs -0 -I % scss-lint '%'`
+
+### syntax-scss
+
+Scann SCSS files for SCSS syntax errors.
+
+`find . -iname \*.scss -print0 | xargs -0 -I % scss-lint '%'`
+
 ### syntax-js
+
+Scann JS files for javascript syntax errors.
 
 `eslint --no-eslintrc .`
 
