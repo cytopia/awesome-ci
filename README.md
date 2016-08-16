@@ -11,6 +11,10 @@ Awesome Continuous Integration
 
 Scan directory for specific files (based on file extensions) and check if they contain git conflicts.
 
+### [file-crlf](bin/file-crlf)
+
+Scan directory for specific files (based on file extensions) and check if they contain CRLF (Windows Line Feeds).
+
 ## 2. Code Conventions
 
 ### [inline-css](bin/inline-css)

@@ -1,0 +1,270 @@
+#!/bin/sh
+
+MY_NAME="file-crlf"
+MY_AUTHOR="cytopia"
+MY_EMAIL="cytopia@everythingcli.org"
+MY_VERSION="0.2"
+MY_DATE="2016-08-16"
+
+
+MY_PATH=
+MY_EXT=
+MY_IGN=
+MY_DRY=0
+MY_LST=0
+MY_CFG=
+
+
+# Regex to scan for CRLF
+MY_REG="CRLF"
+
+
+
+
+print_usage() {
+
+	echo "Usage: ${MY_NAME} --path=dir [--extension=tpl,htm,html,php,...] [--ignore=dir1,dir2] [--config=conf] [--dry] [--list]"
+	echo "       ${MY_NAME} --help"
+	echo "       ${MY_NAME} --version"
+	echo
+	echo "Scan files for CRLF (Windows Line Feeds)."
+	echo "Will return 0, if no CRLF found, otherwise > 0."
+	echo
+	echo "Required arguments:"
+	echo
+	echo "  --path=            Specify directory where to scan."
+	echo
+	echo
+	echo "Optional arguments:"
+	echo "  --config=          Load configuration file."
+	echo "                     File must contain EXTENSION=\"\" and IGNORE=\"\" directives."
+	echo "                     Note that cmd arguments take precedence over the config file."
+	echo
+	echo "  --extension=       Comma separated list of file extensions."
+	echo "                     Defaults to all files if not specified or empty."
+	echo
+	echo "  --ignore=          Comma separated list of ignore paths."
+	echo "                     Directories must be specified from the starting location of --path."
+	echo "                     Example: foor/bar folder inside /var/www"
+	echo "                     --path=/var/www --ignore=foo/bar"
+	echo
+	echo "  --dry              Don't do anything, just display the commands."
+	echo
+	echo "  --list             Instead of searching inside the files, just display the filenames"
+	echo "                     that would be found by --path, --extension and --ignore"
+	echo
+	echo "System arguments:"
+	echo "  --help             Show help screen."
+	echo "  --version          Show version information."
+}
+
+print_version() {
+	echo "${MY_NAME} v${MY_VERSION} (${MY_DATE})"
+	echo "author: ${MY_AUTHOR}"
+	echo "email:  ${MY_EMAIL}"
+}
+
+
+
+while [ $# -gt 0  ]; do
+	case "${1}" in
+
+		# ----------------------------------------
+		--path=*)
+			MY_PATH="$( echo "${1}" | sed 's/--path=//g' )"
+			;;
+
+		# ----------------------------------------
+		--extension=*)
+			MY_EXT="$( echo "${1}" | sed 's/--extension=//g' )"
+			;;
+
+		# ----------------------------------------
+		--ignore=*)
+			MY_IGN="$( echo "${1}" | sed 's/--ignore=//g' )"
+			;;
+
+		# ----------------------------------------
+		--config=*)
+			MY_CFG="$( echo "${1}" | sed 's/--config=//g' )"
+			;;
+
+		# ----------------------------------------
+		--dry)
+			MY_DRY=1
+			;;
+
+		# ----------------------------------------
+		--list)
+			MY_LST=1
+			;;
+
+		# ----------------------------------------
+		--help)
+			print_usage
+			exit 0
+			;;
+
+		# ----------------------------------------
+		--version)
+			print_version
+			exit 0
+			;;
+
+		# ----------------------------------------
+		*)
+			echo "Invalid argument: ${1}"
+			echo "Type '${MY_NAME} --help' for available options."
+			exit 1
+			;;
+	esac
+	shift
+done
+
+
+#
+# Check path
+#
+if [ "${MY_PATH}" = "" ]; then
+	echo "--path not specified"
+	exit 1
+fi
+
+#
+# Check and load config
+#
+if [ "${MY_CFG}" != "" ]; then
+
+	# Check config file
+	if [ ! -f "${MY_CFG}" ]; then
+		echo "[CONFIG] Config file not found: ${MY_CFG}"
+		exit 1
+	fi
+	if ! grep -Eq '^IGNORE=' "${MY_CFG}"; then
+		echo "[CONFIG] IGNORE variable not found in config"
+		exit 1
+	fi
+	if ! grep -Eq "^IGNORE=[\"']{1}.*[\"']{1}$" "${MY_CFG}"; then
+		echo "[CONFIG] Invalid syntax for IGNORE variable"
+		exit 1
+	fi
+	if ! grep -Eq '^EXTENSION=' "${MY_CFG}"; then
+		echo "[CONFIG] EXTENSION variable not found in config"
+		exit 1
+	fi
+	if ! grep -Eq "^EXTENSION=[\"']{1}.*[\"']{1}$" "${MY_CFG}"; then
+		echo "[CONFIG] Invalid syntax for EXTENSION variable"
+		exit 1
+	fi
+
+	LINES="$( cat "${MY_CFG}" | grep -vE '^#.*' | grep -v '^[[:space:]]*$' | grep -c '' )"
+	if [ "${LINES}" != "2" ]; then
+		echo "[CONFIG] More than 2 configuration directives found."
+		echo "[CONFIG] Check config file."
+		exit 1
+	fi
+
+
+	# Source config
+	. "${MY_CFG}"
+fi
+
+
+
+#
+# Decide on File extensions
+#
+if [ "${MY_CFG}" != "" ] && [ "${MY_EXT}" != "" ]; then
+	echo "[ARG] Cmd arg --extension=${MY_EXT} will take precedence over config file value".
+	MY_EXT="${MY_EXT}"
+
+elif [ "${MY_CFG}" != "" ] && [ "${MY_EXT}" = "" ]; then
+	echo "[ARG] Using config file values: ext: ${EXTENSION}"
+	MY_EXT="${EXTENSION}"
+
+elif [ "${MY_CFG}" = "" ] && [ "${MY_EXT}" != "" ]; then
+	MY_EXT="${MY_EXT}"
+	echo "[ARG] Using cmd argument: ext: ${MY_EXT}"
+fi
+
+
+
+#
+# Decide on ignore paths
+#
+if [ "${MY_CFG}" != "" ] && [ "${MY_IGN}" != "" ]; then
+	echo "[ARG] Cmd arg --ignore=${MY_IGN} will take precedence over config file value".
+	MY_IGN="${MY_IGN}"
+
+elif [ "${MY_CFG}" != "" ] && [ "${MY_IGN}" = "" ]; then
+	echo "[ARG] Using config file values: ignore: ${IGNORE}"
+	MY_IGN="${IGNORE}"
+
+elif [ "${MY_CFG}" = "" ] && [ "${MY_IGN}" != "" ]; then
+	MY_IGN="${MY_IGN}"
+	echo "[ARG] Using cmd argument: ignore: ${MY_IGN}"
+
+else
+	echo "[ARG] Not ignoring anything"
+	MY_IGN=
+fi
+
+
+
+
+
+#
+# 'find' pattern for file extensions
+#
+if [ "${MY_EXT}" != "" ]; then
+	NAME_PATTERN="\( -iname '*.$(echo "${MY_EXT}" | sed "s/,/' -o -iname '*\./g")' \)"
+else
+	NAME_PATTERN=""
+fi
+
+#
+# 'find' pattern for ignores/excludes
+#
+if [ "${MY_IGN}" != "" ]; then
+	EXCL_PATTERN="-not \( -path \"${MY_PATH}/$(echo "${MY_IGN}" | sed "s|,|*\" -o -path \"${MY_PATH}/|g")*\" \)"
+else
+	EXCL_PATTERN=""
+fi
+
+
+#
+# Show files or grep in found files?
+#
+if [ "${MY_LST}" = "1" ]; then
+	MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} -print"
+else
+	MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} -print0 | xargs -0 -n1 -I % file '%' | grep '${MY_REG}'"
+fi
+
+
+# Dry mode?
+if [ "${MY_DRY}" = "1" ]; then
+	echo "${MY_CMD}"
+	exit 0
+fi
+
+
+echo "${MY_CMD}"
+output="$(eval "${MY_CMD}")"
+
+# If showing files only, exit normally
+if [ "${MY_LST}" = "1" ]; then
+	echo "${output}"
+	exit 0
+fi
+
+
+if [ "${output}" != "" ]; then
+	echo "${output}"
+	echo "[ERR] CRLF found."
+	exit 1
+else
+	echo "[OK] No CRLF found."
+	exit 0
+fi
+
