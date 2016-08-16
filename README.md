@@ -23,7 +23,7 @@ Scan files and check if they have a non UTF-8 encoding.
 
 ### [file-utf8-bom](bin/file-utf8-bom)
 
-Scan files and check if they contain BOM (Byte Order Mark): '<U+FEFF>'.
+Scan files and check if they contain BOM (Byte Order Mark): `<U+FEFF>`.
 
 ## 2. Code Conventions
 
