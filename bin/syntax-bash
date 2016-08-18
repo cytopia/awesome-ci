@@ -1,0 +1,495 @@
+#!/bin/sh -u
+
+############################################################
+# Adjust for each check
+############################################################
+
+# Version
+MY_VERSION="0.3"
+MY_DATE="2016-08-17"
+
+# Name and messages
+MY_NAME="syntax-bash"
+MY_DESC="Scans recursively for files containing shell (bash) syntax errors."
+MY_FINISH_OK="No files with shell (bash) syntax errors found."
+MY_FINISH_ERR="Found files with shell (bash) syntax errors."
+
+# Configuration file prefix
+MY_CONF_PRE="SYNTAX_BASH_"
+
+# Custom required binaries
+REQUIRED_CUST_BINS="bash"
+
+# How to check for files
+# Note: '%' comes from xargs and represents
+# one file as parameter.
+# Called like this:
+#   eval "xargs -I % sh '${MY_CHECK}'"
+MY_CHECK="bash -n \"%\""
+
+
+
+
+
+############################################################
+# Do not edit from here
+############################################################
+
+#
+# Credits
+#
+MY_AUTHOR="cytopia"
+MY_EMAIL="cytopia@everythingcli.org"
+
+#
+# Required system binaries
+#
+REQUIRED_BINS="sed grep find xargs tr"
+
+#
+# Variables populated by cmd args or config file
+#
+MY_PATH=
+MY_EXT=
+MY_IGN=
+MY_TXT=0
+MY_DRY=0
+MY_LST=0
+MY_VER=0
+MY_CFG=
+
+
+
+################################################################################
+#
+#  F U N C T I O N S
+#
+################################################################################
+
+print_usage() {
+
+	echo "Usage: ${MY_NAME} [--text] [--extension=tpl,htm,html,php,...] [--ignore=dir1,dir2] [--config=conf] [--dry] [--list] [--verbose] --path=dir"
+	echo "       ${MY_NAME} --help"
+	echo "       ${MY_NAME} --version"
+	echo
+	echo "${MY_DESC}"
+	echo "Will return 1 on occurance, otherwise 0."
+	echo
+	echo "Required arguments:"
+	echo
+	echo "  --path=            Specify directory where to scan."
+	echo
+	echo
+	echo "Optional run arguments:"
+	echo "  --config=          Load configuration file."
+	echo "                     File must contain the following directives:"
+	echo "                         ${MY_CONF_PRE}EXTENSION=\"\" # comma separated"
+	echo "                         ${MY_CONF_PRE}IGNORE=\"\"    # comma separated"
+	echo "                         ${MY_CONF_PRE}TEXT=0|1     # 0 or 1"
+	echo "                     Note that cmd arguments take precedence over"
+	echo "                     config file settings."
+	echo
+	echo "  --text             Limit search to text files only (non-binary)."
+	echo "                     Can be narrowed further with '--extension'"
+	echo
+	echo "  --extension=       Comma separated list of file extensions."
+	echo "                     Only find files matching those extensions."
+	echo "                     Defaults to all files if not specified or empty."
+	echo "                     Example:"
+	echo "                         --extension=html,php,inc"
+	echo "                         --extension=php"
+	echo
+	echo "  --ignore=          Comma separated list of ignore paths."
+	echo "                     Directories must be specified from the starting location of --path."
+	echo "                     Example:"
+	echo "                          ignore 'foor/bar' folder inside '/var/www' path:"
+	echo "                         --path=/var/www --ignore=foo/bar"
+	echo
+	echo "  --verbose          Be verbose and print files being checked."
+	echo
+	echo
+	echo "Optional training arguments:"
+	echo "  --dry              Don't do anything, just display the commands."
+	echo
+	echo "  --list             Instead of searching inside the files, just display the filenames"
+	echo "                     that would be found by --path, --extension and --ignore"
+	echo
+	echo
+	echo "System arguments:"
+	echo "  --help             Show help screen."
+	echo "  --version          Show version information."
+	echo
+	echo
+	echo "${MY_NAME} is part of the awesome-ci collection."
+	echo "https://github.com/cytopia/awesome-ci"
+}
+
+print_version() {
+	echo "tool:    ${MY_NAME}"
+	echo "version: v${MY_VERSION} (${MY_DATE})"
+	echo "author:  ${MY_AUTHOR}"
+	echo "email:   ${MY_EMAIL}"
+	echo
+	echo "${MY_NAME} is part of the awesome-ci collection."
+	echo "https://github.com/cytopia/awesome-ci"
+}
+
+check_requirements() {
+	_ret1=0
+	_ret2=0
+
+	# System binaries
+	for _bin in ${REQUIRED_BINS}; do
+		if ! command -v "${_bin}" >/dev/null 2>&1; then
+			echo "[ERR] Required sys binary '${_bin}' not found."
+			_ret1=1
+		#else
+		#	echo "[OK]  Required sys binary '${_bin}' found."
+		fi
+	done
+
+	# Specific binaries for this check
+	for _bin in ${REQUIRED_CUST_BINS}; do
+		if ! command -v "${_bin}" >/dev/null 2>&1; then
+			echo "[ERR] Required custom binary '${_bin}' not found."
+			_ret2=1
+		#else
+		#	echo "[OK]  Required sys binary '${_bin}' found."
+		fi
+	done
+
+	return $((_ret1 + _ret2))
+}
+
+check_config_file() {
+	_config="${1}"
+
+	# Check config file
+	if [ ! -f "${_config}" ]; then
+		echo "[CONFIG] Config file not found: ${_config}"
+		return 1
+	fi
+	if ! grep -Eq "^${MY_CONF_PRE}IGNORE=" "${_config}"; then
+		echo "[CONFIG] ${MY_CONF_PRE}IGNORE variable not found in config."
+		return 1
+	fi
+	if ! grep -Eq "^${MY_CONF_PRE}IGNORE=[\"']{1}.*[\"']{1}$" "${_config}"; then
+		echo "[CONFIG] Invalid syntax for ${MY_CONF_PRE}IGNORE variable."
+		return 1
+	fi
+	if ! grep -Eq "^${MY_CONF_PRE}EXTENSION=" "${_config}"; then
+		echo "[CONFIG] ${MY_CONF_PRE}EXTENSION variable not found in config."
+		return 1
+	fi
+	if ! grep -Eq "^${MY_CONF_PRE}EXTENSION=[\"']{1}.*[\"']{1}$" "${_config}"; then
+		echo "[CONFIG] Invalid syntax for ${MY_CONF_PRE}EXTENSION variable."
+		return 1
+	fi
+	if ! grep -Eq "^${MY_CONF_PRE}TEXT=" "${_config}"; then
+		echo "[CONFIG] ${MY_CONF_PRE}TEXT variable not found in config."
+		return 1
+	fi
+	if ! grep -Eq "^${MY_CONF_PRE}TEXT=[\"']*[01]{1}[\"']*$" "${_config}"; then
+		echo "[CONFIG] Invalid syntax for ${MY_CONF_PRE}TEXT variable."
+		return 1
+	fi
+}
+
+num_cpu() {
+	_num="$(getconf _NPROCESSORS_ONLN)"
+
+	# Worked
+	if [ "$?" = "0" ]; then
+		echo "${_num}"
+		return 0
+	else
+		echo "1"
+		return 1
+	fi
+}
+
+
+################################################################################
+#
+#  M A I N   E N T R Y   P O I N T
+#
+################################################################################
+
+
+
+############################################################
+# Command Line arguments
+############################################################
+
+
+#
+# Read command line arguments
+#
+while [ $# -gt 0  ]; do
+	case "${1}" in
+
+		# ----------------------------------------
+		--path=*)
+			MY_PATH="$( echo "${1}" | sed 's/--path=//g' )"
+			;;
+
+		# ----------------------------------------
+		--extension=*)
+			MY_EXT="$( echo "${1}" | sed 's/--extension=//g' )"
+			;;
+
+		# ----------------------------------------
+		--ignore=*)
+			MY_IGN="$( echo "${1}" | sed 's/--ignore=//g' )"
+			;;
+
+		# ----------------------------------------
+		--config=*)
+			MY_CFG="$( echo "${1}" | sed 's/--config=//g' )"
+			;;
+
+		# ----------------------------------------
+		--text)
+			MY_TXT=1
+			;;
+
+		# ----------------------------------------
+		--dry)
+			MY_DRY=1
+			;;
+
+		# ----------------------------------------
+		--list)
+			MY_LST=1
+			;;
+
+		# ----------------------------------------
+		--verbose)
+			MY_VER=1
+			;;
+
+		# ----------------------------------------
+		--help)
+			print_usage
+			exit 0
+			;;
+
+		# ----------------------------------------
+		--version)
+			print_version
+			exit 0
+			;;
+
+		# ----------------------------------------
+		*)
+			echo "Invalid argument: ${1}"
+			echo "Type '${MY_NAME} --help' for available options."
+			exit 1
+			;;
+	esac
+	shift
+done
+
+
+
+############################################################
+# Sanity Checks
+############################################################
+
+#
+# Check general requirements
+#
+if ! check_requirements; then
+	exit 1
+fi
+
+#
+# Check path
+#
+if [ "${MY_PATH}" = "" ]; then
+	echo "--path not specified"
+	echo "Type '${MY_NAME} --help' for available options."
+	exit 1
+fi
+if [ ! -e "${MY_PATH}" ]; then
+	echo "Specified path does not exist: '${MY_PATH}'."
+	echo "Type '${MY_NAME} --help' for available options."
+	exit 1
+fi
+
+
+#
+# Check and load config if desired
+#
+if [ "${MY_CFG}" != "" ]; then
+	if ! check_config_file "${MY_CFG}"; then
+		exit 1
+	fi
+
+	. "${MY_CFG}"
+fi
+
+
+
+############################################################
+# Evaluate Settings
+############################################################
+
+
+# Var substitutions for config file directives
+# to match current program.
+EXTENSION="${MY_CONF_PRE}EXTENSION"
+IGNORE="${MY_CONF_PRE}IGNORE"
+TEXT="${MY_CONF_PRE}TEXT"
+
+#
+# Decide on File extensions
+#
+if [ "${MY_CFG}" != "" ] && [ "${MY_EXT}" != "" ]; then
+	echo "[ARG] Cmd arg --extension=${MY_EXT} will take precedence over config file value".
+	MY_EXT="${MY_EXT}"
+
+elif [ "${MY_CFG}" != "" ] && [ "${MY_EXT}" = "" ]; then
+	echo "[ARG] Using config file values: ext: ${!EXTENSION}"
+	MY_EXT="${!EXTENSION}"
+
+elif [ "${MY_CFG}" = "" ] && [ "${MY_EXT}" != "" ]; then
+	MY_EXT="${MY_EXT}"
+	echo "[ARG] Using cmd argument: ext: ${MY_EXT}"
+
+else
+	echo "[ARG] Using all file extensions"
+	MY_EXT=
+fi
+
+
+#
+# Decide on ignore paths
+#
+if [ "${MY_CFG}" != "" ] && [ "${MY_IGN}" != "" ]; then
+	echo "[ARG] Cmd arg --ignore=${MY_IGN} will take precedence over config file value".
+	MY_IGN="${MY_IGN}"
+
+elif [ "${MY_CFG}" != "" ] && [ "${MY_IGN}" = "" ]; then
+	echo "[ARG] Using config file values: ignore: ${!IGNORE}"
+	MY_IGN="${!IGNORE}"
+
+elif [ "${MY_CFG}" = "" ] && [ "${MY_IGN}" != "" ]; then
+	MY_IGN="${MY_IGN}"
+	echo "[ARG] Using cmd argument: ignore: ${MY_IGN}"
+
+else
+	echo "[ARG] Not ignoring anything"
+	MY_IGN=
+fi
+
+
+#
+# Decide on text files (non-binary) or all files
+#
+if [ "${MY_CFG}" != "" ] && [ "${MY_TXT}" != "0" ]; then
+	echo "[ARG] Cmd arg --text: '${MY_TXT}' will take precedence over config file value".
+	MY_TXT="${MY_TXT}"
+
+elif [ "${MY_CFG}" != "" ] && [ "${MY_TXT}" = "0" ]; then
+	echo "[ARG] Using config file values: --text: ${!TEXT}"
+	MY_TXT="${!TEXT}"
+
+elif [ "${MY_CFG}" = "" ] && [ "${MY_TXT}" != "0" ]; then
+	MY_TXT="${MY_TXT}"
+	echo "[ARG] Using cmd argument: --text: ${MY_TXT}"
+
+else
+	echo "[ARG] Not narrowing down by text files"
+	MY_TXT="0"
+fi
+
+
+
+
+############################################################
+# Build command
+############################################################
+
+#
+# 'find' pattern for file extensions
+#
+if [ "${MY_EXT}" != "" ]; then
+	NAME_PATTERN="\( -iname '*.$(echo "${MY_EXT}" | sed "s/,/' -o -iname '*\./g")' \)"
+else
+	NAME_PATTERN=""
+fi
+
+#
+# 'find' pattern for ignores/excludes
+#
+if [ "${MY_IGN}" != "" ]; then
+	EXCL_PATTERN="-not \( -path \"${MY_PATH}/$(echo "${MY_IGN}" | sed "s|,|*\" -o -path \"${MY_PATH}/|g")*\" \)"
+else
+	EXCL_PATTERN=""
+fi
+
+
+#
+# Show files or grep in found files?
+#
+
+CPU_CORES="$(num_cpu)"
+
+# Be verbose?
+if [ "${MY_VER}" = "1" ]; then
+	XARGS_VERBOSE="-t"
+else
+	XARGS_VERBOSE=""
+fi
+
+# Text files (list-only)
+if [ "${MY_TXT}" = "1" ] && [ "${MY_LST}" = "1" ]; then
+	MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} -print0 | xargs -0 -P ${CPU_CORES} -n1 -I % grep -Il '' '%'"
+
+# Text files (run!!!)
+elif [ "${MY_TXT}" = "1" ] && [ "${MY_LST}" = "0" ]; then
+	MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} -print0 | xargs -0 -P ${CPU_CORES} -n1 -I % grep -Il '' '%' | tr '\n' '\0' | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} -I % sh -c '${MY_CHECK}'"
+
+# All files (list-only)
+elif [ "${MY_TXT}" = "0" ] && [ "${MY_LST}" = "1" ]; then
+	MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} -print"
+
+# All files (run!!!)
+else
+	MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} -print0 | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} -I % sh -c '${MY_CHECK}'"
+fi
+
+
+
+
+############################################################
+# Execute
+############################################################
+
+# Dry mode?
+if [ "${MY_DRY}" = "1" ]; then
+	echo "${MY_CMD}"
+	exit 0
+fi
+
+
+echo "${MY_CMD}"
+output="$(eval "${MY_CMD}")"
+
+# If showing files only, exit normally
+if [ "${MY_LST}" = "1" ]; then
+	echo "${output}"
+	exit 0
+fi
+
+
+if [ "${output}" != "" ]; then
+	echo "${output}"
+	echo "[ERR] ${MY_FINISH_ERR}"
+	exit 1
+else
+	echo "[OK] ${MY_FINISH_OK}"
+	exit 0
+fi
+

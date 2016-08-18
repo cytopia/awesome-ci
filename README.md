@@ -61,6 +61,36 @@ Scan JS files for JS syntax errors.
 
 `syntax-js --extension=js --text --path=.`
 
+### [syntax-sh](bin/syntax-sh)
+
+Scan shell files for /bin/sh syntax errors.
+
+`syntax-sh --extension=sh,bash --text --path=.`
+
+### [syntax-bash](bin/syntax-bash)
+
+Scan shell files for bash syntax errors.
+
+`syntax-bash --extension=sh,bash --text --path=.`
+
+### [syntax-perl](bin/syntax-perl)
+
+Scan Perl files for Perl syntax errors.
+
+`syntax-perl --extension=pl --text --path=.`
+
+### [syntax-python](bin/syntax-python)
+
+Scan Python files for Python syntax errors.
+
+`syntax-python --extension=py --text --path=.`
+
+### [syntax-ruby](bin/syntax-ruby)
+
+Scan Ruby files for Ruby syntax errors.
+
+`syntax-ruby --extension=rb --text --path=.`
+
 
 ## 3. Code Conventions
 
