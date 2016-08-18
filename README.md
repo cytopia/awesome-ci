@@ -19,20 +19,20 @@ Scan files and check if they contain git conflicts.
 
 Scan files and check if they contain CRLF (Windows Line Feeds).
 
-`file-crlf --extension=bash,bat,c,cfg,conf,config,cpp,css,csv,diff,h,hpp,htm,html,inc,ini,java,js,json,md,patch,php,phpunit,py,rb,tpl,txt,scss,sh,sql,xml,yaml,yml --path=.`
+`file-crlf --text --path=.`
 
 
 ### [file-utf8](bin/file-utf8)
 
 Scan files and check if they have a non UTF-8 encoding.
 
-`file-utf8 --extension=bash,bat,c,cfg,conf,config,cpp,css,csv,diff,h,hpp,htm,html,inc,ini,java,js,json,md,patch,php,phpunit,py,rb,tpl,txt,scss,sh,sql,xml,yaml,yml --path=.`
+`file-utf8 --text --path=.`
 
 ### [file-utf8-bom](bin/file-utf8-bom)
 
 Scan files and check if they contain BOM (Byte Order Mark): `<U+FEFF>`.
 
-`file-utf8-bom --extension=bash,bat,c,cfg,conf,config,cpp,css,csv,diff,h,hpp,htm,html,inc,ini,java,js,json,md,patch,php,phpunit,py,rb,tpl,txt,scss,sh,sql,xml,yaml,yml --path=.`
+`file-utf8-bom --text --path=.`
 
 
 ## 2. Syntax Error
@@ -41,25 +41,26 @@ Scan files and check if they contain BOM (Byte Order Mark): `<U+FEFF>`.
 
 Scan files for PHP syntax errors.
 
-`syntax-php --extension=php,inc --path=.`
+`syntax-php --extension=php,inc --text --path=.`
 
-### syntax-css
+### [syntax-css](bin/syntax-css)
 
 Scan CSS files for CSS syntax errors.
 
-`find . -iname \*.css -print0 | xargs -0 -I % scss-lint '%'`
+`syntax-css --extension=css --text --path=.`
 
-### syntax-scss
+### [syntax-scss](bin/syntax-scss)
 
-Scann SCSS files for SCSS syntax errors.
+Scan SCSS files for SCSS syntax errors.
 
-`find . -iname \*.scss -print0 | xargs -0 -I % scss-lint '%'`
+`syntax-scss --extension=scss --text --path=.`
 
-### syntax-js
+### [syntax-js](bin/syntax-js)
 
-Scann JS files for javascript syntax errors.
+Scan JS files for JS syntax errors.
 
-`eslint --no-eslintrc .`
+`syntax-js --extension=js --text --path=.`
+
 
 ## 3. Code Conventions
 
@@ -67,12 +68,12 @@ Scann JS files for javascript syntax errors.
 
 Scan files and check if they contain inline css code.
 
-`inline-css --extension=htm,html,php,tpl --path=.`
+`inline-css --extension=htm,html,php,tpl --text --path=.`
 
 
 ### [inline-js](bin/inline-js)
 
 Scan files and check if they contain inline javascript code.
 
-`inline-js --extension=htm,html,php,tpl --path=.`
+`inline-js --extension=htm,html,php,tpl --text --path=.`
 

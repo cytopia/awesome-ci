@@ -9,24 +9,23 @@ MY_VERSION="0.3"
 MY_DATE="2016-08-17"
 
 # Name and messages
-MY_NAME="git-conflicts"
-MY_DESC="Scans recursively for files containing git conflicts."
-MY_FINISH_OK="No files with git conflicts found."
-MY_FINISH_ERR="Found files with git conflicts."
+MY_NAME="syntax-js"
+MY_DESC="Scans recursively for files containing JS syntax errors."
+MY_FINISH_OK="No files with JS syntax errors found."
+MY_FINISH_ERR="Found files with JS syntax errors."
 
 # Configuration file prefix
-MY_CONF_PRE="GIT_CONFLICTS_"
+MY_CONF_PRE="SYNTAX_JS_"
 
 # Custom required binaries
-REQUIRED_CUST_BINS=""
+REQUIRED_CUST_BINS="eslint"
 
 # How to check for files
 # Note: '%' comes from xargs and represents
 # one file as parameter.
 # Called like this:
 #   eval "xargs -I % sh '${MY_CHECK}'"
-MY_REG="^(<<<<<<<|>>>>>>>)"
-MY_CHECK="grep \"${MY_REG}\" \"%\""
+MY_CHECK="eslint --no-eslintrc \"%\""
 
 
 
