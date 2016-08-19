@@ -38,7 +38,7 @@ DEFAULT_CUST_OPS=""
 MY_CHECK="sh -n \"%\" 2>&1 || true"
 
 # Command to be displayed for --info
-MY_INFO="(man sh | head -1 | grep -iq dash) && echo 'dash shell' || sh --version | grep -E '(([0-9]+)(\.))+'"
+MY_INFO="(realpath /bin/sh 2>/dev/null | grep -q 'dash') && echo 'dash shell' || sh --version | grep -E '(([0-9]+)(\.))+'"
 
 
 
