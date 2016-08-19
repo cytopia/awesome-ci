@@ -114,18 +114,18 @@ Scan files and check if they contain inline javascript code.
 
 Scan JS files for JS code convention violations.
 
-`syntax-js --extension=js --text --path=. --custom="--quiet --config /absolute/path/to/project/.eslint.json"`
+`syntax-js --extension=js --path=. --custom="--quiet --config .eslint.json"`
 
 ### [syntax-css](bin/syntax-css)
 
 Scan CSS files for CSS code convention violations.
 
-`syntax-css --extension=css --text --path=. --custom="--config /absolute/path/to/project/.scss-lint.yml"`
+`syntax-css --extension=css --text --path=. --custom="--config .scss-lint.yml"`
 
 ### [syntax-scss](bin/syntax-scss)
 
 Scan SCSS files for SCSS code convention violations.
 
-`syntax-scss --extension=scss --text --path=. --custom="--config /absolute/path/to/project/.scss-lint.yml"`
+`syntax-scss --extension=scss --text --path=. --custom="--config .scss-lint.yml"`
 
 
