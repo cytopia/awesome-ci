@@ -39,7 +39,7 @@ MY_REG="^(<<<<<<<|>>>>>>>)"
 MY_CHECK="grep --color=always -inHE \"${MY_REG}\" \"%\" || true"
 
 # Command to be displayed for --info
-MY_INFO="grep -V"
+MY_INFO="grep -V | grep -E '([0-9]+\.+)+'"
 
 
 
