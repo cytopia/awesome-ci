@@ -5,8 +5,8 @@
 ############################################################
 
 # Version
-MY_VERSION="0.3"
-MY_DATE="2016-08-17"
+MY_VERSION="0.4"
+MY_DATE="2016-08-19"
 
 # Name and messages
 MY_NAME="syntax-bash"
@@ -20,12 +20,25 @@ MY_CONF_PRE="SYNTAX_BASH_"
 # Custom required binaries
 REQUIRED_CUST_BINS="bash"
 
+# Enable custom options (cmd arguments)
+# that can be parsed to the actual check binary?
+ENABLE_CUST_OPS=0
+
+# When not specifying --custom,
+# always use this as the default options
+# to parse to the check binary.
+DEFAULT_CUST_OPS=""
+
 # How to check for files
 # Note: '%' comes from xargs and represents
 # one file as parameter.
 # Called like this:
 #   eval "xargs -I % sh '${MY_CHECK}'"
-MY_CHECK="bash -n \"%\" || true"
+MY_CHECK="bash -n \"%\" 2>&1 || true"
+
+# Command to be displayed for --info
+MY_INFO="bash --version | grep -E '(([0-9]+)(\.))+'"
+
 
 
 
@@ -56,7 +69,9 @@ MY_TXT=0
 MY_DRY=0
 MY_LST=0
 MY_VER=0
+MY_DEB=0
 MY_CFG=
+MY_CUS=
 
 
 
@@ -68,7 +83,14 @@ MY_CFG=
 
 print_usage() {
 
-	echo "Usage: ${MY_NAME} [--text] [--extension=tpl,htm,html,php,...] [--ignore=dir1,dir2] [--config=conf] [--dry] [--list] [--verbose] --path=dir"
+	if [ "${ENABLE_CUST_OPS}" = "1" ];then
+		_custom=" [--custom=\"opts\"]"
+	else
+		_custom=""
+	fi
+
+	echo "Usage: ${MY_NAME} [--text] [--extension=tpl,htm,html,php,...] [--ignore=dir1,dir2] [--config=conf]${_custom} [--verbose] [--debug] [--dry] [--list] --path=dir"
+	echo "       ${MY_NAME} --info"
 	echo "       ${MY_NAME} --help"
 	echo "       ${MY_NAME} --version"
 	echo
@@ -81,14 +103,6 @@ print_usage() {
 	echo
 	echo
 	echo "Optional run arguments:"
-	echo "  --config=          Load configuration file."
-	echo "                     File must contain the following directives:"
-	echo "                         ${MY_CONF_PRE}EXTENSION=\"\" # comma separated"
-	echo "                         ${MY_CONF_PRE}IGNORE=\"\"    # comma separated"
-	echo "                         ${MY_CONF_PRE}TEXT=0|1     # 0 or 1"
-	echo "                     Note that cmd arguments take precedence over"
-	echo "                     config file settings."
-	echo
 	echo "  --text             Limit search to text files only (non-binary)."
 	echo "                     Can be narrowed further with '--extension'"
 	echo
@@ -105,7 +119,26 @@ print_usage() {
 	echo "                          ignore 'foor/bar' folder inside '/var/www' path:"
 	echo "                         --path=/var/www --ignore=foo/bar"
 	echo
-	echo "  --verbose          Be verbose and print files being checked."
+	echo "  --config=          Load configuration file."
+	echo "                     File must contain the following directives:"
+	echo "                         ${MY_CONF_PRE}EXTENSION=\"\" # comma separated"
+	echo "                         ${MY_CONF_PRE}IGNORE=\"\"    # comma separated"
+	echo "                         ${MY_CONF_PRE}TEXT=0|1     # 0 or 1"
+	echo "                     Note that cmd arguments take precedence over"
+	echo "                     config file settings."
+	echo
+	if [ "${ENABLE_CUST_OPS}" = "1" ];then
+		echo "  --custom=          Parse custom command line option to the check binary."
+		echo "                     Note that when you want to add config files or other files"
+		echo "                     you must use an absolute path."
+		echo "                     Example:"
+		echo "                          --custom=\"--color --config /absoulte/path/conf.json\""
+		echo
+	fi
+	echo "  --verbose          Be verbose and print commands and files being checked."
+	echo
+	echo
+	echo "  --debug            Print system messages."
 	echo
 	echo
 	echo "Optional training arguments:"
@@ -116,6 +149,7 @@ print_usage() {
 	echo
 	echo
 	echo "System arguments:"
+	echo "  --info             Show command version."
 	echo "  --help             Show help screen."
 	echo "  --version          Show version information."
 	echo
@@ -135,6 +169,7 @@ print_version() {
 }
 
 check_requirements() {
+	_debug="${1}"
 	_ret1=0
 	_ret2=0
 
@@ -143,8 +178,10 @@ check_requirements() {
 		if ! command -v "${_bin}" >/dev/null 2>&1; then
 			echo "[ERR] Required sys binary '${_bin}' not found."
 			_ret1=1
-		#else
-		#	echo "[OK]  Required sys binary '${_bin}' found."
+		else
+			if [ "${_debug}" = "1" ]; then
+				echo "[OK]  Required system binary '${_bin}' found."
+			fi
 		fi
 	done
 
@@ -153,8 +190,10 @@ check_requirements() {
 		if ! command -v "${_bin}" >/dev/null 2>&1; then
 			echo "[ERR] Required custom binary '${_bin}' not found."
 			_ret2=1
-		#else
-		#	echo "[OK]  Required sys binary '${_bin}' found."
+		else
+			if [ "${_debug}" = "1" ]; then
+				echo "[OK]  Required custom binary '${_bin}' found."
+			fi
 		fi
 	done
 
@@ -249,6 +288,17 @@ while [ $# -gt 0  ]; do
 			;;
 
 		# ----------------------------------------
+		--custom=*)
+			if [ "${ENABLE_CUST_OPS}" = "1" ]; then
+				MY_CUS="$( echo "${1}" | sed 's/--custom=//g' )"
+			else
+				echo "Invalid argument: ${1}"
+				echo "Type '${MY_NAME} --help' for available options."
+				exit 1
+			fi
+			;;
+
+		# ----------------------------------------
 		--text)
 			MY_TXT=1
 			;;
@@ -266,6 +316,18 @@ while [ $# -gt 0  ]; do
 		# ----------------------------------------
 		--verbose)
 			MY_VER=1
+			;;
+
+		# ----------------------------------------
+		--debug)
+			MY_DEB=1
+			;;
+
+		# ----------------------------------------
+		--info)
+			echo "\$ ${MY_INFO}"
+			eval "${MY_INFO}"
+			exit 0
 			;;
 
 		# ----------------------------------------
@@ -299,7 +361,7 @@ done
 #
 # Check general requirements
 #
-if ! check_requirements; then
+if ! check_requirements "${MY_DEB}"; then
 	exit 1
 fi
 
@@ -346,19 +408,27 @@ TEXT="${MY_CONF_PRE}TEXT"
 # Decide on File extensions
 #
 if [ "${MY_CFG}" != "" ] && [ "${MY_EXT}" != "" ]; then
-	echo "[ARG] Cmd arg --extension=${MY_EXT} will take precedence over config file value".
+	if [ "${MY_DEB}" = "1" ]; then
+		echo "[ARG] Cmd arg --extension=${MY_EXT} will take precedence over config file value".
+	fi
 	MY_EXT="${MY_EXT}"
 
 elif [ "${MY_CFG}" != "" ] && [ "${MY_EXT}" = "" ]; then
-	echo "[ARG] Using config file values: ext: ${!EXTENSION}"
+	if [ "${MY_DEB}" = "1" ]; then
+		echo "[ARG] Using config file values: ext: ${!EXTENSION}"
+	fi
 	MY_EXT="${!EXTENSION}"
 
 elif [ "${MY_CFG}" = "" ] && [ "${MY_EXT}" != "" ]; then
+	if [ "${MY_DEB}" = "1" ]; then
+		echo "[ARG] Using cmd argument: ext: ${MY_EXT}"
+	fi
 	MY_EXT="${MY_EXT}"
-	echo "[ARG] Using cmd argument: ext: ${MY_EXT}"
 
 else
-	echo "[ARG] Using all file extensions"
+	if [ "${MY_DEB}" = "1" ]; then
+		echo "[ARG] Using all file extensions"
+	fi
 	MY_EXT=
 fi
 
@@ -367,19 +437,27 @@ fi
 # Decide on ignore paths
 #
 if [ "${MY_CFG}" != "" ] && [ "${MY_IGN}" != "" ]; then
-	echo "[ARG] Cmd arg --ignore=${MY_IGN} will take precedence over config file value".
+	if [ "${MY_DEB}" = "1" ]; then
+		echo "[ARG] Cmd arg --ignore=${MY_IGN} will take precedence over config file value".
+	fi
 	MY_IGN="${MY_IGN}"
 
 elif [ "${MY_CFG}" != "" ] && [ "${MY_IGN}" = "" ]; then
-	echo "[ARG] Using config file values: ignore: ${!IGNORE}"
+	if [ "${MY_DEB}" = "1" ]; then
+		echo "[ARG] Using config file values: ignore: ${!IGNORE}"
+	fi
 	MY_IGN="${!IGNORE}"
 
 elif [ "${MY_CFG}" = "" ] && [ "${MY_IGN}" != "" ]; then
+	if [ "${MY_DEB}" = "1" ]; then
+		echo "[ARG] Using cmd argument: ignore: ${MY_IGN}"
+	fi
 	MY_IGN="${MY_IGN}"
-	echo "[ARG] Using cmd argument: ignore: ${MY_IGN}"
 
 else
-	echo "[ARG] Not ignoring anything"
+	if [ "${MY_DEB}" = "1" ]; then
+		echo "[ARG] Not ignoring anything"
+	fi
 	MY_IGN=
 fi
 
@@ -388,19 +466,27 @@ fi
 # Decide on text files (non-binary) or all files
 #
 if [ "${MY_CFG}" != "" ] && [ "${MY_TXT}" != "0" ]; then
-	echo "[ARG] Cmd arg --text: '${MY_TXT}' will take precedence over config file value".
+	if [ "${MY_DEB}" = "1" ]; then
+		echo "[ARG] Cmd arg --text: '${MY_TXT}' will take precedence over config file value".
+	fi
 	MY_TXT="${MY_TXT}"
 
 elif [ "${MY_CFG}" != "" ] && [ "${MY_TXT}" = "0" ]; then
-	echo "[ARG] Using config file values: --text: ${!TEXT}"
+	if [ "${MY_DEB}" = "1" ]; then
+		echo "[ARG] Using config file values: --text: ${!TEXT}"
+	fi
 	MY_TXT="${!TEXT}"
 
 elif [ "${MY_CFG}" = "" ] && [ "${MY_TXT}" != "0" ]; then
+	if [ "${MY_DEB}" = "1" ]; then
+		echo "[ARG] Using cmd argument: --text: ${MY_TXT}"
+	fi
 	MY_TXT="${MY_TXT}"
-	echo "[ARG] Using cmd argument: --text: ${MY_TXT}"
 
 else
-	echo "[ARG] Not narrowing down by text files"
+	if [ "${MY_DEB}" = "1" ]; then
+		echo "[ARG] Not narrowing down by text files"
+	fi
 	MY_TXT="0"
 fi
 
@@ -427,6 +513,16 @@ if [ "${MY_IGN}" != "" ]; then
 	EXCL_PATTERN="-not \( -path \"${MY_PATH}/$(echo "${MY_IGN}" | sed "s|,|*\" -o -path \"${MY_PATH}/|g")*\" \)"
 else
 	EXCL_PATTERN=""
+fi
+
+
+#
+# Customize command?
+#
+if [ "${MY_CUS}" = "" ]; then
+	MY_CHECK="$( echo "${MY_CHECK}" | sed "s|__CUSTOM_OPT_PLACEHOLDER__|${DEFAULT_CUST_OPS}|g" )"
+else
+	MY_CHECK="$( echo "${MY_CHECK}" | sed "s|__CUSTOM_OPT_PLACEHOLDER__|${MY_CUS}|g" )"
 fi
 
 
@@ -473,8 +569,8 @@ if [ "${MY_DRY}" = "1" ]; then
 	exit 0
 fi
 
+echo "\$ ${MY_CMD}"
 
-echo "${MY_CMD}"
 output="$(eval "${MY_CMD}")"
 
 # If showing files only, exit normally
@@ -485,11 +581,10 @@ fi
 
 
 if [ "${output}" != "" ]; then
-	echo "${output}"
+	printf "%s\n" "${output}"
 	echo "[ERR] ${MY_FINISH_ERR}"
 	exit 1
 else
-	echo "[OK] ${MY_FINISH_OK}"
+	echo "[OK]  ${MY_FINISH_OK}"
 	exit 0
 fi
-
