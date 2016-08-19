@@ -35,7 +35,7 @@ DEFAULT_CUST_OPS=""
 # one file as parameter.
 # Called like this:
 #   eval "xargs -I % sh '${MY_CHECK}'"
-MY_REG="[[:space:]]+on(abort|afterprint|beforeprint|beforeunload|blur|canplay|canplaythrough|change|click|contextmenu|copy|cuechange|cut|dblclick|drag|dragend|dragenter|dragleave|dragover|dragstart|drop|durationchange|emptied|ended|error|error|error|focus|hashchange|input|invalid|keydown|keypress|keyup|load|loadeddata|loadedmetadata|loadstart|message|mousedown|mousemove|mouseout|mouseover|mouseup|mousewheel|offline|online|pagehide|pageshow|paste|pause|play|playing|popstate|progress|ratechange|reset|resize|scroll|search|seeked|seeking|select|show|stalled|storage|submit|suspend|timeupdate|toggle|unload|volumechange|waiting|wheel)[[:space:]]*="
+MY_REG="[[:space:]]+on(abort|afterprint|beforeprint|beforeunload|blur|canplay|canplaythrough|change|click|contextmenu|copy|cuechange|cut|dblclick|drag|dragend|dragenter|dragleave|dragover|dragstart|drop|durationchange|emptied|ended|error|focus|hashchange|input|invalid|keydown|keypress|keyup|load|loadeddata|loadedmetadata|loadstart|message|mousedown|mousemove|mouseout|mouseover|mouseup|mousewheel|offline|online|pagehide|pageshow|paste|pause|play|playing|popstate|progress|ratechange|reset|resize|scroll|search|seeked|seeking|select|show|stalled|storage|submit|suspend|timeupdate|toggle|unload|volumechange|waiting|wheel)[[:space:]]*="
 MY_CHECK="grep --color=always -inHE \"${MY_REG}\" \"%\" || true"
 
 # Command to be displayed for --info
