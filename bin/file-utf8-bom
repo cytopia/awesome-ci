@@ -38,7 +38,7 @@ DEFAULT_CUST_OPS=""
 MY_CHECK="awk \"/^\xEF\xBB\xBF/ {print FILENAME} {nextfile}\" \"%\" || true"
 
 # Command to be displayed for --info
-MY_INFO="awk -V | grep -E '(([0-9]+)(\.))+'"
+MY_INFO="(awk -Wversion 2>/dev/null || awk --version) | grep -E '(([0-9]+)(\.))+'"
 
 
 
