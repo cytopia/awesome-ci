@@ -43,7 +43,7 @@ MY_REG="CRLF"
 MY_CHECK="file \"%\" | grep --color=always \"${MY_REG}\" || true"
 
 # Command to be displayed for --info
-MY_INFO="file -v"
+MY_INFO="file -v 2>&1 | grep -E '(([0-9]+)(\.))+'"
 
 
 
