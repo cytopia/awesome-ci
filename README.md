@@ -32,6 +32,13 @@ Scan files and check if they contain CRLF (Windows Line Feeds).
 `file-crlf --text --path=.`
 
 
+### [file-trailing-newline](bin/file-trailing-newline)
+
+Scan files and check if they contain a trailing newline.
+
+`file-trailing-newline --text --path=.`
+
+
 ### [file-trailing-space](bin/file-trailing-space)
 
 Scan files and check if they contain trailing whitespaces.
