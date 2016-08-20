@@ -17,6 +17,13 @@ Scan files and check if they contain git conflicts.
 
 `git-conflicts --path=.`
 
+### [git-ignored](bin/git-ignored)
+
+Scan git directory and see if ignored files are still in git cache.
+
+`git-ignored --path=.`
+
+
 ### [file-crlf](bin/file-crlf)
 
 Scan files and check if they contain CRLF (Windows Line Feeds).
@@ -108,24 +115,5 @@ Scan files and check if they contain inline css code.
 Scan files and check if they contain inline javascript code.
 
 `inline-js --extension=htm,html,php,tpl --text --path=.`
-
-
-### [syntax-js](bin/syntax-js)
-
-Scan JS files for JS code convention violations.
-
-`syntax-js --extension=js --path=. --custom="--quiet --config .eslint.json"`
-
-### [syntax-css](bin/syntax-css)
-
-Scan CSS files for CSS code convention violations.
-
-`syntax-css --extension=css --text --path=. --custom="--config .scss-lint.yml"`
-
-### [syntax-scss](bin/syntax-scss)
-
-Scan SCSS files for SCSS code convention violations.
-
-`syntax-scss --extension=scss --text --path=. --custom="--config .scss-lint.yml"`
 
 
