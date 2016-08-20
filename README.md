@@ -52,6 +52,12 @@ Scan files for Markdown syntax errors.
 
 `syntax-markdown --extension=md --text --path=.`
 
+### [syntax-json](bin/syntax-json)
+
+Scan files for JSON syntax errors.
+
+`syntax-json --extension=json --text --path=.`
+
 ### [syntax-php](bin/syntax-php)
 
 Scan files for PHP syntax errors.
