@@ -17,6 +17,7 @@ Scan files and check if they contain git conflicts.
 
 `git-conflicts --path=.`
 
+
 ### [git-ignored](bin/git-ignored)
 
 Scan git directory and see if ignored files are still in git cache.
@@ -31,11 +32,19 @@ Scan files and check if they contain CRLF (Windows Line Feeds).
 `file-crlf --text --path=.`
 
 
+### [file-trailing-space](bin/file-trailing-space)
+
+Scan files and check if they contain trailing whitespaces.
+
+`file-trailing-space --text --path=.`
+
+
 ### [file-utf8](bin/file-utf8)
 
 Scan files and check if they have a non UTF-8 encoding.
 
 `file-utf8 --text --path=.`
+
 
 ### [file-utf8-bom](bin/file-utf8-bom)
 
@@ -46,23 +55,12 @@ Scan files and check if they contain BOM (Byte Order Mark): `<U+FEFF>`.
 
 ## 2. Syntax Error
 
-### [syntax-markdown](bin/syntax-markdown)
+### [syntax-bash](bin/syntax-bash)
 
-Scan files for Markdown syntax errors.
+Scan shell files for bash syntax errors.
 
-`syntax-markdown --extension=md --text --path=.`
+`syntax-bash --extension=sh,bash --text --path=.`
 
-### [syntax-json](bin/syntax-json)
-
-Scan files for JSON syntax errors.
-
-`syntax-json --extension=json --text --path=.`
-
-### [syntax-php](bin/syntax-php)
-
-Scan files for PHP syntax errors.
-
-`syntax-php --extension=php,inc --text --path=.`
 
 ### [syntax-css](bin/syntax-css)
 
@@ -70,11 +68,6 @@ Scan CSS files for CSS syntax errors.
 
 `syntax-css --extension=css --text --path=.`
 
-### [syntax-scss](bin/syntax-scss)
-
-Scan SCSS files for SCSS syntax errors.
-
-`syntax-scss --extension=scss --text --path=.`
 
 ### [syntax-js](bin/syntax-js)
 
@@ -82,17 +75,20 @@ Scan JS files for JS syntax errors.
 
 `syntax-js --extension=js --text --path=.`
 
-### [syntax-sh](bin/syntax-sh)
 
-Scan shell files for /bin/sh syntax errors.
+### [syntax-json](bin/syntax-json)
 
-`syntax-sh --extension=sh,bash --text --path=.`
+Scan files for JSON syntax errors.
 
-### [syntax-bash](bin/syntax-bash)
+`syntax-json --extension=json --text --path=.`
 
-Scan shell files for bash syntax errors.
 
-`syntax-bash --extension=sh,bash --text --path=.`
+### [syntax-markdown](bin/syntax-markdown)
+
+Scan files for Markdown syntax errors.
+
+`syntax-markdown --extension=md --text --path=.`
+
 
 ### [syntax-perl](bin/syntax-perl)
 
@@ -100,17 +96,41 @@ Scan Perl files for Perl syntax errors.
 
 `syntax-perl --extension=pl --text --path=.`
 
+
+### [syntax-php](bin/syntax-php)
+
+Scan files for PHP syntax errors.
+
+`syntax-php --extension=php,inc --text --path=.`
+
+
 ### [syntax-python](bin/syntax-python)
 
 Scan Python files for Python syntax errors.
 
 `syntax-python --extension=py --text --path=.`
 
+
 ### [syntax-ruby](bin/syntax-ruby)
 
 Scan Ruby files for Ruby syntax errors.
 
 `syntax-ruby --extension=rb --text --path=.`
+
+
+### [syntax-scss](bin/syntax-scss)
+
+Scan SCSS files for SCSS syntax errors.
+
+`syntax-scss --extension=scss --text --path=.`
+
+
+### [syntax-sh](bin/syntax-sh)
+
+Scan shell files for /bin/sh syntax errors.
+
+`syntax-sh --extension=sh,bash --text --path=.`
+
 
 
 ## 3. Code Conventions
