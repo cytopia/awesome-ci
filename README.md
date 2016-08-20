@@ -46,6 +46,12 @@ Scan files and check if they contain BOM (Byte Order Mark): `<U+FEFF>`.
 
 ## 2. Syntax Error
 
+### [syntax-markdown](bin/syntax-markdown)
+
+Scan files for Markdown syntax errors.
+
+`syntax-markdown --extension=md --text --path=.`
+
 ### [syntax-php](bin/syntax-php)
 
 Scan files for PHP syntax errors.
