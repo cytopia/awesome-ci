@@ -6,8 +6,8 @@ set -u
 ############################################################
 
 # Version
-MY_VERSION="0.4"
-MY_DATE="2016-08-19"
+MY_VERSION="0.5"
+MY_DATE="2016-08-21"
 
 # Name and messages
 MY_NAME="git-ignored"

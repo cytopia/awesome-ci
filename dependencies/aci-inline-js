@@ -1,0 +1,49 @@
+#!/bin/sh -u
+
+NAME="aci-inline-js"
+FILE="${1}"
+
+
+
+print_usage() {
+	echo "Usage: ${NAME} file"
+	echo "       ${NAME} -v"
+	echo
+	echo "Check if a file contains inline javascript code."
+	echo "Returns 0, if condition is met, otherwise > 0"
+	echo
+	echo " -v     Show version"
+	exit 1
+}
+print_version() {
+	echo "${NAME} v0.1 (2016-08-21)"
+	echo "Written by cytopia <cytopia@everythingcli.org>"
+	echo "https://github.com/cytopia"
+}
+
+if [ "${FILE}" = "-v" ]; then
+	print_version
+	exit 0
+fi
+
+
+#
+# Validate file
+#
+if [ ! -f "${FILE}" ]; then
+	echo "No such file: ${FILE}"
+	exit 1
+fi
+if [ ! -r "${FILE}" ]; then
+	echo "Cannot read file: ${FILE}"
+	exit 1
+fi
+
+
+MY_REG="[[:space:]]+on(abort|afterprint|beforeprint|beforeunload|blur|canplay|canplaythrough|change|click|contextmenu|copy|cuechange|cut|dblclick|drag|dragend|dragenter|dragleave|dragover|dragstart|drop|durationchange|emptied|ended|error|focus|hashchange|input|invalid|keydown|keypress|keyup|load|loadeddata|loadedmetadata|loadstart|message|mousedown|mousemove|mouseout|mouseover|mouseup|mousewheel|offline|online|pagehide|pageshow|paste|pause|play|playing|popstate|progress|ratechange|reset|resize|scroll|search|seeked|seeking|select|show|stalled|storage|submit|suspend|timeupdate|toggle|unload|volumechange|waiting|wheel)[[:space:]]*="
+
+if grep --color=always -inHE "${MY_REG}" "${FILE}"; then
+	exit 1
+fi
+
+exit 0

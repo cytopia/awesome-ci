@@ -6,8 +6,8 @@ set -u
 ############################################################
 
 # Version
-MY_VERSION="0.4"
-MY_DATE="2016-08-19"
+MY_VERSION="0.5"
+MY_DATE="2016-08-21"
 
 # Name and messages
 MY_NAME="syntax-markdown"
@@ -67,6 +67,7 @@ MY_PATH=
 MY_EXT=
 MY_IGN=
 MY_TXT=0
+MY_SIZ=0
 MY_DRY=0
 MY_LST=0
 MY_VER=0
@@ -90,7 +91,7 @@ print_usage() {
 		_custom=""
 	fi
 
-	echo "Usage: ${MY_NAME} [--text] [--extension=tpl,htm,html,php,...] [--ignore=dir1,dir2] [--config=conf]${_custom} [--verbose] [--debug] [--dry] [--list] --path=dir"
+	echo "Usage: ${MY_NAME} [--text] [--size] [--extension=tpl,htm,html,php,...] [--ignore=dir1,dir2] [--config=conf]${_custom} [--verbose] [--debug] [--dry] [--list] --path=dir"
 	echo "       ${MY_NAME} --info"
 	echo "       ${MY_NAME} --help"
 	echo "       ${MY_NAME} --version"
@@ -106,6 +107,8 @@ print_usage() {
 	echo "Optional run arguments:"
 	echo "  --text             Limit search to text files only (non-binary)."
 	echo "                     Can be narrowed further with '--extension'"
+	echo
+	echo "  --size             Limit search to files which are not empty (bigger than 0 bytes)."
 	echo
 	echo "  --extension=       Comma separated list of file extensions."
 	echo "                     Only find files matching those extensions."
@@ -310,6 +313,11 @@ while [ $# -gt 0  ]; do
 			;;
 
 		# ----------------------------------------
+		--size)
+			MY_SIZ=1
+			;;
+
+		# ----------------------------------------
 		--dry)
 			MY_DRY=1
 			;;
@@ -409,6 +417,7 @@ fi
 EXTENSION="${MY_CONF_PRE}EXTENSION"
 IGNORE="${MY_CONF_PRE}IGNORE"
 TEXT="${MY_CONF_PRE}TEXT"
+SIZE="${MY_CONF_PRE}SIZE"
 
 #
 # Decide on File extensions
@@ -497,6 +506,41 @@ else
 fi
 
 
+#
+# Decide on file size
+#
+if [ "${MY_CFG}" != "" ] && [ "${MY_SIZ}" != "0" ]; then
+	if [ "${MY_DEB}" = "1" ]; then
+		echo "[ARG] Cmd arg --size: '${MY_SIZ}' will take precedence over config file value".
+	fi
+	MY_SIZ="${MY_SIZ}"
+
+elif [ "${MY_CFG}" != "" ] && [ "${MY_SIZ}" = "0" ]; then
+	if [ "${MY_DEB}" = "1" ]; then
+		echo "[ARG] Using config file values: --size: ${!SIZE}"
+	fi
+	MY_SIZ="${!SIZE}"
+
+elif [ "${MY_CFG}" = "" ] && [ "${MY_SIZ}" != "0" ]; then
+	if [ "${MY_DEB}" = "1" ]; then
+		echo "[ARG] Using cmd argument: --size: ${MY_SIZ}"
+	fi
+	MY_SIZ="${MY_SIZ}"
+
+else
+	if [ "${MY_DEB}" = "1" ]; then
+		echo "[ARG] Not narrowing down by size > 0 bytes"
+	fi
+	MY_SIZ="0"
+fi
+
+if [ "${MY_SIZ}" = "1" ]; then
+	MY_SIZ="! -size 0"
+else
+	MY_SIZ=""
+fi
+
+
 
 
 ############################################################
@@ -526,9 +570,9 @@ fi
 # Customize command?
 #
 if [ "${MY_CUS}" = "" ]; then
-	MY_CHECK="$( echo "${MY_CHECK}" | sed "s?__CUSTOM_OPT_PLACEHOLDER__?${DEFAULT_CUST_OPS}?g" )"
+	MY_CHECK="$( echo "${MY_CHECK}" | sed "s|__CUSTOM_OPT_PLACEHOLDER__|${DEFAULT_CUST_OPS}|g" )"
 else
-	MY_CHECK="$( echo "${MY_CHECK}" | sed "s?__CUSTOM_OPT_PLACEHOLDER__?${MY_CUS}?g" )"
+	MY_CHECK="$( echo "${MY_CHECK}" | sed "s|__CUSTOM_OPT_PLACEHOLDER__|${MY_CUS}|g" )"
 fi
 
 
@@ -547,19 +591,19 @@ fi
 
 # Text files (list-only)
 if [ "${MY_TXT}" = "1" ] && [ "${MY_LST}" = "1" ]; then
-	MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} -print0 | xargs -0 -P ${CPU_CORES} -n1 -I % grep -Il '' '%'"
+	MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | xargs -0 -P ${CPU_CORES} -n1 -I % grep -Il '' '%'"
 
 # Text files (run!!!)
 elif [ "${MY_TXT}" = "1" ] && [ "${MY_LST}" = "0" ]; then
-	MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} -print0 | xargs -0 -P ${CPU_CORES} -n1 -I % grep -Il '' '%' | tr '\n' '\0' | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} -I % sh -c '${MY_CHECK}'"
+	MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | xargs -0 -P ${CPU_CORES} -n1 -I % grep -Il '' '%' | tr '\n' '\0' | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} -I % sh -c '${MY_CHECK}'"
 
 # All files (list-only)
 elif [ "${MY_TXT}" = "0" ] && [ "${MY_LST}" = "1" ]; then
-	MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} -print"
+	MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print"
 
 # All files (run!!!)
 else
-	MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} -print0 | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} -I % sh -c '${MY_CHECK}'"
+	MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN}${MY_SIZ}  -print0 | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} -I % sh -c '${MY_CHECK}'"
 fi
 
 

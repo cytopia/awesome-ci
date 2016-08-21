@@ -25,6 +25,7 @@ Lot's of tools for git, file and static source code analysis.
 
 # Optional:
   --text            # Only scan non-binary files
+  --size            # Only scan non-empty files (greater 0 bytes)
   --extension       # Only scan files with these file extensions
   --ignore          # Ignore files/folders
   --config          # Specify configuration file

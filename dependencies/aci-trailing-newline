@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -u
 
 NAME="aci-trailing-newline"
 OPTION="${1}"
