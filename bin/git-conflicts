@@ -59,12 +59,13 @@ MY_EMAIL="cytopia@everythingcli.org"
 #
 # Required system binaries
 #
-REQUIRED_BINS="sed grep find xargs tr"
+REQUIRED_BINS="awk grep find sed tr xargs"
 
 #
 # Variables populated by cmd args or config file
 #
 MY_PATH=
+MY_SHE=
 MY_EXT=
 MY_IGN=
 MY_TXT=0
@@ -92,7 +93,7 @@ print_usage() {
 		_custom=""
 	fi
 
-	echo "Usage: ${MY_NAME} [--text] [--size] [--extension=tpl,htm,html,php,...] [--ignore=dir1,dir2] [--config=conf]${_custom} [--verbose] [--debug] [--dry] [--list] --path=dir"
+	echo "Usage: ${MY_NAME} [--text] [--size] [--shebang=php] [--extension=tpl,htm,html,php,...] [--ignore=dir1,dir2] [--config=conf]${_custom} [--verbose] [--debug] [--dry] [--list] --path=dir"
 	echo "       ${MY_NAME} --info"
 	echo "       ${MY_NAME} --help"
 	echo "       ${MY_NAME} --version"
@@ -111,7 +112,16 @@ print_usage() {
 	echo
 	echo "  --size             Limit search to files which are not empty (bigger than 0 bytes)."
 	echo
-	echo "  --extension=       Comma separated list of file extensions."
+	echo "  --shebang=         Only find files (shell scripts) with this specific shebang."
+	echo "                     It is useful to combine this with --text and --size for faster searches."
+	echo "                     Use with --dry to see how this search command is generated."
+	echo "                     Example:"
+	echo "                         --shebang=bash"
+	echo "                         --shebang=php"
+	echo "                         --shebang=sh"
+	echo
+	echo "  --extension=       Only find files matching those extensions."
+	echo "                     Comma separated list of file extensions."
 	echo "                     Only find files matching those extensions."
 	echo "                     Defaults to all files if not specified or empty."
 	echo "                     Example:"
@@ -283,6 +293,11 @@ while [ $# -gt 0  ]; do
 			;;
 
 		# ----------------------------------------
+		--shebang=*)
+			MY_SHE="$( echo "${1}" | sed 's/--shebang=//g' )"
+			;;
+
+		# ----------------------------------------
 		--extension=*)
 			MY_EXT="$( echo "${1}" | sed 's/--extension=//g' )"
 			;;
@@ -412,6 +427,8 @@ fi
 # Evaluate Settings
 ############################################################
 
+CPU_CORES="$(num_cpu)"
+
 
 # Var substitutions for config file directives
 # to match current program.
@@ -419,6 +436,17 @@ EXTENSION="${MY_CONF_PRE}EXTENSION"
 IGNORE="${MY_CONF_PRE}IGNORE"
 TEXT="${MY_CONF_PRE}TEXT"
 SIZE="${MY_CONF_PRE}SIZE"
+
+#
+# Decide on Shebang
+#
+if [ "${MY_SHE}" != "" ]; then
+	MY_SHE="xargs -0 -P ${CPU_CORES} -n1 -I {} sh -c 'awk \"/^#!.*(\/${MY_SHE}|[[:space:]]+${MY_SHE})/{print FILENAME}\" \"{}\" || true'"
+else
+	MY_SHE=""
+fi
+
+
 
 #
 # Decide on File extensions
@@ -581,7 +609,6 @@ fi
 # Show files or grep in found files?
 #
 
-CPU_CORES="$(num_cpu)"
 
 # Be verbose?
 if [ "${MY_VER}" = "1" ]; then
@@ -590,21 +617,44 @@ else
 	XARGS_VERBOSE=""
 fi
 
-# Text files (list-only)
+#
+# Build command
+#
+
+
+### Text files (list-only)
 if [ "${MY_TXT}" = "1" ] && [ "${MY_LST}" = "1" ]; then
-	MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | xargs -0 -P ${CPU_CORES} -n1 -I % grep -Il '' '%'"
+	if [ "${MY_SHE}" != "" ]; then
+		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | xargs -0 -P ${CPU_CORES} -n1 -I % grep -Il '' '%' | tr '\n' '\0' | ${MY_SHE}"
+	else
+		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | xargs -0 -P ${CPU_CORES} -n1 -I % grep -Il '' '%'"
+	fi
 
-# Text files (run!!!)
+### Text files (run!!!)
 elif [ "${MY_TXT}" = "1" ] && [ "${MY_LST}" = "0" ]; then
-	MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | xargs -0 -P ${CPU_CORES} -n1 -I % grep -Il '' '%' | tr '\n' '\0' | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} -I % sh -c '${MY_CHECK}'"
+	if [ "${MY_SHE}" != "" ]; then
+		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | xargs -0 -P ${CPU_CORES} -n1 -I % grep -Il '' '%' | tr '\n' '\0' | ${MY_SHE} | tr '\n' '\0' | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} -I % sh -c '${MY_CHECK}'"
+	else
+		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | xargs -0 -P ${CPU_CORES} -n1 -I % grep -Il '' '%' | tr '\n' '\0' | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} -I % sh -c '${MY_CHECK}'"
+	fi
 
-# All files (list-only)
+### All files (list-only)
 elif [ "${MY_TXT}" = "0" ] && [ "${MY_LST}" = "1" ]; then
-	MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print"
+	if [ "${MY_SHE}" != "" ]; then
+		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | ${MY_SHE}"
+	else
+		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print"
+	fi
 
-# All files (run!!!)
+
+### All files (run!!!)
 else
-	MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN}${MY_SIZ}  -print0 | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} -I % sh -c '${MY_CHECK}'"
+	if [ "${MY_SHE}" != "" ]; then
+		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN}${MY_SIZ}  -print0 | ${MY_SHE} | tr '\n' '\0' | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} -I % sh -c '${MY_CHECK}'"
+	else
+		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN}${MY_SIZ}  -print0 | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} -I % sh -c '${MY_CHECK}'"
+	fi
+
 fi
 
 
