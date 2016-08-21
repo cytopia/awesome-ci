@@ -10,42 +10,35 @@ MY_VERSION="0.4"
 MY_DATE="2016-08-19"
 
 # Name and messages
-MY_NAME="file-trailing-newline"
-MY_DESC="Scans recursively for files not containing a trailing newline."
-MY_FINISH_OK="All files have a trailing newline."
-MY_FINISH_ERR="Some files do not have a trailing newline."
+MY_NAME="file-empty"
+MY_DESC="Scans recursively for files that are empty."
+MY_FINISH_OK="No empty files found."
+MY_FINISH_ERR="Found empty files."
 
 # Configuration file prefix
-MY_CONF_PRE="FILE_TRAILING_NEWLINE_"
+MY_CONF_PRE="FILE_UTF8_"
 
 # Custom required binaries
-REQUIRED_CUST_BINS="aci-trailing-newline"
+REQUIRED_CUST_BINS=""
 
 # Enable custom options (cmd arguments)
 # that can be parsed to the actual check binary?
-ENABLE_CUST_OPS=1
+ENABLE_CUST_OPS=0
 
 # When not specifying --custom,
 # always use this as the default options
 # to parse to the check binary.
-DEFAULT_CUST_OPS="-n \"%\" || echo \"%: No trailing newline\""
+DEFAULT_CUST_OPS=""
 
-# How to add your check here:
-# ---------------------------
-# %s   This comes from xargs and represents
-#      the current file to work on:
-#      xargs -I % sh '${MY_CHECK}'
-#
-# __CUSTOM_OPT_PLACEHOLDER__
-#      This will be replaced either with custom options
-#      or with the default options.
-MY_CHECK="aci-trailing-newline __CUSTOM_OPT_PLACEHOLDER__"
-
-
+# How to check for files
+# Note: '%' comes from xargs and represents
+# one file as parameter.
+# Called like this:
+#   eval "xargs -I % sh '${MY_CHECK}'"
+MY_CHECK="test ! -s \"%\" && echo \"%: empty file\" || true"
 
 # Command to be displayed for --info
-MY_INFO="aci-trailing-newline -v"
-
+MY_INFO="echo \"test is a built-in shell command\""
 
 
 
