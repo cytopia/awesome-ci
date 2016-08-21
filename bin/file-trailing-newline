@@ -72,7 +72,7 @@ REQUIRED_BINS="awk grep find sed tr xargs"
 #
 MY_PATH=
 MY_SHE=
-MY_EXT=
+MY_EXT=0
 MY_IGN=
 MY_TXT=0
 MY_SIZ=0
@@ -457,21 +457,21 @@ fi
 #
 # Decide on File extensions
 #
-if [ "${MY_CFG}" != "" ] && [ "${MY_EXT}" != "" ]; then
+if [ "${MY_CFG}" != "" ] && [ "${MY_EXT}" != "0" ]; then
 	if [ "${MY_DEB}" = "1" ]; then
 		echo "[ARG] Cmd arg --extension=${MY_EXT} will take precedence over config file value".
 	fi
 	MY_EXT="${MY_EXT}"
 
-elif [ "${MY_CFG}" != "" ] && [ "${MY_EXT}" = "" ]; then
+elif [ "${MY_CFG}" != "" ] && [ "${MY_EXT}" = "0" ]; then
 	if [ "${MY_DEB}" = "1" ]; then
 		echo "[ARG] Using config file values: ext: ${!EXTENSION}"
 	fi
 	MY_EXT="${!EXTENSION}"
 
-elif [ "${MY_CFG}" = "" ] && [ "${MY_EXT}" != "" ]; then
+elif [ "${MY_CFG}" = "" ] && [ "${MY_EXT}" != "0" ]; then
 	if [ "${MY_DEB}" = "1" ]; then
-		echo "[ARG] Using cmd argument: ext: ${MY_EXT}"
+		echo "[ARG] Using cmd argument: ext: '${MY_EXT}'"
 	fi
 	MY_EXT="${MY_EXT}"
 
