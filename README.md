@@ -23,12 +23,14 @@ Lot's of tools for git, file and static source code analysis.
 # Required:
   --path            # Specify the path where to scan
 
-# Optional:
+# Optional pattern (each option is logically and-ed):
   --text            # Only scan non-binary files
   --size            # Only scan non-empty files (greater 0 bytes)
   --shebang         # Only scan files (shell scripts) that match a certain shebang
   --extension       # Only scan files with these file extensions
   --ignore          # Ignore files/folders
+
+# Optional misc:
   --config          # Specify configuration file
   --verbose         # Show files and commands as being processed
   --debug           # Show additional debug messages
