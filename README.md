@@ -8,6 +8,8 @@ Lot's of tools for git, file and static source code analysis.
 
 **Note:** All scripts from [dependencies/](dependencies/) must be placed into an executable path (`/usr/bin`, `/usr/local/bin` or equivalent) prior usage.
 
+@see [dependencies/README.md](dependencies/README.md) for more information.
+
 ---
 
 ## Usage
