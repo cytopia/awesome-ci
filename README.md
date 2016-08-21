@@ -15,7 +15,7 @@ Lot's of tools for git, file and static source code analysis.
 ## Usage
 
 * All tools share the same pattern (except `git-ignored`) and can be used with the same command line arguments.
-* Some tools have an additional option `--custom=""` to overwrite the command itself.
+* Some tools have an additional option `--custom=""` to overwrite the command itself (this is explained and shown in detail in each command's `--help` option).
 
 **General usage options:**
 
