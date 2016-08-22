@@ -1,8 +1,6 @@
 #!/bin/sh -u
 
 NAME="aci-trailing-newline"
-OPTION="${1}"
-FILE="${2}"
 
 
 
@@ -25,16 +23,22 @@ print_version() {
 	echo "https://github.com/cytopia"
 }
 
-if [ "${#}" = "1" ] && [ "${OPTION}" = "-v" ]; then
+if [ "${#}" = "1" ] && [ "${1}" = "-v" ]; then
 	print_version
 	exit 0
 fi
 
-if [ "${OPTION}" != "-n" ] && [ "${OPTION}" != "-1" ]; then
+if [ "${#}" != "2" ]; then
+	print_usage
+	exit 1
+fi
+if [ "${1}" != "-n" ] && [ "${1}" != "-1" ]; then
 	print_usage
 	exit 1
 fi
 
+OPTION="${1}"
+FILE="${2}"
 
 #
 # Validate file
