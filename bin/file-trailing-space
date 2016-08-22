@@ -359,6 +359,10 @@ while [ $# -gt 0  ]; do
 
 		# ----------------------------------------
 		--info)
+			if ! check_requirements "${MY_DEB}"; then
+				exit 1
+			fi
+
 			echo "\$ ${MY_INFO}"
 			eval "${MY_INFO}"
 			exit 0

@@ -86,13 +86,15 @@ Scan files and check if they are empty (0 bytes).
 
 Scan files and check if they contain a trailing newline.
 
-```shell
-# At least 1 trailing newline
-$ file-trailing-newline --text --size --path=.
+`file-trailing-newline --text --size --path=.`
 
-# Exactly only 1 trailing newline
-$ file-trailing-newline --text --size --path=. --custom="-1 \"%\" || echo \"%: Not exactly 1 trailing newline\""
-```
+
+#### [file-trailing-single-newline](bin/file-trailing-single-newline)
+
+Scan files and check if they contain exactly one trailing newline.
+
+`file-trailing-single-newline --text --size --path=.`
+
 
 
 #### [file-trailing-space](bin/file-trailing-space)
