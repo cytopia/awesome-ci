@@ -82,6 +82,32 @@ Scan files and check if they are empty (0 bytes).
 **(Do not use `--size` here, it will cancel the each other out)**
 
 
+#### [file-regex](bin/file-regex)
+
+Generic check to scan files and see if they contain a specific regex.
+
+`file-regex --text --size --path=. --custom="regex here"`
+
+**Note about escaping:**
+
+* Escape `(` with `\\\(` (three or five slashes) and not `\(`
+* Escape `'` (single quote)(three or five slashes) instead of `\'`
+* Escape `"` with `\\\\\"` (five slashes)
+
+**Examples**
+
+```shell
+
+# Check for css tags containing: url('/ or url("/ or url(/
+$ file-regex --path=. --extension=css --text --size --custom="url\\\(['\\\''\\\\\"]*/"
+
+# Check for css tags containing: url('http[s]:// or url("http[s]:// or url(http[s]://
+$ ffile-regex --path=. --extension=css --text --size --custom="url\\\(['\\\''\\\\\"]*http[s]*://"
+
+# Check common html file tpyes for 'href="http[s]*://'
+$ file-regex --path=. --extension=htm,html,php,tpl --text --size --custom="href=[[:space:]]*['\\\''\\\\\"]*http[s]*://"
+```
+
 #### [file-trailing-newline](bin/file-trailing-newline)
 
 Scan files and check if they contain a trailing newline.
