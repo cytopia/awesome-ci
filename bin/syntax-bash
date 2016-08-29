@@ -5,10 +5,6 @@ set -u
 # Adjust for each check
 ############################################################
 
-# Version
-MY_VERSION="0.5"
-MY_DATE="2016-08-21"
-
 # Name and messages
 MY_NAME="syntax-bash"
 MY_DESC="Scans recursively for files containing shell (bash) syntax errors."
@@ -30,11 +26,16 @@ ENABLE_CUST_OPS=0
 # to parse to the check binary.
 DEFAULT_CUST_OPS=""
 
-# How to check for files
-# Note: '%' comes from xargs and represents
-# one file as parameter.
-# Called like this:
-#   eval "xargs -I % sh '${MY_CHECK}'"
+# How to add your check here:
+# ---------------------------
+# %s   This comes from xargs and represents
+#      the current file to work on:
+#      xargs -I % sh '${MY_CHECK}'
+#
+# __CUSTOM_OPT_PLACEHOLDER__
+#      This will be replaced either with custom options
+#      or with the default options.
+
 MY_CHECK="bash -n \"%\" 2>&1 || true"
 
 # Command to be displayed for --info
@@ -48,6 +49,12 @@ MY_INFO="bash --version | grep -E '(([0-9]+)(\.))+'"
 ############################################################
 # Do not edit from here
 ############################################################
+
+#
+# Version
+#
+MY_VERSION="0.6"
+MY_DATE="2016-08-28"
 
 #
 # Credits
@@ -83,6 +90,8 @@ MY_CUS=
 #  F U N C T I O N S
 #
 ################################################################################
+
+
 
 print_usage() {
 
@@ -142,13 +151,12 @@ print_usage() {
 	echo "                     config file settings."
 	echo
 	if [ "${ENABLE_CUST_OPS}" = "1" ];then
-		CURRENT_COMMAND="$( echo "${DEFAULT_CUST_OPS}" | sed 's?\"?\\\"?g' )"
 		echo "  --custom=          Parse custom command line option to the check binary."
 		echo "                     Note that when you want to add config files or other files"
 		echo "                     you must use an absolute path."
 		echo
 		echo "                     Current custom command:"
-		echo "                          --custom=\"${CURRENT_COMMAND}\""
+		echo "                          --custom=\"${DEFAULT_CUST_OPS//\"/\\\"}\"" # \" -> \\\"
 		echo
 		echo "                     Overwrite example:"
 		echo "                          --custom=\"--color --config /absoulte/path/conf.json\""
@@ -168,7 +176,7 @@ print_usage() {
 	echo
 	echo
 	echo "System arguments:"
-	echo "  --info             Show command version."
+	echo "  --info             Show versions of required commands (useful for bugreports)."
 	echo "  --help             Show help screen."
 	echo "  --version          Show version information."
 	echo
@@ -186,6 +194,67 @@ print_version() {
 	echo "${MY_NAME} is part of the awesome-ci collection."
 	echo "https://github.com/cytopia/awesome-ci"
 }
+
+print_info() {
+
+	#
+	# Required binaries
+	#
+
+	if ! echo "${MY_INFO}" | grep -cqE "^bash"; then
+		MY_CMD_VERSION="bash --version | grep -E '(([0-9]+)(\.))+'"
+		echo "\$ ${MY_CMD_VERSION}"
+		eval "${MY_CMD_VERSION}"
+		echo
+	fi
+	if ! echo "${MY_INFO}" | grep -cqE "^\(awk"; then
+		MY_CMD_VERSION="(awk -Wversion 2>/dev/null || awk --version) | grep -E '(([0-9]+)(\.))+'"
+		echo "\$ ${MY_CMD_VERSION}"
+		eval "${MY_CMD_VERSION}"
+		echo
+	fi
+	if ! echo "${MY_INFO}" | grep -cqE "^grep"; then
+		MY_CMD_VERSION="grep -V | grep -E '([0-9]+\.+)+'"
+		echo "\$ ${MY_CMD_VERSION}"
+		eval "${MY_CMD_VERSION}"
+		echo
+	fi
+	if ! echo "${MY_INFO}" | grep -cqE "^\(find"; then
+		MY_CMD_VERSION="(find --version >/dev/null 2>&1) && (find --version 2>&1 | head -1) || (echo 'find (BSD find)')"
+		echo "\$ ${MY_CMD_VERSION}"
+		eval "${MY_CMD_VERSION}"
+		echo
+	fi
+	if ! echo "${MY_INFO}" | grep -cqE "^\(sed"; then
+		MY_CMD_VERSION="(sed --version >/dev/null 2>&1) && (sed --version 2>&1 | head -1) || (echo 'sed (BSD sed)')"
+		echo "\$ ${MY_CMD_VERSION}"
+		eval "${MY_CMD_VERSION}"
+		echo
+	fi
+	if ! echo "${MY_INFO}" | grep -cqE "^\(tr"; then
+		MY_CMD_VERSION="(tr --version >/dev/null 2>&1) && (tr --version 2>&1 | head -1) || (echo 'tr (BSD tr)')"
+		echo "\$ ${MY_CMD_VERSION}"
+		eval "${MY_CMD_VERSION}"
+		echo
+	fi
+	if ! echo "${MY_INFO}" | grep -cqE "^\(xargs"; then
+		MY_CMD_VERSION="(xargs --version >/dev/null 2>&1) && (xargs --version 2>&1 | head -1) || (echo 'xargs (BSD xargs)')"
+		echo "\$ ${MY_CMD_VERSION}"
+		eval "${MY_CMD_VERSION}"
+		echo
+	fi
+
+
+	#
+	# Custom binary
+	#
+	if [ "${MY_INFO}" != "" ]; then
+		echo "\$ ${MY_INFO}"
+		eval "${MY_INFO}"
+		echo
+	fi
+}
+
 
 check_requirements() {
 	_debug="${1}"
@@ -253,6 +322,12 @@ check_config_file() {
 	fi
 }
 
+
+#
+# System independent method
+# to get number of CPU cores.
+# (defaults to 1 if impossible)
+#
 num_cpu() {
 	_num="$(getconf _NPROCESSORS_ONLN)"
 
@@ -265,6 +340,21 @@ num_cpu() {
 		return 1
 	fi
 }
+
+
+#
+# sed wrapper that automatically escapes
+# regex literals
+#
+mysed() {
+	_input="$1"
+	_search="$2"
+	_replace="$3"
+
+	echo "${_input}" | sed "s/$(echo "${_search}" | sed -e 's/\([[\/.*]\|\]\)/\\&/g')/$(echo "${_replace}" | sed -e 's/[\/&]/\\&/g')/g"
+}
+
+
 
 
 ################################################################################
@@ -288,33 +378,33 @@ while [ $# -gt 0  ]; do
 
 		# ----------------------------------------
 		--path=*)
-			MY_PATH="$( echo "${1}" | sed 's/--path=//g' )"
+			MY_PATH="${1//--path=/}"
 			;;
 
 		# ----------------------------------------
 		--shebang=*)
-			MY_SHE="$( echo "${1}" | sed 's/--shebang=//g' )"
+			MY_SHE="${1//--shebang=/}"
 			;;
 
 		# ----------------------------------------
 		--extension=*)
-			MY_EXT="$( echo "${1}" | sed 's/--extension=//g' )"
+			MY_EXT="${1//--extension=/}"
 			;;
 
 		# ----------------------------------------
 		--ignore=*)
-			MY_IGN="$( echo "${1}" | sed 's/--ignore=//g' )"
+			MY_IGN="${1//--ignore=/}"
 			;;
 
 		# ----------------------------------------
 		--config=*)
-			MY_CFG="$( echo "${1}" | sed 's/--config=//g' )"
+			MY_CFG="${1//--config=/}"
 			;;
 
 		# ----------------------------------------
 		--custom=*)
 			if [ "${ENABLE_CUST_OPS}" = "1" ]; then
-				MY_CUS="$( echo "${1}" | sed 's/--custom=//g' )"
+				MY_CUS="${1//--custom=/}"
 			else
 				echo "Invalid argument: ${1}"
 				echo "Type '${MY_NAME} --help' for available options."
@@ -358,8 +448,7 @@ while [ $# -gt 0  ]; do
 				exit 1
 			fi
 
-			echo "\$ ${MY_INFO}"
-			eval "${MY_INFO}"
+			print_info
 			exit 0
 			;;
 
@@ -575,6 +664,7 @@ fi
 
 
 
+
 ############################################################
 # Build command
 ############################################################
@@ -583,7 +673,7 @@ fi
 # 'find' pattern for file extensions
 #
 if [ "${MY_EXT}" != "" ]; then
-	NAME_PATTERN="\( -iname '*.$(echo "${MY_EXT}" | sed "s/,/' -o -iname '*\./g")' \)"
+	NAME_PATTERN="\( -iname \*.${MY_EXT//,/ -o -iname \\*.} \)"
 else
 	NAME_PATTERN=""
 fi
@@ -592,7 +682,7 @@ fi
 # 'find' pattern for ignores/excludes
 #
 if [ "${MY_IGN}" != "" ]; then
-	EXCL_PATTERN="-not \( -path \"${MY_PATH}/$(echo "${MY_IGN}" | sed "s|,|*\" -o -path \"${MY_PATH}/|g")*\" \)"
+	EXCL_PATTERN="-not \( -path \"${MY_PATH}/${MY_IGN//,/*\" -o -path \"${MY_PATH}\/}*\" \)"
 else
 	EXCL_PATTERN=""
 fi
@@ -602,9 +692,9 @@ fi
 # Customize command?
 #
 if [ "${MY_CUS}" = "" ]; then
-	MY_CHECK="$( echo "${MY_CHECK}" | sed "s|__CUSTOM_OPT_PLACEHOLDER__|${DEFAULT_CUST_OPS}|g" )"
+	MY_CHECK="$( mysed "${MY_CHECK}" "__CUSTOM_OPT_PLACEHOLDER__" "${DEFAULT_CUST_OPS}" )"
 else
-	MY_CHECK="$( echo "${MY_CHECK}" | sed "s|__CUSTOM_OPT_PLACEHOLDER__|${MY_CUS}|g" )"
+	MY_CHECK="$( mysed "${MY_CHECK}" "__CUSTOM_OPT_PLACEHOLDER__" "${MY_CUS}" )"
 fi
 
 
@@ -669,26 +759,26 @@ fi
 
 # Dry mode?
 if [ "${MY_DRY}" = "1" ]; then
-	echo "${MY_CMD}"
+	printf "%s\n" "${MY_CMD}"
 	exit 0
 fi
 
-echo "\$ ${MY_CMD}"
+printf "\$ %s\n" "${MY_CMD}"
 
 output="$(eval "${MY_CMD}")"
 
 # If showing files only, exit normally
 if [ "${MY_LST}" = "1" ]; then
-	echo "${output}"
+	printf "%s\n" "${output}"
 	exit 0
 fi
 
 
 if [ "${output}" != "" ]; then
 	printf "%s\n" "${output}"
-	echo "[ERR] ${MY_FINISH_ERR}"
+	printf "[ERR] %s\n" "${MY_FINISH_ERR}"
 	exit 1
 else
-	echo "[OK]  ${MY_FINISH_OK}"
+	printf "[OK]  %s\n" "${MY_FINISH_OK}"
 	exit 0
 fi

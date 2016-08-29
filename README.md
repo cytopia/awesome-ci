@@ -48,6 +48,8 @@ Lot's of tools for git, file and static source code analysis.
 
 All checks have the option to only check by one or more file **extensions** as well as to **exclude** one or more folders from the whole search.
 
+
+
 ### 1. Git analysis
 
 #### [git-conflicts](bin/git-conflicts)
@@ -81,32 +83,6 @@ Scan files and check if they are empty (0 bytes).
 
 **(Do not use `--size` here, it will cancel the each other out)**
 
-
-#### [file-regex](bin/file-regex)
-
-Generic check to scan files and see if they contain a specific regex.
-
-`file-regex --text --size --path=. --custom="regex here"`
-
-**Note about escaping:**
-
-* Escape `(` with `\\\(` (three or five slashes) and not `\(`
-* Escape `'` (single quote)(three or five slashes) instead of `\'`
-* Escape `"` with `\\\\\"` (five slashes)
-
-**Examples**
-
-```shell
-
-# Check for css tags containing: url('/ or url("/ or url(/
-$ file-regex --path=. --extension=css --text --size --custom="url\\\(['\\\''\\\\\"]*/"
-
-# Check for css tags containing: url('http[s]:// or url("http[s]:// or url(http[s]://
-$ ffile-regex --path=. --extension=css --text --size --custom="url\\\(['\\\''\\\\\"]*http[s]*://"
-
-# Check common html file tpyes for 'href="http[s]*://'
-$ file-regex --path=. --extension=htm,html,php,tpl --text --size --custom="href=[[:space:]]*['\\\''\\\\\"]*http[s]*://"
-```
 
 #### [file-trailing-newline](bin/file-trailing-newline)
 
@@ -276,4 +252,68 @@ Scan files and check if they contain inline javascript code.
 
 `inline-js --text --size --extension=htm,html,php,tpl --path=.`
 
+
+
+### 5. Custom regex
+
+If none of the below tools fit your need, use one of these two custom regex tools. If you think your required regex is quite common, please drop me an issue and i will add it.
+
+**Note about escaping: (grep)**
+
+* Escape `'` (single quote) with `'\''`
+* Escape `"` (double quote) with `\\\"`
+
+**Note about escaping: (perl)**
+
+* Escape `'` (single quote) with `\x27`
+* Escape `"` (double quote) with `\x22` or `\"`
+* Escape `/` (forward slash) with `\/`
+
+**Note about escaping: (general)**
+
+Depending on your current shell (such as: Bash, ZSH, TCH, etc), you might have to escape special symbols so they are not interpretated on your shell.
+
+Escapes for Bash (and alike)
+
+* Escape `!` with `\!`
+
+
+#### [regex-grep](bin/regex-grep)
+
+`egrep` (`grep -E`) regex version to scan files for an occurance.
+
+`regex-grep --text --size --path=. --custom=""`
+
+#### [regex-perl](bin/regex-perl)
+
+`perl` regex version to scan files for an occurance.
+
+`regex-perl --text --size --path=. --custom=""`
+
+
+**Examples**
+
+Check for css tags containing: `url('/` or `url("/` or `url(/`
+
+```shell
+$ regex-grep --path=. --extension=css,scss --text --size --custom="url\([[:space:]]*['\''\\\"]?[[:space:]]*/"
+
+$ regex-perl --path=. --extension=css,scss --text --size --custom="url\([[:space:]]*[\x27\"]?[[:space:]]*\/"
+```
+
+Check for css tags containing: `url('http[s]://` or `url("http[s]://` or `url(http[s]://`
+
+```shell
+$ regex-grep --path=. --extension=css,scss --text --size --custom="url\([[:space:]]*['\''\\\"]?[[:space:]]*http[s]?://"
+
+$ regex-perl --path=. --extension=css,scss --text --size --custom="url\([[:space:]]*[\x27\"]?[[:space:]]*http[s]?:\/\/"
+```
+
+ Check common html file tpyes for `href="http[s]*://`
+
+```shell
+$ regex-grep --path=. --extension=htm,html,php,tpl --text --size --custom="href=[[:space:]]*['\''\\\"]?http[s]?://"
+
+$ regex-perl --path=. --extension=htm,html,php,tpl --text --size --custom="href=[[:space:]]*[\x27\"]?http[s]?:\/\/"
+```
 

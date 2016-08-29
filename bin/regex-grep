@@ -6,20 +6,20 @@ set -u
 ############################################################
 
 # Name and messages
-MY_NAME="syntax-perl"
-MY_DESC="Scans recursively for files containing Perl syntax errors."
-MY_FINISH_OK="No files with Perl syntax errors found."
-MY_FINISH_ERR="Found files with Perl syntax errors."
+MY_NAME="regex-grep"
+MY_DESC="Scans recursively for files containing a specific regex."
+MY_FINISH_OK="No files with specified regex found."
+MY_FINISH_ERR="Files with specified regex found."
 
 # Configuration file prefix
-MY_CONF_PRE="SYNTAX_PERL_"
+MY_CONF_PRE="REGEX_GREP_"
 
 # Custom required binaries
-REQUIRED_CUST_BINS="perl"
+REQUIRED_CUST_BINS="grep"
 
 # Enable custom options (cmd arguments)
 # that can be parsed to the actual check binary?
-ENABLE_CUST_OPS=0
+ENABLE_CUST_OPS=1
 
 # When not specifying --custom,
 # always use this as the default options
@@ -36,10 +36,10 @@ DEFAULT_CUST_OPS=""
 #      This will be replaced either with custom options
 #      or with the default options.
 
-MY_CHECK="perl -c \"%\" 2>&1 || true"
+MY_CHECK="grep --color=always -inHE \"__CUSTOM_OPT_PLACEHOLDER__\" \"%\" || true"
 
 # Command to be displayed for --info
-MY_INFO="perl --version | grep -E '(([0-9]+)(\.))+'"
+MY_INFO="grep -V | grep -E '([0-9]+\.+)+'"
 
 
 

@@ -1,0 +1,16 @@
+dist: trusty
+sudo: required
+
+language: bash
+
+before_install:
+  # Install 'shellcheck' and 'tmpreaper'
+  - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ trusty-backports restricted main universe"
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq shellcheck
+
+
+script:
+
+  - shellcheck --exclude=SC1090 --shell=bash bin/*
+
