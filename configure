@@ -1,0 +1,70 @@
+#!/bin/sh
+
+# This is a leight-weight self-styled configure script
+
+
+PREFIX=""
+
+print_help() {
+
+	echo "Usage: configure [--prefix]"
+	echo ""
+	echo "--prefix     Specify custom install prefix."
+	echo "             e.g. --prefix=/usr/local"
+	echo ""
+}
+
+
+while [ $# -gt 0  ]; do
+
+	case "$1" in
+
+		--help)
+			print_help
+			exit 0
+			;;
+
+		--prefix*)
+			CUSTOM_PREFIX="$(echo "$1" | $(which sed) 's/^--prefix=//g')"
+			# Remove trailing slash
+			CUSTOM_PREFIX="/$(echo "${CUSTOM_PREFIX}" | $(which sed) 's#/*$##;s#^/*##')"
+			PREFIX="${CUSTOM_PREFIX}"
+			;;
+
+		*)
+			echo "Invalid argument: '${1}'"
+			echo "Type '${0} --help' for available options."
+			exit 1
+			;;
+	esac
+	shift
+done
+
+
+if [ -z "${PREFIX}" ]; then
+	BINDIR="/usr/bin"
+else
+	BINDIR="${PREFIX}/bin"
+fi
+
+
+
+# Write configure configuration file
+echo "PREFIX = ${PREFIX}"  > configure.in
+echo "ETCDIR = ${ETCDIR}" >> configure.in
+echo "BINDIR = ${BINDIR}" >> configure.in
+echo "MANDIR = ${MANDIR}" >> configure.in
+
+echo ""
+echo "Configure run successfully"
+echo ""
+if [ -z "${PREFIX}" ]; then
+	echo "     Install prefix: /"
+else
+	echo "     Install prefix: ${PREFIX}"
+fi
+echo ""
+echo "     ${BINDIR}/"
+echo ""
+echo "Run 'make install' to install"
+exit 0

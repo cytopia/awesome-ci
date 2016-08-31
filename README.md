@@ -12,6 +12,23 @@ Lot's of tools for git, file and static source code analysis.
 
 ---
 
+## Install
+
+```bash
+# Install to /usr/bin
+./configure
+make install
+
+# Instal to /usr/local/bin
+./configure --prefix=/usr/local
+make install
+
+# Install to /opt/bin
+./configure --prefix=/opt
+make install
+```
+
+
 ## Usage
 
 * All tools share the same pattern (except `git-ignored`) and can be used with the same command line arguments.
@@ -19,7 +36,7 @@ Lot's of tools for git, file and static source code analysis.
 
 **General usage options:**
 
-```shell
+```bash
 # Required:
   --path            # Specify the path where to scan
 
@@ -126,7 +143,7 @@ Scan files and check if they contain BOM (Byte Order Mark): `<U+FEFF>`.
 
 Scan shell files for bash syntax errors.
 
-```shell
+```bash
 # By extension
 $ syntax-bash --text --size --extension=sh,bash --path=.
 
@@ -168,7 +185,7 @@ Scan files for Markdown syntax errors.
 
 Scan Perl files for Perl syntax errors.
 
-```shell
+```bash
 # By extension
 $ syntax-perl --text --size --extension=pl --path=.`
 
@@ -181,7 +198,8 @@ $ syntax-perl --text --size --shebang=perl --path=.`
 
 Scan files for PHP syntax errors.
 
-```shell
+```bash
+
 # By extension
 $ syntax-php --text --size --extension=php,inc --path=.`
 
@@ -194,7 +212,7 @@ $ syntax-php --text --size --shebang=php --path=.`
 
 Scan Python files for Python syntax errors.
 
-```shell
+```bash
 # By extension
 $ syntax-python --text --size --extension=py --path=.`
 
@@ -207,7 +225,7 @@ $ syntax-python --text --size --shebang=python --path=.`
 
 Scan Ruby files for Ruby syntax errors.
 
-```shell
+```bash
 # By extension
 $ syntax-ruby --text --size --extension=rb --path=.`
 
@@ -227,7 +245,7 @@ Scan SCSS files for SCSS syntax errors.
 
 Scan shell files for /bin/sh syntax errors.
 
-```shell
+```bash
 # By extension
 $ syntax-sh --text --size --extension=sh,bash --path=.`
 
@@ -295,7 +313,7 @@ Escapes for Bash (and alike)
 
 Check for css tags containing: `url('/` or `url("/` or `url(/`
 
-```shell
+```bash
 $ regex-grep --path=. --extension=css,scss --text --size --custom="url\([[:space:]]*['\''\\\"]?[[:space:]]*/"
 
 $ regex-perl --path=. --extension=css,scss --text --size --custom="url\([[:space:]]*[\x27\"]?[[:space:]]*\/"
@@ -303,7 +321,7 @@ $ regex-perl --path=. --extension=css,scss --text --size --custom="url\([[:space
 
 Check for css tags containing: `url('http[s]://` or `url("http[s]://` or `url(http[s]://`
 
-```shell
+```bash
 $ regex-grep --path=. --extension=css,scss --text --size --custom="url\([[:space:]]*['\''\\\"]?[[:space:]]*http[s]?://"
 
 $ regex-perl --path=. --extension=css,scss --text --size --custom="url\([[:space:]]*[\x27\"]?[[:space:]]*http[s]?:\/\/"
@@ -311,7 +329,7 @@ $ regex-perl --path=. --extension=css,scss --text --size --custom="url\([[:space
 
  Check common html file tpyes for `href="http[s]*://`
 
-```shell
+```bash
 $ regex-grep --path=. --extension=htm,html,php,tpl --text --size --custom="href=[[:space:]]*['\''\\\"]?http[s]?://"
 
 $ regex-perl --path=. --extension=htm,html,php,tpl --text --size --custom="href=[[:space:]]*[\x27\"]?http[s]?:\/\/"
