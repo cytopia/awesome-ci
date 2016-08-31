@@ -743,9 +743,9 @@ elif [ "${MY_TXT}" = "0" ] && [ "${MY_LST}" = "1" ]; then
 ### All files (run!!!)
 else
 	if [ "${MY_SHE}" != "" ]; then
-		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN}${MY_SIZ}  -print0 | ${MY_SHE} | tr '\n' '\0' | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} -I % sh -c '${MY_CHECK}'"
+		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | ${MY_SHE} | tr '\n' '\0' | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} -I % sh -c '${MY_CHECK}'"
 	else
-		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN}${MY_SIZ}  -print0 | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} -I % sh -c '${MY_CHECK}'"
+		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} -I % sh -c '${MY_CHECK}'"
 	fi
 
 fi
