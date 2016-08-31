@@ -187,10 +187,10 @@ Scan Perl files for Perl syntax errors.
 
 ```bash
 # By extension
-$ syntax-perl --text --size --extension=pl --path=.`
+$ syntax-perl --text --size --extension=pl --path=.
 
 # By shebang
-$ syntax-perl --text --size --shebang=perl --path=.`
+$ syntax-perl --text --size --shebang=perl --path=.
 ```
 
 
@@ -199,12 +199,11 @@ $ syntax-perl --text --size --shebang=perl --path=.`
 Scan files for PHP syntax errors.
 
 ```bash
-
 # By extension
-$ syntax-php --text --size --extension=php,inc --path=.`
+$ syntax-php --text --size --extension=php,inc --path=.
 
 # By shebang
-$ syntax-php --text --size --shebang=php --path=.`
+$ syntax-php --text --size --shebang=php --path=.
 ```
 
 
@@ -214,10 +213,10 @@ Scan Python files for Python syntax errors.
 
 ```bash
 # By extension
-$ syntax-python --text --size --extension=py --path=.`
+$ syntax-python --text --size --extension=py --path=.
 
 # By shebang
-$ syntax-python --text --size --shebang=python --path=.`
+$ syntax-python --text --size --shebang=python --path=.
 ```
 
 
@@ -227,10 +226,10 @@ Scan Ruby files for Ruby syntax errors.
 
 ```bash
 # By extension
-$ syntax-ruby --text --size --extension=rb --path=.`
+$ syntax-ruby --text --size --extension=rb --path=.
 
 # By shebang
-$ syntax-ruby --text --size --shebang=ruby --path=.`
+$ syntax-ruby --text --size --shebang=ruby --path=.
 ```
 
 
@@ -247,10 +246,10 @@ Scan shell files for /bin/sh syntax errors.
 
 ```bash
 # By extension
-$ syntax-sh --text --size --extension=sh,bash --path=.`
+$ syntax-sh --text --size --extension=sh,bash --path=.
 
 # By shebang
-$ syntax-sh --text --size --shebang=sh --path=.`
+$ syntax-sh --text --size --shebang=sh --path=.
 ```
 
 
