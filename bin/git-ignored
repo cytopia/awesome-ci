@@ -58,6 +58,9 @@ MY_DRY=0
 MY_LST=0
 MY_DEB=0
 
+CLR_SUC="\033[0;32m"
+CLR_ERR="\033[0;31m"
+CLR_CLS="\033[0m"
 
 
 ################################################################################
@@ -266,9 +269,9 @@ fi
 
 if [ "${output}" != "" ]; then
 	printf "%s\n" "${output}"
-	echo "[ERR] ${MY_FINISH_ERR}"
+	printf "${CLR_ERR}[ERR] %s${CLR_CLS}\n" "${MY_FINISH_ERR}"
 	exit 1
 else
-	echo "[OK]  ${MY_FINISH_OK}"
+	printf "${CLR_SUC}[OK]  %s${CLR_CLS}\n" "${MY_FINISH_OK}"
 	exit 0
 fi

@@ -9,7 +9,7 @@ set -u
 MY_NAME="inline-js"
 MY_DESC="Scans recursively for files containing inline JS."
 MY_FINISH_OK="No files with inline JS found."
-MY_FINISH_ERR="Found files with inline JS conflicts."
+MY_FINISH_ERR="Found files with inline JS."
 
 # Configuration file prefix
 MY_CONF_PRE="INLINE_JS_"
@@ -53,8 +53,8 @@ MY_INFO="aci-inline-js -v"
 #
 # Version
 #
-MY_VERSION="0.6"
-MY_DATE="2016-08-28"
+MY_VERSION="0.7"
+MY_DATE="2016-09-01"
 
 #
 # Credits
@@ -83,7 +83,9 @@ MY_DEB=0
 MY_CFG=
 MY_CUS=
 
-
+CLR_SUC="\033[0;32m"
+CLR_ERR="\033[0;31m"
+CLR_CLS="\033[0m"
 
 ################################################################################
 #
@@ -776,9 +778,9 @@ fi
 
 if [ "${output}" != "" ]; then
 	printf "%s\n" "${output}"
-	printf "[ERR] %s\n" "${MY_FINISH_ERR}"
+	printf "${CLR_ERR}[ERR] %s${CLR_CLS}\n" "${MY_FINISH_ERR}"
 	exit 1
 else
-	printf "[OK]  %s\n" "${MY_FINISH_OK}"
+	printf "${CLR_SUC}[OK]  %s${CLR_CLS}\n" "${MY_FINISH_OK}"
 	exit 0
 fi
