@@ -12,5 +12,31 @@ before_install:
 
 script:
 
-  - shellcheck --exclude=SC1090 --shell=bash bin/*
+  # Test the source
+  - shellcheck --exclude=SC1090,SC2001 --shell=bash bin/*
 
+  # Test the scripts
+  - bin/file-crlf --path=. --config=etc/awesome-ci.conf --dry
+  - bin/file-empty --path=. --config=etc/awesome-ci.conf --dry
+  - bin/file-trailing-newline --path=. --config=etc/awesome-ci.conf --dry
+  - bin/file-trailing-single-newline --path=. --config=etc/awesome-ci.conf --dry
+  - bin/file-trailing-space --path=. --config=etc/awesome-ci.conf --dry
+  - bin/file-utf8 --path=. --config=etc/awesome-ci.conf --dry
+  - bin/file-utf8-bom --path=. --config=etc/awesome-ci.conf --dry
+  - bin/git-conflicts --path=. --config=etc/awesome-ci.conf --dry
+  - bin/git-ignored --path=. --dry
+  - bin/inline-css --path=. --config=etc/awesome-ci.conf --dry
+  - bin/inline-js --path=. --config=etc/awesome-ci.conf --dry
+  - bin/regex-grep --path=. --config=etc/awesome-ci.conf --dry
+  - bin/regex-perl --path=. --config=etc/awesome-ci.conf --dry
+  - bin/syntax-bash --path=. --config=etc/awesome-ci.conf --dry
+  - bin/syntax-css --path=. --config=etc/awesome-ci.conf --dry
+  - bin/syntax-js --path=. --config=etc/awesome-ci.conf --dry
+  - bin/syntax-json --path=. --config=etc/awesome-ci.conf --dry
+  - bin/syntax-markdown --path=. --config=etc/awesome-ci.conf --dry
+  - bin/syntax-perl --path=. --config=etc/awesome-ci.conf --dry
+  - bin/syntax-php --path=. --config=etc/awesome-ci.conf --dry
+  - bin/syntax-python --path=. --config=etc/awesome-ci.conf --dry
+  - bin/syntax-ruby --path=. --config=etc/awesome-ci.conf --dry
+  - bin/syntax-scss --path=. --config=etc/awesome-ci.conf --dry
+  - bin/syntax-sh --path=. --config=etc/awesome-ci.conf --dry

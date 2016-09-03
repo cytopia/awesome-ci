@@ -53,8 +53,8 @@ MY_INFO="isutf8 --help | grep version"
 #
 # Version
 #
-MY_VERSION="0.7"
-MY_DATE="2016-09-01"
+MY_VERSION="0.8"
+MY_DATE="2016-09-03"
 
 #
 # Credits
@@ -103,7 +103,7 @@ print_usage() {
 		_custom=""
 	fi
 
-	echo "Usage: ${MY_NAME} [--text] [--size] [--shebang=php] [--extension=tpl,htm,html,php,...] [--ignore=dir1,dir2] [--config=conf]${_custom} [--verbose] [--debug] [--dry] [--list] --path=dir"
+	echo "Usage: ${MY_NAME} [--text] [--size] [--shebang=php] [--extension=tpl,htm,html,php,...] [--ignore=dir1,dir2] [--config=conf] [--confpre=${MY_CONF_PRE}]${_custom} [--verbose] [--debug] [--dry] [--list] --path=dir"
 	echo "       ${MY_NAME} --info"
 	echo "       ${MY_NAME} --help"
 	echo "       ${MY_NAME} --version"
@@ -149,8 +149,16 @@ print_usage() {
 	echo "                         ${MY_CONF_PRE}EXTENSION=\"\" # comma separated"
 	echo "                         ${MY_CONF_PRE}IGNORE=\"\"    # comma separated"
 	echo "                         ${MY_CONF_PRE}TEXT=0|1     # 0 or 1"
+	if [ "${ENABLE_CUST_OPS}" = "1" ];then
+		echo "                         ${MY_CONF_PRE}CUSTOM=\"\"    # custom command"
+	fi
 	echo "                     Note that cmd arguments take precedence over"
 	echo "                     config file settings."
+	echo
+	echo "  --confpre=         Set custom configuration directive prefix."
+	echo "                     Current default ist: '${MY_CONF_PRE}'."
+	echo "                     This is useful, when you want to define different defaults"
+	echo "                     per check via configuration file."
 	echo
 	if [ "${ENABLE_CUST_OPS}" = "1" ];then
 		echo "  --custom=          Parse custom command line option to the check binary."
@@ -298,6 +306,8 @@ check_config_file() {
 		echo "[CONFIG] Config file not found: ${_config}"
 		return 1
 	fi
+
+	# Check directives
 	if ! grep -Eq "^${MY_CONF_PRE}IGNORE=" "${_config}"; then
 		echo "[CONFIG] ${MY_CONF_PRE}IGNORE variable not found in config."
 		return 1
@@ -322,6 +332,15 @@ check_config_file() {
 		echo "[CONFIG] Invalid syntax for ${MY_CONF_PRE}TEXT variable."
 		return 1
 	fi
+
+	# Check optional directives
+	if [ "${ENABLE_CUST_OPS}" = "1" ]; then
+		if ! grep -Eq "^${MY_CONF_PRE}CUSTOM=[\"']{1}.*[\"']{1}$" "${_config}"; then
+			echo "[CONFIG] Invalid syntax for ${MY_CONF_PRE}CUSTOM variable."
+			return 1
+		fi
+	fi
+
 }
 
 
@@ -401,6 +420,11 @@ while [ $# -gt 0  ]; do
 		# ----------------------------------------
 		--config=*)
 			MY_CFG="${1//--config=/}"
+			;;
+
+		# ----------------------------------------
+		--confpre=*)
+			MY_CONF_PRE="${1//--confpre=/}"
 			;;
 
 		# ----------------------------------------

@@ -49,6 +49,7 @@ make install
 
 # Optional misc:
   --config          # Specify configuration file
+  --confpre         # Alter configuration directive prefix for this check
   --verbose         # Show files and commands as being processed
   --debug           # Show additional debug messages
   --list            # Only show files that would be processed (no processing)
@@ -310,7 +311,7 @@ Escapes for Bash (and alike)
 
 **Examples**
 
-Check for css tags containing: `url('/` or `url("/` or `url(/`
+1 Check for css tags containing: `url('/` or `url("/` or `url(/`
 
 ```bash
 $ regex-grep --path=. --extension=css,scss --text --size --custom="url\([[:space:]]*['\''\\\"]?[[:space:]]*/"
@@ -318,7 +319,7 @@ $ regex-grep --path=. --extension=css,scss --text --size --custom="url\([[:space
 $ regex-perl --path=. --extension=css,scss --text --size --custom="url\([[:space:]]*[\x27\"]?[[:space:]]*\/"
 ```
 
-Check for css tags containing: `url('http[s]://` or `url("http[s]://` or `url(http[s]://`
+2 Check for css tags containing: `url('http[s]://` or `url("http[s]://` or `url(http[s]://`
 
 ```bash
 $ regex-grep --path=. --extension=css,scss --text --size --custom="url\([[:space:]]*['\''\\\"]?[[:space:]]*http[s]?://"
@@ -326,7 +327,7 @@ $ regex-grep --path=. --extension=css,scss --text --size --custom="url\([[:space
 $ regex-perl --path=. --extension=css,scss --text --size --custom="url\([[:space:]]*[\x27\"]?[[:space:]]*http[s]?:\/\/"
 ```
 
- Check common html file tpyes for `href="http[s]*://`
+3 Check common html file tpyes for `href="http[s]*://`
 
 ```bash
 $ regex-grep --path=. --extension=htm,html,php,tpl --text --size --custom="href=[[:space:]]*['\''\\\"]?http[s]?://"
@@ -334,3 +335,78 @@ $ regex-grep --path=. --extension=htm,html,php,tpl --text --size --custom="href=
 $ regex-perl --path=. --extension=htm,html,php,tpl --text --size --custom="href=[[:space:]]*[\x27\"]?http[s]?:\/\/"
 ```
 
+
+**Examples via configuration file**
+
+1 Check for css tags containing: `url('/` or `url("/` or `url(/`
+
+`.awesome-ci.conf`
+
+```bash
+REGEX_GREP_LEAD_SLASH_EXTENSION="css,scss"
+REGEX_GREP_LEAD_SLASH_IGNORE=""
+REGEX_GREP_LEAD_SLASH_TEXT=1
+REGEX_GREP_LEAD_SLASH_SIZE=1
+REGEX_GREP_LEAD_SLASH_CUSTOM="url\([[:space:]]*['\''\\\"]?[[:space:]]*/"
+
+REGEX_PERL_LEAD_SLASH_EXTENSION="css,scss"
+REGEX_PERL_LEAD_SLASH_IGNORE=""
+REGEX_PERL_LEAD_SLASH_TEXT=1
+REGEX_PERL_LEAD_SLASH_SIZE=1
+REGEX_PERL_LEAD_SLASH_CUSTOM="url\([[:space:]]*[\x27\"]?[[:space:]]*\/"
+```
+
+```bash
+$ regex-grep --config=.awesome-ci.conf --confpre=REGEX_GREP_LEAD_SLASH_ --path=.
+
+$ regex-perl --config=.awesome-ci.conf --confpre=REGEX_PERL_LEAD_SLASH_ --path=.
+```
+
+2 Check for css tags containing: `url('http[s]://` or `url("http[s]://` or `url(http[s]://`
+
+`.awesome-ci.conf`
+
+```bash
+REGEX_GREP_FQDN_EXTENSION="css,scss"
+REGEX_GREP_FQDN_IGNORE=""
+REGEX_GREP_FQDN_TEXT=1
+REGEX_GREP_FQDN_SIZE=1
+REGEX_GREP_FQDN_CUSTOM="url\([[:space:]]*['\''\\\"]?[[:space:]]*http[s]?://"
+
+REGEX_PERL_FQDN_EXTENSION="css,scss"
+REGEX_PERL_FQDN_IGNORE=""
+REGEX_PERL_FQDN_TEXT=1
+REGEX_PERL_FQDN_SIZE=1
+REGEX_PERL_FQDN_CUSTOM="url\([[:space:]]*[\x27\"]?[[:space:]]*http[s]?:\/\/"
+```
+
+```bash
+$ regex-grep --config=.awesome-ci.conf --confpre=REGEX_GREP_FQDN_ --path=.
+
+$ regex-perl --config=.awesome-ci.conf --confpre=REGEX_PERL_FQDN_ --path=.
+```
+
+
+3 Check common html file tpyes for `href="http[s]*://`
+
+`.awesome-ci.conf`
+
+```bash
+REGEX_GREP_HREF_FQDN_EXTENSION="htm,html,php,tpl"
+REGEX_GREP_HREF_FQDN_IGNORE=""
+REGEX_GREP_HREF_FQDN_TEXT=1
+REGEX_GREP_HREF_FQDN_SIZE=1
+REGEX_GREP_HREF_FQDN_CUSTOM="href=[[:space:]]*['\''\\\"]?http[s]?://"
+
+REGEX_PERL_HREF_FQDN_EXTENSION="htm,html,php,tpl"
+REGEX_PERL_HREF_FQDN_IGNORE=""
+REGEX_PERL_HREF_FQDN_TEXT=1
+REGEX_PERL_HREF_FQDN_SIZE=1
+REGEX_PERL_HREF_FQDN_CUSTOM="href=[[:space:]]*[\x27\"]?http[s]?:\/\/"
+```
+
+```bash
+$ regex-grep --config=.awesome-ci.conf --confpre=REGEX_GREP_HREF_FQDN_ --path=.
+
+$ regex-perl --config=.awesome-ci.conf --confpre=REGEX_PERL_HREF_FQDN_ --path=.
+```
