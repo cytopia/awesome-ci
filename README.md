@@ -1,6 +1,6 @@
 # awesome-ci
 
-Awesome Continuous Integration.
+[![Build Status](https://travis-ci.org/cytopia/awesome-ci.svg?branch=master)](https://travis-ci.org/cytopia/awesome-ci) Awesome CI Tools.
 
 ---
 
