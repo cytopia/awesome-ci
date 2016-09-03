@@ -24,19 +24,18 @@ before_install:
   - sudo npm install -g mdlint
   - sudo gem install scss_lint
 
-
-
-script:
-
-  # Test the source
-  - shellcheck --exclude=SC1090,SC2001 --shell=bash bin/*
-
   # Install scripts
   - ./configure
   - sudo make install
 
 
-  # Test the scripts
+script:
+
+  # Validate coding guidelines of self
+  - shellcheck --exclude=SC1090,SC2001 --shell=bash bin/*
+
+
+  # Test the scripts in dry mode
   - bin/file-crlf --path=. --config=etc/awesome-ci.conf --dry
   - bin/file-empty --path=. --config=etc/awesome-ci.conf --dry
   - bin/file-trailing-newline --path=. --config=etc/awesome-ci.conf --dry
@@ -61,3 +60,29 @@ script:
   - bin/syntax-ruby --path=. --config=etc/awesome-ci.conf --dry
   - bin/syntax-scss --path=. --config=etc/awesome-ci.conf --dry
   - bin/syntax-sh --path=. --config=etc/awesome-ci.conf --dry
+
+  # Test the scripts in real mode
+  - bin/file-crlf --path=. --config=etc/awesome-ci.conf
+  - bin/file-empty --path=. --config=etc/awesome-ci.conf
+  - bin/file-trailing-newline --path=. --config=etc/awesome-ci.conf
+  - bin/file-trailing-single-newline --path=. --config=etc/awesome-ci.conf
+  - bin/file-trailing-space --path=. --config=etc/awesome-ci.conf
+  - bin/file-utf8 --path=. --config=etc/awesome-ci.conf
+  - bin/file-utf8-bom --path=. --config=etc/awesome-ci.conf
+  - bin/git-conflicts --path=. --config=etc/awesome-ci.conf
+  - bin/git-ignored --path=.
+  - bin/inline-css --path=. --config=etc/awesome-ci.conf
+  - bin/inline-js --path=. --config=etc/awesome-ci.conf
+  - bin/regex-grep --path=. --config=etc/awesome-ci.conf
+  - bin/regex-perl --path=. --config=etc/awesome-ci.conf
+  - bin/syntax-bash --path=. --config=etc/awesome-ci.conf
+  - bin/syntax-css --path=. --config=etc/awesome-ci.conf
+  - bin/syntax-js --path=. --config=etc/awesome-ci.conf
+  - bin/syntax-json --path=. --config=etc/awesome-ci.conf
+  - bin/syntax-markdown --path=. --config=etc/awesome-ci.conf
+  - bin/syntax-perl --path=. --config=etc/awesome-ci.conf
+  - bin/syntax-php --path=. --config=etc/awesome-ci.conf
+  - bin/syntax-python --path=. --config=etc/awesome-ci.conf
+  - bin/syntax-ruby --path=. --config=etc/awesome-ci.conf
+  - bin/syntax-scss --path=. --config=etc/awesome-ci.conf
+  - bin/syntax-sh --path=. --config=etc/awesome-ci.conf
