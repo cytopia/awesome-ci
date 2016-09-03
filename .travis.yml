@@ -5,9 +5,10 @@ language: bash
 
 before_install:
   # Add more modern repos
-  - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ trusty-backports restricted main universe"
-  - sudo apt-get install python-software-properties
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq python-software-properties
   - sudo apt-add-repository ppa:brightbox/ruby-ng
+  - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ trusty-backports restricted main universe"
 
   # Update sources
   - sudo apt-get update -qq
