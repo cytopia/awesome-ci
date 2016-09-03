@@ -7,7 +7,7 @@ before_install:
   # Install 'shellcheck' and 'tmpreaper'
   - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ trusty-backports restricted main universe"
   - sudo apt-get update -qq
-  - sudo apt-get install -qq shellcheck moreutils npm php
+  - sudo apt-get install -qq shellcheck moreutils npm php5
   - sudo npm install -g scss-lint
   - sudo npm install -g eslint
   - sudo npm install -g jsonlint
