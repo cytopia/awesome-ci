@@ -7,13 +7,12 @@ before_install:
   # Install 'shellcheck' and 'tmpreaper'
   - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ trusty-backports restricted main universe"
   - sudo apt-get update -qq
-  - sudo apt-get install -qq shellcheck moreutils nodejs npm php5
+  - sudo apt-get install -qq shellcheck moreutils nodejs npm php5 rubygems
   - sudo ln -s /usr/bin/nodejs /usr/bin/node
-  - sudo npm install -g scss-lint
   - sudo npm install -g eslint
   - sudo npm install -g jsonlint
   - sudo npm install -g mdlint
-  - sudo ln -s /usr/local/lib/node_modules/* /usr/local/bin/* || true
+  - sudo gem install --no-user-install scss_lint
 
 
 
