@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/cytopia/awesome-ci.svg?branch=master)](https://travis-ci.org/cytopia/awesome-ci)
 [![Latest Stable Version](https://poser.pugx.org/cytopia/awesome-ci/v/stable)](https://packagist.org/packages/cytopia/awesome-ci) [![Total Downloads](https://poser.pugx.org/cytopia/awesome-ci/downloads)](https://packagist.org/packages/cytopia/awesome-ci) [![Latest Unstable Version](https://poser.pugx.org/cytopia/awesome-ci/v/unstable)](https://packagist.org/packages/cytopia/awesome-ci) [![License](https://poser.pugx.org/cytopia/awesome-ci/license)](http://opensource.org/licenses/MIT)
-[![Type](https://img.shields.io/badge/type-bash-red.svg)](https://en.wikipedia.org/?title=Bourne_shell)
+[![Type](https://img.shields.io/badge/type-bash-red.svg)](https://en.wikipedia.org/wiki/Bash_%28Unix_shell%29)
 
 ---
 
