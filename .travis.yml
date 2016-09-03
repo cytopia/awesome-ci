@@ -4,10 +4,19 @@ sudo: required
 language: bash
 
 before_install:
-  # Install 'shellcheck' and 'tmpreaper'
+  # Add more modern repos
   - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ trusty-backports restricted main universe"
+  - sudo apt-get install python-software-properties
+  - sudo apt-add-repository ppa:brightbox/ruby-ng
+
+  # Update sources
   - sudo apt-get update -qq
-  - sudo apt-get install -qq shellcheck moreutils nodejs npm php5 ruby
+
+  # Install
+  - sudo apt-get install -qq ruby2.1 ruby-switch
+  - sudo ruby-switch --set ruby2.1
+
+  - sudo apt-get install -qq shellcheck moreutils nodejs npm php5
   - sudo ln -s /usr/bin/nodejs /usr/bin/node
   - sudo npm install -g eslint
   - sudo npm install -g jsonlint
