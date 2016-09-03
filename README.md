@@ -122,4 +122,3 @@ make install
 ./configure --prefix=/opt
 make install
 ```
-
