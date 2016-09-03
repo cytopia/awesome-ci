@@ -73,9 +73,9 @@ script:
   - bin/git-ignored --path=.
   - bin/inline-css --path=. --config=etc/awesome-ci.conf
   - bin/inline-js --path=. --config=etc/awesome-ci.conf
-  - bin/regex-grep --path=. --config=etc/awesome-ci.conf
+    #- bin/regex-grep --path=. --config=etc/awesome-ci.conf
     #- bin/regex-perl --path=. --config=etc/awesome-ci.conf
-    #- bin/syntax-bash --path=. --config=etc/awesome-ci.conf
+  - bin/syntax-bash --path=. --config=etc/awesome-ci.conf
   - bin/syntax-css --path=. --config=etc/awesome-ci.conf
   - bin/syntax-js --path=. --config=etc/awesome-ci.conf
   - bin/syntax-json --path=. --config=etc/awesome-ci.conf
