@@ -59,4 +59,3 @@ install:
 clean:
 
 	rm -f configure.in
-

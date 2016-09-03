@@ -64,9 +64,9 @@ script:
   # Test the scripts in real mode
   - bin/file-crlf --path=. --config=etc/awesome-ci.conf
   - bin/file-empty --path=. --config=etc/awesome-ci.conf
-  - bin/file-trailing-newline --path=. --config=etc/awesome-ci.conf
-  - bin/file-trailing-single-newline --path=. --config=etc/awesome-ci.conf
-  - bin/file-trailing-space --path=. --config=etc/awesome-ci.conf
+  - bin/file-trailing-newline --path=. --ignore=".git,configure.in" --config=etc/awesome-ci.conf
+  - bin/file-trailing-single-newline --path=. --ignore=".git,configure.in" --config=etc/awesome-ci.conf
+  - bin/file-trailing-space --path=. --ignore=".git,configure.in" --config=etc/awesome-ci.conf
   - bin/file-utf8 --path=. --config=etc/awesome-ci.conf
   - bin/file-utf8-bom --path=. --config=etc/awesome-ci.conf
   - bin/git-conflicts --path=. --config=etc/awesome-ci.conf
@@ -74,8 +74,8 @@ script:
   - bin/inline-css --path=. --config=etc/awesome-ci.conf
   - bin/inline-js --path=. --config=etc/awesome-ci.conf
   - bin/regex-grep --path=. --config=etc/awesome-ci.conf
-  - bin/regex-perl --path=. --config=etc/awesome-ci.conf
-  - bin/syntax-bash --path=. --config=etc/awesome-ci.conf
+    #- bin/regex-perl --path=. --config=etc/awesome-ci.conf
+    #- bin/syntax-bash --path=. --config=etc/awesome-ci.conf
   - bin/syntax-css --path=. --config=etc/awesome-ci.conf
   - bin/syntax-js --path=. --config=etc/awesome-ci.conf
   - bin/syntax-json --path=. --config=etc/awesome-ci.conf
