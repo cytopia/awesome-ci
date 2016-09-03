@@ -8,6 +8,8 @@
 
 Lot's of tools for git, file and static source code analysis.
 
+Can also be used for simply learning `find`, `xargs`, `tr` and `grep`. Just add `--dry` to any of the scripts and they will show you the final created command without executing.
+
 **Note:** All scripts from [dependencies/](dependencies/) must be placed into an executable path (`/usr/bin`, `/usr/local/bin` or equivalent) prior usage.
 
 @see [dependencies/README.md](dependencies/) for more information.
