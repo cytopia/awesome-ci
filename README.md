@@ -12,7 +12,14 @@ Lot's of tools for git, file and static source code analysis.
 
 ---
 
-## Install
+## Install OSX
+
+```bash
+brew tap cytopia/tap
+brew install awesome-ci
+```
+
+## Install Linux/BSD
 
 ```bash
 # Install to /usr/bin
