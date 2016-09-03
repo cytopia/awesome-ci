@@ -7,13 +7,23 @@ before_install:
   # Install 'shellcheck' and 'tmpreaper'
   - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ trusty-backports restricted main universe"
   - sudo apt-get update -qq
-  - sudo apt-get install -qq shellcheck
+  - sudo apt-get install -qq shellcheck moreutils npm php
+  - sudo npm install -g scss-lint
+  - sudo npm install -g eslint
+  - sudo npm install -g jsonlint
+  - sudo npm install -g mdlint
+
 
 
 script:
 
   # Test the source
   - shellcheck --exclude=SC1090,SC2001 --shell=bash bin/*
+
+  # Install scripts
+  - ./configure
+  - sudo make install
+
 
   # Test the scripts
   - bin/file-crlf --path=. --config=etc/awesome-ci.conf --dry
