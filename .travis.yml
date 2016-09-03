@@ -12,7 +12,7 @@ before_install:
   - sudo npm install -g eslint
   - sudo npm install -g jsonlint
   - sudo npm install -g mdlint
-  - sudo gem install --no-user-install scss_lint
+  - sudo gem install scss_lint
 
 
 
