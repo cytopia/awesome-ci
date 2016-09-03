@@ -13,7 +13,7 @@ before_install:
   - sudo npm install -g eslint
   - sudo npm install -g jsonlint
   - sudo npm install -g mdlint
-  - sudo ln -s /usr/local/lib/node_modules/* /usr/local/bin*
+  - sudo ln -s /usr/local/lib/node_modules/* /usr/local/bin/* || true
 
 
 
