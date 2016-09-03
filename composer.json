@@ -1,0 +1,15 @@
+{
+	"name": "cytopia/awesome-ci",
+	"description": "Lot's of tools for git, file and static source code analysis.",
+	"type": "library",
+	"keywords": ["continuous integration", "linter", "regex"],
+	"homepage": "https://github.com/cytopia/awesome-ci",
+	"license": "MIT",
+	"authors": [
+		{
+			"name" : "cytopia",
+			"homepage": "https://github.com/cytopia/awesome-ci",
+			"role": "Developer"
+		}
+	]
+}
