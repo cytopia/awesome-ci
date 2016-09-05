@@ -53,8 +53,8 @@ MY_INFO="file -v 2>&1 | grep -E '(([0-9]+)(\.))+'"
 #
 # Version
 #
-MY_VERSION="0.8"
-MY_DATE="2016-09-03"
+MY_VERSION="0.9"
+MY_DATE="2016-09-05"
 
 #
 # Credits
@@ -554,6 +554,7 @@ EXTENSION="${MY_CONF_PRE}EXTENSION"
 IGNORE="${MY_CONF_PRE}IGNORE"
 TEXT="${MY_CONF_PRE}TEXT"
 SIZE="${MY_CONF_PRE}SIZE"
+CUSTOM="${MY_CONF_PRE}CUSTOM"
 
 #
 # Decide on Shebang
@@ -688,6 +689,36 @@ else
 fi
 
 
+
+#
+# Decide on Custom string
+#
+if [ "${ENABLE_CUST_OPS}" = "1" ]; then
+	if [ "${MY_CFG}" != "" ] && [ "${MY_CUS}" != "" ]; then
+		if [ "${MY_DEB}" = "1" ]; then
+			echo "[ARG] Cmd arg --custom=\"${MY_CUS}\" will take precedence over config file value".
+		fi
+		MY_CUS="${MY_CUS}"
+
+	elif [ "${MY_CFG}" != "" ] && [ "${MY_CUS}" = "" ]; then
+		if [ "${MY_DEB}" = "1" ]; then
+			echo "[ARG] Using config file values: custom: \"${!CUSTOM}\""
+		fi
+		MY_CUS="${!CUSTOM}"
+
+	elif [ "${MY_CFG}" = "" ] && [ "${MY_CUS}" != "" ]; then
+		if [ "${MY_DEB}" = "1" ]; then
+			echo "[ARG] Using cmd argument: custom: \"${MY_CUS}\""
+		fi
+		MY_CUS="${MY_CUS}"
+
+	else
+		if [ "${MY_DEB}" = "1" ]; then
+			echo "[ARG] No customization applied"
+		fi
+		MY_CUS=
+	fi
+fi
 
 
 
