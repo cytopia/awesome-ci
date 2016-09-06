@@ -38,6 +38,9 @@ DEFAULT_CUST_OPS=""
 
 MY_CHECK="sh -n \"%\" 2>&1 || true"
 
+# Can this check fix the problems?
+ENABLE_FIX=0
+
 # Command to be displayed for --info
 MY_INFO="(realpath /bin/sh 2>/dev/null | grep -q 'dash') && echo 'Dash Shell' || sh --version | grep -E '(([0-9]+)(\.))+'"
 
@@ -53,8 +56,8 @@ MY_INFO="(realpath /bin/sh 2>/dev/null | grep -q 'dash') && echo 'Dash Shell' ||
 #
 # Version
 #
-MY_VERSION="0.9"
-MY_DATE="2016-09-05"
+MY_VERSION="0.10"
+MY_DATE="2016-09-06"
 
 #
 # Credits
@@ -80,6 +83,7 @@ MY_DRY=0
 MY_LST=0
 MY_VER=0
 MY_DEB=0
+MY_FIX=0
 MY_CFG=
 MY_CUS=
 
@@ -103,7 +107,13 @@ print_usage() {
 		_custom=""
 	fi
 
-	echo "Usage: ${MY_NAME} [--text] [--size] [--shebang=php] [--extension=tpl,htm,html,php,...] [--ignore=dir1,dir2] [--config=conf] [--confpre=${MY_CONF_PRE}]${_custom} [--verbose] [--debug] [--dry] [--list] --path=dir"
+	if [ "${ENABLE_FIX}" = "1" ];then
+		_fix=" [--fix]"
+	else
+		_fix=""
+	fi
+
+	echo "Usage: ${MY_NAME} [--text] [--size] [--shebang=php] [--extension=tpl,htm,html,php,...] [--ignore=dir1,dir2] [--config=conf] [--confpre=${MY_CONF_PRE}]${_custom}${_fix} [--verbose] [--debug] [--dry] [--list] --path=dir"
 	echo "       ${MY_NAME} --info"
 	echo "       ${MY_NAME} --help"
 	echo "       ${MY_NAME} --version"
@@ -117,6 +127,12 @@ print_usage() {
 	echo
 	echo
 	echo "Optional run arguments:"
+	if [ "${ENABLE_FIX}" = "1" ];then
+		echo "  --fix              Fixable :-)"
+		echo "                     Fix the problems for the specified files."
+		echo "                     Note, all other options below also apply"
+		echo
+	fi
 	echo "  --text             Limit search to text files only (non-binary)."
 	echo "                     Can be narrowed further with '--extension'"
 	echo
@@ -439,6 +455,18 @@ while [ $# -gt 0  ]; do
 			;;
 
 		# ----------------------------------------
+		--fix)
+			if [ "${ENABLE_FIX}" = "1" ]; then
+				MY_FIX=1
+			else
+				echo "Invalid argument: ${1}"
+				echo "Type '${MY_NAME} --help' for available options."
+				exit 1
+			fi
+			;;
+
+
+		# ----------------------------------------
 		--text)
 			MY_TXT=1
 			;;
@@ -746,12 +774,20 @@ fi
 
 
 #
-# Customize command?
+# Fix?
 #
-if [ "${MY_CUS}" = "" ]; then
-	MY_CHECK="$( mysed "${MY_CHECK}" "__CUSTOM_OPT_PLACEHOLDER__" "${DEFAULT_CUST_OPS}" )"
+if [ "${MY_FIX}" = "1" ]; then
+	MY_CHECK="${MY_FIX_CMD}"
 else
-	MY_CHECK="$( mysed "${MY_CHECK}" "__CUSTOM_OPT_PLACEHOLDER__" "${MY_CUS}" )"
+	#
+	# Normal check
+	# (Apply custom command?)
+	#
+	if [ "${MY_CUS}" = "" ]; then
+		MY_CHECK="$( mysed "${MY_CHECK}" "__CUSTOM_OPT_PLACEHOLDER__" "${DEFAULT_CUST_OPS}" )"
+	else
+		MY_CHECK="$( mysed "${MY_CHECK}" "__CUSTOM_OPT_PLACEHOLDER__" "${MY_CUS}" )"
+	fi
 fi
 
 
