@@ -37,7 +37,7 @@ script:
   # Output Info
   - bin/file-crlf --info
   - bin/file-empty --info
-  - bin/file-trailing-newline--info --info
+  - bin/file-trailing-newline --info
   - bin/file-trailing-single-newline --info
   - bin/file-trailing-space --info
   - bin/file-utf8 --info
