@@ -6,6 +6,14 @@
 
 ---
 
+**Runs on**
+
+[![Linux](https://raw.githubusercontent.com/cytopia/icons/master/64x64/linux.png)](https://www.kernel.org/)
+[![FreeBSD](https://raw.githubusercontent.com/cytopia/icons/master/64x64/freebsd.png)](https://www.freebsd.org)
+[![OSX](https://raw.githubusercontent.com/cytopia/icons/master/64x64/osx.png)](https://www.apple.com/osx)
+
+
+
 Lot's of tools for git, file and static source code analysis.
 
 **Documentation**
