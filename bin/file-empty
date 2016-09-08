@@ -56,8 +56,8 @@ MY_INFO="echo \"test is a built-in shell command\""
 #
 # Version
 #
-MY_VERSION="0.11"
-MY_DATE="2016-09-07"
+MY_VERSION="0.12"
+MY_DATE="2016-09-09"
 
 #
 # Credits
@@ -819,9 +819,9 @@ if [ "${MY_TXT}" = "1" ] && [ "${MY_LST}" = "1" ]; then
 ### Text files (run!!!)
 elif [ "${MY_TXT}" = "1" ] && [ "${MY_LST}" = "0" ]; then
 	if [ "${MY_SHE}" != "" ]; then
-		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | xargs -0 -P ${CPU_CORES} -n1 grep -Il '' | tr '\n' '\0' | ${MY_SHE} | tr '\n' '\0' | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} sh -c '${MY_CHECK}' --"
+		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | xargs -0 -P ${CPU_CORES} -n1 grep -Il '' | tr '\n' '\0' | ${MY_SHE} | tr '\n' '\0' | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} sh -c 'if [ -f \"\${1}\" ]; then ${MY_CHECK}; fi' --"
 	else
-		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | xargs -0 -P ${CPU_CORES} -n1 grep -Il '' | tr '\n' '\0' | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} sh -c '${MY_CHECK}' --"
+		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | xargs -0 -P ${CPU_CORES} -n1 grep -Il '' | tr '\n' '\0' | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} sh -c 'if [ -f \"\${1}\" ]; then ${MY_CHECK}; fi' --"
 	fi
 
 ### All files (list-only)
@@ -836,9 +836,9 @@ elif [ "${MY_TXT}" = "0" ] && [ "${MY_LST}" = "1" ]; then
 ### All files (run!!!)
 else
 	if [ "${MY_SHE}" != "" ]; then
-		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | ${MY_SHE} | tr '\n' '\0' | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} sh -c '${MY_CHECK}' --"
+		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | ${MY_SHE} | tr '\n' '\0' | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} sh -c 'if [ -f \"\${1}\" ]; then ${MY_CHECK}; fi' --"
 	else
-		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} sh -c '${MY_CHECK}' --"
+		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} sh -c 'if [ -f \"\${1}\" ]; then ${MY_CHECK}; fi' --"
 	fi
 
 fi
