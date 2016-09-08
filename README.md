@@ -40,7 +40,7 @@ All checks have the option to only check by one or more file **extensions**, by 
 | File | [file-trailing-single-newline](bin/file-trailing-single-newline) | ✓ | Scan files and check if they contain exactly one trailing newline. |
 | File | [file-trailing-space](bin/file-trailing-space) | ✓ | Scan files and check if they contain trailing whitespaces. |
 | File | [file-utf8](bin/file-utf8) | | Scan files and check if they have a non UTF-8 encoding. |
-| File | [file-utf8-bom](bin/file-utf8-bom) | | Scan files and check if they contain BOM (Byte Order Mark): `<U+FEFF>`. |
+| File | [file-utf8-bom](bin/file-utf8-bom) | ✓ | Scan files and check if they contain BOM (Byte Order Mark): `<U+FEFF>`. |
 | Syntax | [syntax-bash](bin/syntax-bash) | | Scan shell files for bash syntax errors. |
 | Syntax | [syntax-css](bin/syntax-css) | | Scan CSS files for CSS syntax errors. |
 | Syntax | [syntax-js](bin/syntax-js) | | Scan JS files for JS syntax errors. |

@@ -39,7 +39,10 @@ DEFAULT_CUST_OPS=""
 MY_CHECK="awk \"/^\xEF\xBB\xBF/ {print FILENAME} {nextfile}\" \"\$1\" || true"
 
 # Can this check fix the problems?
-ENABLE_FIX=0
+ENABLE_FIX=1
+
+# Command for fixing
+MY_FIX_CMD="out=\"\$( awk \"/^\xEF\xBB\xBF/ {print FILENAME} {nextfile}\" \"\$1\" )\" || true; if [ \"\${out}\" != \"\" ]; then (sed -i\"\" -e \"1s/^\xEF\xBB\xBF//\" \"\$1\" && echo \"Fixing: \$1\" || echo \"FAILED: \$1\"); fi"
 
 # Command to be displayed for --info
 MY_INFO="(awk -Wversion 2>/dev/null || awk --version) | grep -E '(([0-9]+)(\.))+'"

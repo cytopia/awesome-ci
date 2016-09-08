@@ -41,12 +41,8 @@ MY_CHECK="aci-trailing-newline -1 \"\$1\" || echo \"\$1: Not exactly one trailin
 # Can this check fix the problems?
 ENABLE_FIX=1
 
-# Command for fixing (TODO: fix this!!!)
-#MY_FIX_CMD="file=\"%\"; aci-trailing-newline -1 \"\${file}\" || (echo \"Fixing: \${file}\"; echo \"\" >> \"\${file}\"; sed -i\"\" -e :a -e \"/^\n*\\\$/{\\\$d;N;ba\" -e \"}\" \"\${file}\")"
-
+# Command for fixing
 MY_FIX_CMD="aci-trailing-newline -1 \"\$1\" || ((echo \"\" >> \"\$1\" && sed -i\"\" -e :a -e \"/^\n*\\\$/{\\\$d;N;ba\" -e \"}\" \"\$1\") && echo \"Fixing: \$1\" || echo \"FAILED: \$1\")"
-
-
 
 # Command to be displayed for --info
 MY_INFO="aci-trailing-newline -v"
