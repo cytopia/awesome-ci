@@ -34,6 +34,32 @@ script:
   # Validate coding guidelines of self
   - shellcheck --exclude=SC1090,SC2001 --shell=bash bin/*
 
+  # Output Info
+  - bin/file-crlf --info
+  - bin/file-empty --info
+  - bin/file-trailing-newline--info --info
+  - bin/file-trailing-single-newline --info
+  - bin/file-trailing-space --info
+  - bin/file-utf8 --info
+  - bin/file-utf8-bom --info
+  - bin/git-conflicts --info
+  - bin/git-ignored --info
+  - bin/inline-css --info
+  - bin/inline-js --info
+  - bin/regex-grep --info
+  - bin/regex-perl --info
+  - bin/syntax-bash --info
+  - bin/syntax-css --info
+  - bin/syntax-js --info
+  - bin/syntax-json --info
+  - bin/syntax-markdown --info
+  - bin/syntax-perl --info
+  - bin/syntax-php --info
+  - bin/syntax-python --info
+  - bin/syntax-ruby --info
+  - bin/syntax-scss --info
+  - bin/syntax-sh --info
+
 
   # Test the scripts in dry mode
   - bin/file-crlf --path=. --config=etc/awesome-ci.conf --dry
