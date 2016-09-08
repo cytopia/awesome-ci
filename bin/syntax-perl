@@ -28,15 +28,15 @@ DEFAULT_CUST_OPS=""
 
 # How to add your check here:
 # ---------------------------
-# %s   This comes from xargs and represents
+# $1   This comes from xargs and represents
 #      the current file to work on:
-#      xargs -I % sh '${MY_CHECK}'
+#      xargs sh '${MY_CHECK}' --
 #
 # __CUSTOM_OPT_PLACEHOLDER__
 #      This will be replaced either with custom options
 #      or with the default options.
 
-MY_CHECK="perl -c \"%\" 2>&1 || true"
+MY_CHECK="perl -c \"\$1\" 2>&1 || true"
 
 # Can this check fix the problems?
 ENABLE_FIX=0
@@ -56,8 +56,8 @@ MY_INFO="perl --version | grep -E '(([0-9]+)(\.))+'"
 #
 # Version
 #
-MY_VERSION="0.10"
-MY_DATE="2016-09-06"
+MY_VERSION="0.11"
+MY_DATE="2016-09-07"
 
 #
 # Credits
@@ -811,17 +811,17 @@ fi
 ### Text files (list-only)
 if [ "${MY_TXT}" = "1" ] && [ "${MY_LST}" = "1" ]; then
 	if [ "${MY_SHE}" != "" ]; then
-		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | xargs -0 -P ${CPU_CORES} -n1 -I % grep -Il '' '%' | tr '\n' '\0' | ${MY_SHE}"
+		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | xargs -0 -P ${CPU_CORES} -n1 grep -Il '' | tr '\n' '\0' | ${MY_SHE}"
 	else
-		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | xargs -0 -P ${CPU_CORES} -n1 -I % grep -Il '' '%'"
+		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | xargs -0 -P ${CPU_CORES} -n1 grep -Il ''"
 	fi
 
 ### Text files (run!!!)
 elif [ "${MY_TXT}" = "1" ] && [ "${MY_LST}" = "0" ]; then
 	if [ "${MY_SHE}" != "" ]; then
-		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | xargs -0 -P ${CPU_CORES} -n1 -I % grep -Il '' '%' | tr '\n' '\0' | ${MY_SHE} | tr '\n' '\0' | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} -I % sh -c '${MY_CHECK}'"
+		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | xargs -0 -P ${CPU_CORES} -n1 grep -Il '' | tr '\n' '\0' | ${MY_SHE} | tr '\n' '\0' | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} sh -c '${MY_CHECK}' --"
 	else
-		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | xargs -0 -P ${CPU_CORES} -n1 -I % grep -Il '' '%' | tr '\n' '\0' | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} -I % sh -c '${MY_CHECK}'"
+		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | xargs -0 -P ${CPU_CORES} -n1 grep -Il '' | tr '\n' '\0' | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} sh -c '${MY_CHECK}' --"
 	fi
 
 ### All files (list-only)
@@ -836,9 +836,9 @@ elif [ "${MY_TXT}" = "0" ] && [ "${MY_LST}" = "1" ]; then
 ### All files (run!!!)
 else
 	if [ "${MY_SHE}" != "" ]; then
-		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | ${MY_SHE} | tr '\n' '\0' | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} -I % sh -c '${MY_CHECK}'"
+		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | ${MY_SHE} | tr '\n' '\0' | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} sh -c '${MY_CHECK}' --"
 	else
-		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} -I % sh -c '${MY_CHECK}'"
+		MY_CMD="find ${MY_PATH} -type f ${NAME_PATTERN} ${EXCL_PATTERN} ${MY_SIZ} -print0 | xargs -0 -P ${CPU_CORES} -n1 ${XARGS_VERBOSE} sh -c '${MY_CHECK}' --"
 	fi
 
 fi
