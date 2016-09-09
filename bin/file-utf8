@@ -39,7 +39,9 @@ DEFAULT_CUST_OPS=""
 MY_CHECK="isutf8 \"\$1\" || true"
 
 # Can this check fix the problems?
-ENABLE_FIX=0
+ENABLE_FIX=1
+
+MY_FIX_CMD="isutf8 \"\$1\" >/dev/null || (TERM=vt100 vi -u NONE -n -es -c \"set fileencoding=utf8\" -c \"wq\" \"\$1\" > /dev/tty && echo \"Fixing: \$1\" || echo \"FAILED: \$1\")"
 
 # Command to be displayed for --info
 MY_INFO="isutf8 --help | grep version"
