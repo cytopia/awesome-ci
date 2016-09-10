@@ -65,12 +65,24 @@ $ regex-grep --path=. --ignore=".git,.svn" --shebang=sh --size --text \
 --custom="if[[:space:]]*\[\[" --dry
 
 find . -type f  -not \( -path "./.git*" -o -path "./.svn*" \) ! -size 0 -print0 | \
-   xargs -0 -P 8 -n1 -I % grep -Il '' '%' | \
+   xargs -0 -P 8 -n1 grep -Il '' | \
    tr '\n' '\0' | \
    xargs -0 -P 8 -n1 -I {} sh -c 'awk "/^#!.*(\/sh|[[:space:]]+sh)/{print FILENAME}" "{}" || true' | \
    tr '\n' '\0' | \
-   xargs -0 -P 8 -n1  -I % sh -c 'grep --color=always -inHE "if[[:space:]]*\[\[" "%" || true'
+   xargs -0 -P 8 -n1  sh -c 'if [ -f "${1}" ]; then grep --color=always -inHE "if[[:space:]]*\[\[" "$1" || true; fi' --
 ```
+
+## Fix
+
+Some of the above scripts offer the `--fix` option (see table above), with which you are actually able to fix the problem.
+You can also combine it with `--dry` to see how the actual fix command looks like:
+```bash
+$ file-utf8 --path=dump.sql --fix --dry
+
+find dump.sql -type f -print0 | \
+   xargs -0 -P 8 -n1  sh -c 'if [ -f "${1}" ]; then isutf8 "$1" >/dev/null || (TERM=vt100 vi -u NONE -n -es -c "set fileencoding=utf8" -c "wq" "$1" > /dev/tty && echo "Fixing: $1" || echo "FAILED: $1"); fi' --
+```
+
 
 ## General Usage
 
