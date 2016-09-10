@@ -42,7 +42,6 @@ MY_CHECK="sh -n \"\$1\" 2>&1 || true"
 ENABLE_FIX=0
 
 # Command to be displayed for --info
-#MY_INFO="sh --version >/dev/null 2>&1 && (sh --version|grep -E '(([0-9]+)(\.))+') || basename $( realpath /bin/sh )"
 MY_INFO="(sh --version >/dev/null 2>&1) && (sh --version|grep -E '(([0-9]+)(\.))+') || (/bin/ls -l /bin/sh | grep -qE '/bin/sh[[:space:]]+->' && (basename \"\$(/bin/ls -l /bin/sh | sed \"s/^.*->[[:space:]]*//g\")\") || (/bin/ls /bin/sh))"
 
 
