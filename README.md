@@ -34,8 +34,8 @@ All checks have the option to only check by one or more file **extensions**, by 
 |------|------|---------|-------------|
 | Git | [git-conflicts](bin/git-conflicts) | | Scan files and check if they contain git conflicts. |
 | Git | [git-ignored](bin/git-ignored) | | Scan git directory and see if ignored files are still in git cache. |
-| File | [file-crlf](bin/file-crlf) | | Scan files and check if they contain CRLF (Windows Line Feeds). |
-| File | [file-empty](bin/file-empty) | ✓ | Scan files and check if they are empty (0 bytes). |
+| File | [file-crlf](bin/file-crlf) | ✓ | Scan files and check if they contain CRLF (Windows Line Feeds). |
+| File | [file-empty](bin/file-empty) | | Scan files and check if they are empty (0 bytes). |
 | File | [file-trailing-newline](bin/file-trailing-newline) | ✓ | Scan files and check if they contain a trailing newline. |
 | File | [file-trailing-single-newline](bin/file-trailing-single-newline) | ✓ | Scan files and check if they contain exactly one trailing newline. |
 | File | [file-trailing-space](bin/file-trailing-space) | ✓ | Scan files and check if they contain trailing whitespaces. |
