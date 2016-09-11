@@ -29,6 +29,7 @@ before_install:
   - sudo wget -P /usr/local/ https://nodejs.org/dist/v${version}/node-v${version}-linux-x64.tar.xz;
   - sudo tar xvf /usr/local/node-v${version}-linux-x64.tar.xz -C /usr/local;
   - sudo ln -s /usr/local/node-v${version}-linux-x64 /usr/local/node;
+  - sudo ln -s /usr/local/node/bin/* /usr/local/bin/ 2>/dev/null || true
 
 
   - sudo npm install -g eslint
