@@ -17,6 +17,9 @@ MY_CONF_PRE="FILE_CRLF_"
 # Custom required binaries
 REQUIRED_CUST_BINS="file"
 
+# Binaries required for fixing
+REQUIRED_FIX_BINS="dos2unix"
+
 # Enable custom options (cmd arguments)
 # that can be parsed to the actual check binary?
 ENABLE_CUST_OPS=0
@@ -39,12 +42,15 @@ MY_REG="CRLF"
 MY_CHECK="file \"\$1\" | grep --color=always \"${MY_REG}\" || true"
 
 # Can this check fix the problems?
-ENABLE_FIX=0
+ENABLE_FIX=1
+
+MY_FIX_CMD="file \"\$1\" | grep -q \"${MY_REG}\" && (dos2unix -k -q -s \"\$1\" && echo \"Fixing: \$1\" || echo \"FAILED: \$1\") || true"
 
 # Command to be displayed for --info
 MY_INFO="file -v 2>&1 | grep -E '(([0-9]+)(\.))+'"
 
-
+# Command to be displayed for --info
+MY_FIX_INFO="dos2unix --version"
 
 
 
@@ -270,7 +276,6 @@ print_info() {
 		echo
 	fi
 
-
 	#
 	# Custom binary
 	#
@@ -278,6 +283,28 @@ print_info() {
 		echo "\$ ${MY_INFO}"
 		eval "${MY_INFO}"
 		echo
+	fi
+
+	#
+	# --fix binary
+	#
+	if [ "${ENABLE_FIX}" = "1" ] && [ "${MY_FIX_INFO}" != "" ] && [ "${REQUIRED_FIX_BINS}" != "" ]; then
+		_can_fix="1"
+		for _bin in ${REQUIRED_FIX_BINS}; do
+			if ! command -v "${_bin}" >/dev/null 2>&1; then
+				echo "${_bin}: Not found."
+				_can_fix="0}"
+			fi
+		done
+		if [ "${_can_fix}" = "1" ]; then
+			echo "\$ ${MY_FIX_INFO}"
+			eval "${MY_FIX_INFO}"
+			echo
+		else
+			echo "Unable to use --fix"
+			echo
+			return 1
+		fi
 	fi
 }
 
@@ -310,6 +337,21 @@ check_requirements() {
 			fi
 		fi
 	done
+
+	# Binaries required to fix
+	if [ "${ENABLE_FIX}" = "1" ] && [ "${MY_FIX}" = "1" ]; then
+		for _bin in ${REQUIRED_FIX_BINS}; do
+			if ! command -v "${_bin}" >/dev/null 2>&1; then
+				echo "[ERR] Required --fix binary '${_bin}' not found."
+				_ret2=1
+			else
+				if [ "${_debug}" = "1" ]; then
+					echo "[OK]  Required --fix binary '${_bin}' found."
+				fi
+			fi
+		done
+	fi
+
 
 	return $((_ret1 + _ret2))
 }
@@ -502,7 +544,10 @@ while [ $# -gt 0  ]; do
 				exit 1
 			fi
 
-			print_info
+			if ! print_info; then
+				exit 1
+			fi
+
 			exit 0
 			;;
 
