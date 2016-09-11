@@ -56,8 +56,8 @@ MY_INFO="aci-inline-js -v"
 #
 # Version
 #
-MY_VERSION="0.12"
-MY_DATE="2016-09-09"
+MY_VERSION="0.13"
+MY_DATE="2016-09-11"
 
 #
 # Credits
@@ -588,7 +588,7 @@ CUSTOM="${MY_CONF_PRE}CUSTOM"
 # Decide on Shebang
 #
 if [ "${MY_SHE}" != "" ]; then
-	MY_SHE="xargs -0 -P ${CPU_CORES} -n1 -I {} sh -c 'awk \"/^#!.*(\/${MY_SHE}|[[:space:]]+${MY_SHE})/{print FILENAME}\" \"{}\" || true'"
+	MY_SHE="xargs -0 -P ${CPU_CORES} -n1 awk '/^#!.*(\/${MY_SHE}|[[:space:]]+${MY_SHE})/{print FILENAME}'"
 else
 	MY_SHE=""
 fi
