@@ -288,7 +288,7 @@ print_info() {
 	#
 	# --fix binary
 	#
-	if [ "${ENABLE_FIX}" = "1" ] && [ "${MY_FIX_INFO}" != "" ] && [ "${REQUIRED_FIX_BINS}" != "" ]; then
+	if [ "${ENABLE_FIX}" = "1" ] && [ "${REQUIRED_FIX_BINS}" != "" ]; then
 		_can_fix="1"
 		for _bin in ${REQUIRED_FIX_BINS}; do
 			if ! command -v "${_bin}" >/dev/null 2>&1; then
