@@ -273,7 +273,6 @@ print_info() {
 		echo
 	fi
 
-
 	#
 	# Custom binary
 	#
@@ -281,6 +280,28 @@ print_info() {
 		echo "\$ ${MY_INFO}"
 		eval "${MY_INFO}"
 		echo
+	fi
+
+	#
+	# --fix binary
+	#
+	if [ "${ENABLE_FIX}" = "1" ] && [ "${MY_FIX_INFO}" != "" ] && [ "${REQUIRED_FIX_BINS}" != "" ]; then
+		_can_fix="1"
+		for _bin in ${REQUIRED_FIX_BINS}; do
+			if ! command -v "${_bin}" >/dev/null 2>&1; then
+				echo "${_bin}: Not found."
+				_can_fix="0}"
+			fi
+		done
+		if [ "${_can_fix}" = "1" ]; then
+			echo "\$ ${MY_FIX_INFO}"
+			eval "${MY_FIX_INFO}"
+			echo
+		else
+			echo "Unable to use --fix"
+			echo
+			return 1
+		fi
 	fi
 }
 
@@ -313,6 +334,21 @@ check_requirements() {
 			fi
 		fi
 	done
+
+	# Binaries required to fix
+	if [ "${ENABLE_FIX}" = "1" ] && [ "${MY_FIX}" = "1" ]; then
+		for _bin in ${REQUIRED_FIX_BINS}; do
+			if ! command -v "${_bin}" >/dev/null 2>&1; then
+				echo "[ERR] Required --fix binary '${_bin}' not found."
+				_ret2=1
+			else
+				if [ "${_debug}" = "1" ]; then
+					echo "[OK]  Required --fix binary '${_bin}' found."
+				fi
+			fi
+		done
+	fi
+
 
 	return $((_ret1 + _ret2))
 }
@@ -505,7 +541,10 @@ while [ $# -gt 0  ]; do
 				exit 1
 			fi
 
-			print_info
+			if ! print_info; then
+				exit 1
+			fi
+
 			exit 0
 			;;
 
