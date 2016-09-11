@@ -14,7 +14,7 @@ before_install:
   - sudo apt-get update -qq
 
   # Install
-  - sudo apt-get install -qq ruby2.1 ruby-switch shellcheck moreutils php5 dos2uni
+  - sudo apt-get install -qq ruby2.1 ruby-switch shellcheck moreutils php5 dos2unix
 
   # Set ruby version
   - sudo ruby-switch --set ruby2.1
