@@ -39,7 +39,7 @@ DEFAULT_CUST_OPS=""
 #      This will be replaced either with custom options
 #      or with the default options.
 
-MY_CHECK="ruby -c \"\$1\" 2>&1 || true"
+MY_CHECK="ruby -c \"\$1\" 2>&1 | grep -vE \"[[:space:]]*OK\$\" || true"
 
 # Can this check fix the problems?
 ENABLE_FIX=0

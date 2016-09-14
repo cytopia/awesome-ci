@@ -27,7 +27,7 @@ REQUIRED_FIX_BINS=""
 # When not specifying --custom,
 # always use this as the default options
 # to parse to the check binary.
-DEFAULT_CUST_OPS="--color"
+DEFAULT_CUST_OPS="--color --include-linter \"\""
 
 # How to add your check here:
 # ---------------------------

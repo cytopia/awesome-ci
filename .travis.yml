@@ -34,8 +34,9 @@ before_install:
 
   - sudo npm install -g eslint
   - sudo npm install -g jsonlint
-  - sudo npm install -g mdlint
+    #- sudo npm install -g mdlint
   - sudo gem install scss_lint
+  - sudo gem install mdl
 
   # Symlink node binaries
   - sudo ln -s /usr/local/node/bin/* /usr/local/bin/ 2>/dev/null || true
@@ -48,10 +49,15 @@ before_install:
 
 script:
 
-  # Validate coding guidelines of self
+  #------------------------------------------------------------
+  # 1.) Validate coding guidelines of self
+  #------------------------------------------------------------
   - shellcheck --exclude=SC1090,SC2001 --shell=bash bin/*
 
-  # Output Info
+
+  #------------------------------------------------------------
+  # 2.) Output Info
+  #------------------------------------------------------------
   - bin/file-crlf --info
   - bin/file-empty --info
   - bin/file-trailing-newline --info
@@ -78,54 +84,117 @@ script:
   - bin/syntax-sh --info
 
 
-  # Test the scripts in dry mode
-  - bin/file-crlf --path=. --config=etc/awesome-ci.conf --dry
-  - bin/file-empty --path=. --config=etc/awesome-ci.conf --dry
-  - bin/file-trailing-newline --path=. --config=etc/awesome-ci.conf --dry
+  #------------------------------------------------------------
+  # 3.) Test the scripts in dry mode
+  #------------------------------------------------------------
+  - bin/file-crlf                    --path=. --config=etc/awesome-ci.conf --dry
+  - bin/file-empty                   --path=. --config=etc/awesome-ci.conf --dry
+  - bin/file-trailing-newline        --path=. --config=etc/awesome-ci.conf --dry
   - bin/file-trailing-single-newline --path=. --config=etc/awesome-ci.conf --dry
-  - bin/file-trailing-space --path=. --config=etc/awesome-ci.conf --dry
-  - bin/file-utf8 --path=. --config=etc/awesome-ci.conf --dry
-  - bin/file-utf8-bom --path=. --config=etc/awesome-ci.conf --dry
-  - bin/git-conflicts --path=. --config=etc/awesome-ci.conf --dry
-  - bin/git-ignored --path=. --dry
-  - bin/inline-css --path=. --config=etc/awesome-ci.conf --dry
-  - bin/inline-js --path=. --config=etc/awesome-ci.conf --dry
-  - bin/regex-grep --path=. --config=etc/awesome-ci.conf --dry
-  - bin/regex-perl --path=. --config=etc/awesome-ci.conf --dry
-  - bin/syntax-bash --path=. --config=etc/awesome-ci.conf --dry
-  - bin/syntax-css --path=. --config=etc/awesome-ci.conf --dry
-  - bin/syntax-js --path=. --config=etc/awesome-ci.conf --dry
-  - bin/syntax-json --path=. --config=etc/awesome-ci.conf --dry
-  - bin/syntax-markdown --path=. --config=etc/awesome-ci.conf --dry
-  - bin/syntax-perl --path=. --config=etc/awesome-ci.conf --dry
-  - bin/syntax-php --path=. --config=etc/awesome-ci.conf --dry
-  - bin/syntax-python --path=. --config=etc/awesome-ci.conf --dry
-  - bin/syntax-ruby --path=. --config=etc/awesome-ci.conf --dry
-  - bin/syntax-scss --path=. --config=etc/awesome-ci.conf --dry
-  - bin/syntax-sh --path=. --config=etc/awesome-ci.conf --dry
+  - bin/file-trailing-space          --path=. --config=etc/awesome-ci.conf --dry
+  - bin/file-utf8                    --path=. --config=etc/awesome-ci.conf --dry
+  - bin/file-utf8-bom                --path=. --config=etc/awesome-ci.conf --dry
+  - bin/git-conflicts                --path=. --config=etc/awesome-ci.conf --dry
+  - bin/git-ignored                  --path=. --dry
+  - bin/inline-css                   --path=. --config=etc/awesome-ci.conf --dry
+  - bin/inline-js                    --path=. --config=etc/awesome-ci.conf --dry
+  - bin/regex-grep                   --path=. --config=etc/awesome-ci.conf --dry
+  - bin/regex-perl                   --path=. --config=etc/awesome-ci.conf --dry
+  - bin/syntax-bash                  --path=. --config=etc/awesome-ci.conf --dry
+  - bin/syntax-css                   --path=. --config=etc/awesome-ci.conf --dry
+  - bin/syntax-js                    --path=. --config=etc/awesome-ci.conf --dry
+  - bin/syntax-json                  --path=. --config=etc/awesome-ci.conf --dry
+  - bin/syntax-markdown              --path=. --config=etc/awesome-ci.conf --dry
+  - bin/syntax-perl                  --path=. --config=etc/awesome-ci.conf --dry
+  - bin/syntax-php                   --path=. --config=etc/awesome-ci.conf --dry
+  - bin/syntax-python                --path=. --config=etc/awesome-ci.conf --dry
+  - bin/syntax-ruby                  --path=. --config=etc/awesome-ci.conf --dry
+  - bin/syntax-scss                  --path=. --config=etc/awesome-ci.conf --dry
+  - bin/syntax-sh                    --path=. --config=etc/awesome-ci.conf --dry
 
-  # Test the scripts in real mode
-  - bin/file-crlf --path=. --config=etc/awesome-ci.conf
-  - bin/file-empty --path=. --config=etc/awesome-ci.conf
-  - bin/file-trailing-newline --path=. --ignore=".git,configure.in" --config=etc/awesome-ci.conf
-  - bin/file-trailing-single-newline --path=. --ignore=".git,configure.in" --config=etc/awesome-ci.conf
-  - bin/file-trailing-space --path=. --ignore=".git,configure.in" --config=etc/awesome-ci.conf
-  - bin/file-utf8 --path=. --config=etc/awesome-ci.conf
-  - bin/file-utf8-bom --path=. --config=etc/awesome-ci.conf
-  - bin/git-conflicts --path=. --config=etc/awesome-ci.conf
-  - bin/git-ignored --path=.
-  - bin/inline-css --path=. --config=etc/awesome-ci.conf
-  - bin/inline-js --path=. --config=etc/awesome-ci.conf
-    #- bin/regex-grep --path=. --config=etc/awesome-ci.conf
-    #- bin/regex-perl --path=. --config=etc/awesome-ci.conf
-  - bin/syntax-bash --path=. --config=etc/awesome-ci.conf
-  - bin/syntax-css --path=. --config=etc/awesome-ci.conf
-  - bin/syntax-js --path=. --config=etc/awesome-ci.conf
-  - bin/syntax-json --path=. --config=etc/awesome-ci.conf
-  - bin/syntax-markdown --path=. --config=etc/awesome-ci.conf
-  - bin/syntax-perl --path=. --config=etc/awesome-ci.conf
-  - bin/syntax-php --path=. --config=etc/awesome-ci.conf
-  - bin/syntax-python --path=. --config=etc/awesome-ci.conf
-  - bin/syntax-ruby --path=. --config=etc/awesome-ci.conf
-  - bin/syntax-scss --path=. --config=etc/awesome-ci.conf
-  - bin/syntax-sh --path=. --config=etc/awesome-ci.conf
+
+  #------------------------------------------------------------
+  # 4.) Test the scripts in real mode (without findings)
+  #------------------------------------------------------------
+  - bin/file-crlf                    --path=. --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
+  - bin/file-empty                   --path=. --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
+  - bin/file-trailing-newline        --path=. --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
+  - bin/file-trailing-single-newline --path=. --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
+  - bin/file-trailing-space          --path=. --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
+  - bin/file-utf8                    --path=. --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
+  - bin/file-utf8-bom                --path=. --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
+  - bin/git-conflicts                --path=. --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
+  - bin/git-ignored                  --path=.
+  - bin/inline-css                   --path=. --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
+  - bin/inline-js                    --path=. --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
+ #- bin/regex-grep                   --path=. --config=etc/awesome-ci.conf
+ #- bin/regex-perl                   --path=. --config=etc/awesome-ci.conf
+  - bin/syntax-bash                  --path=. --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
+  - bin/syntax-css                   --path=. --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
+  - bin/syntax-js                    --path=. --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
+  - bin/syntax-json                  --path=. --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
+  - bin/syntax-markdown              --path=. --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
+  - bin/syntax-perl                  --path=. --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
+  - bin/syntax-php                   --path=. --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
+  - bin/syntax-python                --path=. --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
+  - bin/syntax-ruby                  --path=. --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
+  - bin/syntax-scss                  --path=. --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
+  - bin/syntax-sh                    --path=. --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
+
+
+  #------------------------------------------------------------
+  # 5.) Find errors
+  #------------------------------------------------------------
+  - bin/file-crlf                    --path=test/err/ --config=etc/awesome-ci.conf && false || true
+  - bin/file-empty                   --path=test/err/ --config=etc/awesome-ci.conf && false || true
+  - bin/file-trailing-newline        --path=test/err/ --config=etc/awesome-ci.conf && false || true
+  - bin/file-trailing-single-newline --path=test/err/ --config=etc/awesome-ci.conf && false || true
+  - bin/file-trailing-space          --path=test/err/ --config=etc/awesome-ci.conf && false || true
+  - bin/file-utf8                    --path=test/err/ --config=etc/awesome-ci.conf && false || true
+  - bin/file-utf8-bom                --path=test/err/ --config=etc/awesome-ci.conf && false || true
+  - bin/git-conflicts                --path=test/err/ --config=etc/awesome-ci.conf && false || true
+ #- bin/git-ignored                  --path=test/err/
+  - bin/inline-css                   --path=test/err/ --config=etc/awesome-ci.conf && false || true
+  - bin/inline-js                    --path=test/err/ --config=etc/awesome-ci.conf && false || true
+ #- bin/regex-grep                   --path=test/err/ --config=etc/awesome-ci.conf
+ #- bin/regex-perl                   --path=test/err/ --config=etc/awesome-ci.conf
+  - bin/syntax-bash                  --path=test/err/ --config=etc/awesome-ci.conf && false || true
+  - bin/syntax-css                   --path=test/err/ --config=etc/awesome-ci.conf && false || true
+  - bin/syntax-js                    --path=test/err/ --config=etc/awesome-ci.conf && false || true
+  - bin/syntax-json                  --path=test/err/ --config=etc/awesome-ci.conf && false || true
+  - bin/syntax-markdown              --path=test/err/ --config=etc/awesome-ci.conf && false || true
+  - bin/syntax-perl                  --path=test/err/ --config=etc/awesome-ci.conf && false || true
+  - bin/syntax-php                   --path=test/err/ --config=etc/awesome-ci.conf && false || true
+  - bin/syntax-python                --path=test/err/ --config=etc/awesome-ci.conf && false || true
+  - bin/syntax-ruby                  --path=test/err/ --config=etc/awesome-ci.conf && false || true
+  - bin/syntax-scss                  --path=test/err/ --config=etc/awesome-ci.conf && false || true
+  - bin/syntax-sh                    --path=test/err/ --config=etc/awesome-ci.conf && false || true
+
+
+  #------------------------------------------------------------
+  # 6.) Find Success
+  #------------------------------------------------------------
+  - bin/file-crlf                    --path=test/err/ --config=etc/awesome-ci.conf
+  - bin/file-empty                   --path=test/err/ --config=etc/awesome-ci.conf
+  - bin/file-trailing-newline        --path=test/err/ --config=etc/awesome-ci.conf
+  - bin/file-trailing-single-newline --path=test/err/ --config=etc/awesome-ci.conf
+  - bin/file-trailing-space          --path=test/err/ --config=etc/awesome-ci.conf
+  - bin/file-utf8                    --path=test/err/ --config=etc/awesome-ci.conf
+  - bin/file-utf8-bom                --path=test/err/ --config=etc/awesome-ci.conf
+  - bin/git-conflicts                --path=test/err/ --config=etc/awesome-ci.conf
+ #- bin/git-ignored                  --path=test/err/
+  - bin/inline-css                   --path=test/err/ --config=etc/awesome-ci.conf
+  - bin/inline-js                    --path=test/err/ --config=etc/awesome-ci.conf
+ #- bin/regex-grep                   --path=test/err/ --config=etc/awesome-ci.conf
+ #- bin/regex-perl                   --path=test/err/ --config=etc/awesome-ci.conf
+  - bin/syntax-bash                  --path=test/err/ --config=etc/awesome-ci.conf
+  - bin/syntax-css                   --path=test/err/ --config=etc/awesome-ci.conf
+  - bin/syntax-js                    --path=test/err/ --config=etc/awesome-ci.conf
+  - bin/syntax-json                  --path=test/err/ --config=etc/awesome-ci.conf
+  - bin/syntax-markdown              --path=test/err/ --config=etc/awesome-ci.conf
+  - bin/syntax-perl                  --path=test/err/ --config=etc/awesome-ci.conf
+  - bin/syntax-php                   --path=test/err/ --config=etc/awesome-ci.conf
+  - bin/syntax-python                --path=test/err/ --config=etc/awesome-ci.conf
+  - bin/syntax-ruby                  --path=test/err/ --config=etc/awesome-ci.conf
+  - bin/syntax-scss                  --path=test/err/ --config=etc/awesome-ci.conf
+  - bin/syntax-sh                    --path=test/err/ --config=etc/awesome-ci.conf
