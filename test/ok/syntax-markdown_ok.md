@@ -5,5 +5,3 @@
 ### H3
 
 some text
-
-
