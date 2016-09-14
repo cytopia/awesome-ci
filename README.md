@@ -64,10 +64,10 @@ All of the above scripts offer the `--dry` option which will only show you the b
 $ regex-grep --path=. --ignore=".git,.svn" --shebang=sh --size --text \
 --custom="if[[:space:]]*\[\[" --dry
 
-find . -type f  -not \( -path "./.git*" -o -path "./.svn*" \) ! -size 0 -print0 | \
+find . -type f -not \( -path "./.git*" -o -path "./.svn*" \) ! -size 0 -print0 | \
    xargs -0 -P 8 -n1 grep -Il '' | \
    tr '\n' '\0' | \
-   xargs -0 -P 8 -n1 -I {} sh -c 'awk "/^#!.*(\/sh|[[:space:]]+sh)/{print FILENAME}" "{}" || true' | \
+   xargs -0 -P 8 -n1 awk '/^#!.*(\/sh|[[:space:]]+sh)/{print FILENAME}' | \
    tr '\n' '\0' | \
    xargs -0 -P 8 -n1  sh -c 'if [ -f "${1}" ]; then grep --color=always -inHE "if[[:space:]]*\[\[" "$1" || true; fi' --
 ```
@@ -82,6 +82,7 @@ $ file-utf8 --path=dump.sql --fix --dry
 find dump.sql -type f -print0 | \
    xargs -0 -P 8 -n1  sh -c 'if [ -f "${1}" ]; then isutf8 "$1" >/dev/null || (TERM=vt100 vi -u NONE -n -es -c "set fileencoding=utf8" -c "wq" "$1" > /dev/tty && echo "Fixing: $1" || echo "FAILED: $1"); fi' --
 ```
+
 
 
 ## General Usage
