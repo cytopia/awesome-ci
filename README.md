@@ -20,6 +20,7 @@ Lot's of tools for git, file and static source code analysis.
 
 * [Dependencies](dependencies/)
 * [Examples](EXAMPLES.md)
+* [Regex Contributions](REGEX_CONTRIBUTIONS.md)
 
 ---
 
@@ -82,6 +83,15 @@ $ file-utf8 --path=dump.sql --fix --dry
 find dump.sql -type f -print0 | \
    xargs -0 -P 8 -n1  sh -c 'if [ -f "${1}" ]; then isutf8 "$1" >/dev/null || (TERM=vt100 vi -u NONE -n -es -c "set fileencoding=utf8" -c "wq" "$1" > /dev/tty && echo "Fixing: $1" || echo "FAILED: $1"); fi' --
 ```
+
+
+## Custom regex contributions
+
+`regex-grep` and `regex-perl` have a lot of potential for doing custom project validation.
+
+In order to give you an idea, have a look at the compiled [Regex Contributions](REGEX_CONTRIBUTIONS.md).
+
+Please use pull requests to add useful checks.
 
 
 
