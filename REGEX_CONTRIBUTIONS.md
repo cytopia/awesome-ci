@@ -25,8 +25,8 @@ Escapes for Bash (and alike)
 
 ## Table of Contents
 
-1. [SCSS](https://github.com/cytopia/awesome-ci/REGEX_CONTRIBUTIONS.md#scss)
-2. [HTML](https://github.com/cytopia/awesome-ci/REGEX_CONTRIBUTIONS.md#html)
+1. [SCSS](https://github.com/cytopia/awesome-ci/blob/master/REGEX_CONTRIBUTIONS.md#scss)
+2. [HTML](https://github.com/cytopia/awesome-ci/blob/master/REGEX_CONTRIBUTIONS.md#html)
 
 
 ## Checks
