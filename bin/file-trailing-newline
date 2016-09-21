@@ -302,7 +302,7 @@ print_info() {
 		else
 			echo "Unable to use --fix"
 			echo
-			return 1
+			return 0
 		fi
 	fi
 }
