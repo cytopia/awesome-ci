@@ -1,5 +1,9 @@
 #!/bin/sh
 
+#
+# This must be ignored \\x00 \x00
+#
+
 if ! run "git-conflicts --config=.awesome-ci.conf --path=."; then
 	printf "${CLR_ERR}[%s]${CLR_CLS}\n" "FAILED"
 	ERRNO=$((ERRNO + 1))
