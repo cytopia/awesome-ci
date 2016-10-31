@@ -149,31 +149,31 @@ script:
   #------------------------------------------------------------
   # 5.) Find errors
   #------------------------------------------------------------
-  - bin/file-crlf                    --path=test/err/ --config=etc/awesome-ci.conf && false || true
-  - bin/file-empty                   --path=test/err/ --config=etc/awesome-ci.conf && false || true
-  - bin/file-nullbyte-char           --path=test/err/ --config=etc/awesome-ci.conf && false || true
-  - bin/file-trailing-newline        --path=test/err/ --config=etc/awesome-ci.conf && false || true
-  - bin/file-trailing-single-newline --path=test/err/ --config=etc/awesome-ci.conf && false || true
-  - bin/file-trailing-space          --path=test/err/ --config=etc/awesome-ci.conf && false || true
-  - bin/file-utf8                    --path=test/err/ --config=etc/awesome-ci.conf && false || true
-  - bin/file-utf8-bom                --path=test/err/ --config=etc/awesome-ci.conf && false || true
-  - bin/git-conflicts                --path=test/err/ --config=etc/awesome-ci.conf && false || true
- #- bin/git-ignored                  --path=test/err/
-  - bin/inline-css                   --path=test/err/ --config=etc/awesome-ci.conf && false || true
-  - bin/inline-js                    --path=test/err/ --config=etc/awesome-ci.conf && false || true
- #- bin/regex-grep                   --path=test/err/ --config=etc/awesome-ci.conf
- #- bin/regex-perl                   --path=test/err/ --config=etc/awesome-ci.conf
-  - bin/syntax-bash                  --path=test/err/ --config=etc/awesome-ci.conf && false || true
-  - bin/syntax-css                   --path=test/err/ --config=etc/awesome-ci.conf && false || true
-  - bin/syntax-js                    --path=test/err/ --config=etc/awesome-ci.conf && false || true
-  - bin/syntax-json                  --path=test/err/ --config=etc/awesome-ci.conf && false || true
-  - bin/syntax-markdown              --path=test/err/ --config=etc/awesome-ci.conf && false || true
-  - bin/syntax-perl                  --path=test/err/ --config=etc/awesome-ci.conf && false || true
-  - bin/syntax-php                   --path=test/err/ --config=etc/awesome-ci.conf && false || true
-  - bin/syntax-python                --path=test/err/ --config=etc/awesome-ci.conf && false || true
-  - bin/syntax-ruby                  --path=test/err/ --config=etc/awesome-ci.conf && false || true
-  - bin/syntax-scss                  --path=test/err/ --config=etc/awesome-ci.conf && false || true
-  - bin/syntax-sh                    --path=test/err/ --config=etc/awesome-ci.conf && false || true
+  - if bin/file-crlf                    --path=test/err/ --config=etc/awesome-ci.conf; then false; else true; fi
+  - if bin/file-empty                   --path=test/err/ --config=etc/awesome-ci.conf; then false; else true; fi
+  - if bin/file-nullbyte-char           --path=test/err/ --config=etc/awesome-ci.conf; then false; else true; fi
+  - if bin/file-trailing-newline        --path=test/err/ --config=etc/awesome-ci.conf; then false; else true; fi
+  - if bin/file-trailing-single-newline --path=test/err/ --config=etc/awesome-ci.conf; then false; else true; fi
+  - if bin/file-trailing-space          --path=test/err/ --config=etc/awesome-ci.conf; then false; else true; fi
+  - if bin/file-utf8                    --path=test/err/ --config=etc/awesome-ci.conf; then false; else true; fi
+  - if bin/file-utf8-bom                --path=test/err/ --config=etc/awesome-ci.conf; then false; else true; fi
+  - if bin/git-conflicts                --path=test/err/ --config=etc/awesome-ci.conf; then false; else true; fi
+ #- if bin/git-ignored                  --path=test/err/
+  - if bin/inline-css                   --path=test/err/ --config=etc/awesome-ci.conf; then false; else true; fi
+  - if bin/inline-js                    --path=test/err/ --config=etc/awesome-ci.conf; then false; else true; fi
+ #- if bin/regex-grep                   --path=test/err/ --config=etc/awesome-ci.conf; then false; else true; fi
+ #- if bin/regex-perl                   --path=test/err/ --config=etc/awesome-ci.conf; then false; else true; fi
+  - if bin/syntax-bash                  --path=test/err/ --config=etc/awesome-ci.conf; then false; else true; fi
+  - if bin/syntax-css                   --path=test/err/ --config=etc/awesome-ci.conf; then false; else true; fi
+  - if bin/syntax-js                    --path=test/err/ --config=etc/awesome-ci.conf; then false; else true; fi
+  - if bin/syntax-json                  --path=test/err/ --config=etc/awesome-ci.conf; then false; else true; fi
+  - if bin/syntax-markdown              --path=test/err/ --config=etc/awesome-ci.conf; then false; else true; fi
+  - if bin/syntax-perl                  --path=test/err/ --config=etc/awesome-ci.conf; then false; else true; fi
+  - if bin/syntax-php                   --path=test/err/ --config=etc/awesome-ci.conf; then false; else true; fi
+  - if bin/syntax-python                --path=test/err/ --config=etc/awesome-ci.conf; then false; else true; fi
+  - if bin/syntax-ruby                  --path=test/err/ --config=etc/awesome-ci.conf; then false; else true; fi
+  - if bin/syntax-scss                  --path=test/err/ --config=etc/awesome-ci.conf; then false; else true; fi
+  - if bin/syntax-sh                    --path=test/err/ --config=etc/awesome-ci.conf; then false; else true; fi
 
 
   #------------------------------------------------------------
