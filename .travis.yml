@@ -24,7 +24,8 @@ before_install:
   - sudo apt-get install -qq
 
   # NodeJS
-  - version="$( wget -qO-  https://nodejs.org/en/download/ 2>/dev/null | grep 'Current version' | grep -oE 'v[0-9.]{3,5}' | sed 's/^v//g' )";
+  - url=$(  wget -qO-  https://nodejs.org/en/download/current 2>/dev/null | grep -oE 'https://.*node.*linux.*x64.*tar.xz' )
+  - version=$( echo "${url}" | grep -oE 'v[0-9.]{3,5}' | sed 's/^v//g' | head -1 )
   - sudo mkdir -p /usr/local/bin/ || true;
   - sudo wget -P /usr/local/ https://nodejs.org/dist/v${version}/node-v${version}-linux-x64.tar.xz;
   - sudo tar xvf /usr/local/node-v${version}-linux-x64.tar.xz -C /usr/local;
