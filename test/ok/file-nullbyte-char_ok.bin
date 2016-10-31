@@ -1,0 +1,6 @@
+#!/bin/sh
+
+if ! run "git-conflicts --config=.awesome-ci.conf --path=."; then
+	printf "${CLR_ERR}[%s]${CLR_CLS}\n" "FAILED"
+	ERRNO=$((ERRNO + 1))
+fi

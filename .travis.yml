@@ -60,6 +60,7 @@ script:
   #------------------------------------------------------------
   - bin/file-crlf --info
   - bin/file-empty --info
+  - bin/file-nullbyte-char --info
   - bin/file-trailing-newline --info
   - bin/file-trailing-single-newline --info
   - bin/file-trailing-space --info
@@ -89,6 +90,7 @@ script:
   #------------------------------------------------------------
   - bin/file-crlf                    --path=. --config=etc/awesome-ci.conf --dry
   - bin/file-empty                   --path=. --config=etc/awesome-ci.conf --dry
+  - bin/file-nullbyte-char           --path=. --config=etc/awesome-ci.conf --dry
   - bin/file-trailing-newline        --path=. --config=etc/awesome-ci.conf --dry
   - bin/file-trailing-single-newline --path=. --config=etc/awesome-ci.conf --dry
   - bin/file-trailing-space          --path=. --config=etc/awesome-ci.conf --dry
@@ -118,6 +120,7 @@ script:
   #------------------------------------------------------------
   - bin/file-crlf                    --path=. --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
   - bin/file-empty                   --path=. --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
+  - bin/file-nullbyte-char           --path=. --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
   - bin/file-trailing-newline        --path=. --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
   - bin/file-trailing-single-newline --path=. --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
   - bin/file-trailing-space          --path=. --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
@@ -147,6 +150,7 @@ script:
   #------------------------------------------------------------
   - bin/file-crlf                    --path=test/err/ --config=etc/awesome-ci.conf && false || true
   - bin/file-empty                   --path=test/err/ --config=etc/awesome-ci.conf && false || true
+  - bin/file-nullbyte-char           --path=test/err/ --config=etc/awesome-ci.conf && false || true
   - bin/file-trailing-newline        --path=test/err/ --config=etc/awesome-ci.conf && false || true
   - bin/file-trailing-single-newline --path=test/err/ --config=etc/awesome-ci.conf && false || true
   - bin/file-trailing-space          --path=test/err/ --config=etc/awesome-ci.conf && false || true
@@ -176,6 +180,7 @@ script:
   #------------------------------------------------------------
   - bin/file-crlf                    --path=test/ok/ --config=etc/awesome-ci.conf
   - bin/file-empty                   --path=test/ok/ --config=etc/awesome-ci.conf
+  - bin/file-nullbyte-char           --path=test/ok/ --config=etc/awesome-ci.conf
   - bin/file-trailing-newline        --path=test/ok/ --config=etc/awesome-ci.conf
   - bin/file-trailing-single-newline --path=test/ok/ --config=etc/awesome-ci.conf
   - bin/file-trailing-space          --path=test/ok/ --config=etc/awesome-ci.conf
