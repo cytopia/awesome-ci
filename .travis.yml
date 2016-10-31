@@ -179,28 +179,28 @@ script:
   #------------------------------------------------------------
   # 6.) Find Success
   #------------------------------------------------------------
-  - bin/file-crlf                    --path=test/ok/ --config=etc/awesome-ci.conf
-  - bin/file-empty                   --path=test/ok/ --config=etc/awesome-ci.conf
-  - bin/file-nullbyte-char           --path=test/ok/ --config=etc/awesome-ci.conf
-  - bin/file-trailing-newline        --path=test/ok/ --config=etc/awesome-ci.conf
-  - bin/file-trailing-single-newline --path=test/ok/ --config=etc/awesome-ci.conf
-  - bin/file-trailing-space          --path=test/ok/ --config=etc/awesome-ci.conf
-  - bin/file-utf8                    --path=test/ok/ --config=etc/awesome-ci.conf
-  - bin/file-utf8-bom                --path=test/ok/ --config=etc/awesome-ci.conf
-  - bin/git-conflicts                --path=test/ok/ --config=etc/awesome-ci.conf
- #- bin/git-ignored                  --path=test/ok/
-  - bin/inline-css                   --path=test/ok/ --config=etc/awesome-ci.conf
-  - bin/inline-js                    --path=test/ok/ --config=etc/awesome-ci.conf
- #- bin/regex-grep                   --path=test/ok/ --config=etc/awesome-ci.conf
- #- bin/regex-perl                   --path=test/ok/ --config=etc/awesome-ci.conf
-  - bin/syntax-bash                  --path=test/ok/ --config=etc/awesome-ci.conf
-  - bin/syntax-css                   --path=test/ok/ --config=etc/awesome-ci.conf
-  - bin/syntax-js                    --path=test/ok/ --config=etc/awesome-ci.conf
-  - bin/syntax-json                  --path=test/ok/ --config=etc/awesome-ci.conf
-  - bin/syntax-markdown              --path=test/ok/ --config=etc/awesome-ci.conf
-  - bin/syntax-perl                  --path=test/ok/ --config=etc/awesome-ci.conf
-  - bin/syntax-php                   --path=test/ok/ --config=etc/awesome-ci.conf
-  - bin/syntax-python                --path=test/ok/ --config=etc/awesome-ci.conf
-  - bin/syntax-ruby                  --path=test/ok/ --config=etc/awesome-ci.conf
-  - bin/syntax-scss                  --path=test/ok/ --config=etc/awesome-ci.conf
-  - bin/syntax-sh                    --path=test/ok/ --config=etc/awesome-ci.conf
+  - bin/file-crlf                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=*.pyc
+  - bin/file-empty                   --path=test/ok/ --config=etc/awesome-ci.conf --ignore=*.pyc
+  - bin/file-nullbyte-char           --path=test/ok/ --config=etc/awesome-ci.conf --ignore=*.pyc
+  - bin/file-trailing-newline        --path=test/ok/ --config=etc/awesome-ci.conf --ignore=*.pyc
+  - bin/file-trailing-single-newline --path=test/ok/ --config=etc/awesome-ci.conf --ignore=*.pyc
+  - bin/file-trailing-space          --path=test/ok/ --config=etc/awesome-ci.conf --ignore=*.pyc
+  - bin/file-utf8                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=*.pyc
+  - bin/file-utf8-bom                --path=test/ok/ --config=etc/awesome-ci.conf --ignore=*.pyc
+  - bin/git-conflicts                --path=test/ok/ --config=etc/awesome-ci.conf --ignore=*.pyc
+ #- bin/git-ignored                  --path=test/ok/                              --ignore=*.pyc
+  - bin/inline-css                   --path=test/ok/ --config=etc/awesome-ci.conf --ignore=*.pyc
+  - bin/inline-js                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=*.pyc
+ #- bin/regex-grep                   --path=test/ok/ --config=etc/awesome-ci.conf --ignore=*.pyc
+ #- bin/regex-perl                   --path=test/ok/ --config=etc/awesome-ci.conf --ignore=*.pyc
+  - bin/syntax-bash                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=*.pyc
+  - bin/syntax-css                   --path=test/ok/ --config=etc/awesome-ci.conf --ignore=*.pyc
+  - bin/syntax-js                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=*.pyc
+  - bin/syntax-json                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=*.pyc
+  - bin/syntax-markdown              --path=test/ok/ --config=etc/awesome-ci.conf --ignore=*.pyc
+  - bin/syntax-perl                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=*.pyc
+  - bin/syntax-php                   --path=test/ok/ --config=etc/awesome-ci.conf --ignore=*.pyc
+  - bin/syntax-python                --path=test/ok/ --config=etc/awesome-ci.conf --ignore=*.pyc
+  - bin/syntax-ruby                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=*.pyc
+  - bin/syntax-scss                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=*.pyc
+  - bin/syntax-sh                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=*.pyc
