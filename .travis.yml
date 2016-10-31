@@ -119,31 +119,31 @@ script:
   #------------------------------------------------------------
   # 4.) Test the scripts in real mode (without findings)
   #------------------------------------------------------------
-  - bin/file-crlf                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
-  - bin/file-empty                   --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
-  - bin/file-nullbyte-char           --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
-  - bin/file-trailing-newline        --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
-  - bin/file-trailing-single-newline --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
-  - bin/file-trailing-space          --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
-  - bin/file-utf8                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
-  - bin/file-utf8-bom                --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
-  - bin/git-conflicts                --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
+  - bin/file-crlf                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
+  - bin/file-empty                   --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
+  - bin/file-nullbyte-char           --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
+  - bin/file-trailing-newline        --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
+  - bin/file-trailing-single-newline --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
+  - bin/file-trailing-space          --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
+  - bin/file-utf8                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
+  - bin/file-utf8-bom                --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
+  - bin/git-conflicts                --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
   - bin/git-ignored                  --path=test/ok/
-  - bin/inline-css                   --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
-  - bin/inline-js                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
+  - bin/inline-css                   --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
+  - bin/inline-js                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
  #- bin/regex-grep                   --path=test/ok/ --config=etc/awesome-ci.conf
  #- bin/regex-perl                   --path=test/ok/ --config=etc/awesome-ci.conf
-  - bin/syntax-bash                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
-  - bin/syntax-css                   --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
-  - bin/syntax-js                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
-  - bin/syntax-json                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
-  - bin/syntax-markdown              --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
-  - bin/syntax-perl                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
-  - bin/syntax-php                   --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
-  - bin/syntax-python                --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
-  - bin/syntax-ruby                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
-  - bin/syntax-scss                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
-  - bin/syntax-sh                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,test/,configure.in"
+  - bin/syntax-bash                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
+  - bin/syntax-css                   --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
+  - bin/syntax-js                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
+  - bin/syntax-json                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
+  - bin/syntax-markdown              --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
+  - bin/syntax-perl                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
+  - bin/syntax-php                   --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
+  - bin/syntax-python                --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
+  - bin/syntax-ruby                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
+  - bin/syntax-scss                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
+  - bin/syntax-sh                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
 
 
   #------------------------------------------------------------
