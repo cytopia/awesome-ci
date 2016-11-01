@@ -62,8 +62,8 @@ MY_INFO="aci-trailing-newline -v"
 #
 # Version
 #
-MY_VERSION="0.13"
-MY_DATE="2016-09-11"
+MY_VERSION="0.14"
+MY_DATE="2016-11-01"
 
 #
 # Credits

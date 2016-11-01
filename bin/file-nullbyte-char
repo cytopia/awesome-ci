@@ -64,8 +64,8 @@ MY_FIX_INFO="dos2unix --version"
 #
 # Version
 #
-MY_VERSION="0.13"
-MY_DATE="2016-09-11"
+MY_VERSION="0.14"
+MY_DATE="2016-11-01"
 
 #
 # Credits

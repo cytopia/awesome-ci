@@ -36,8 +36,8 @@ MY_INFO="git --version"
 #
 # Version
 #
-MY_VERSION="0.5"
-MY_DATE="2016-08-21"
+MY_VERSION="0.14"
+MY_DATE="2016-11-01"
 
 #
 # Credits

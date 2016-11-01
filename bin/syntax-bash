@@ -59,8 +59,8 @@ MY_INFO="bash --version | grep -E '(([0-9]+)(\.))+'"
 #
 # Version
 #
-MY_VERSION="0.13"
-MY_DATE="2016-09-11"
+MY_VERSION="0.14"
+MY_DATE="2016-11-01"
 
 #
 # Credits
