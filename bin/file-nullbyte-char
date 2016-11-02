@@ -15,10 +15,10 @@ MY_FINISH_ERR="Files with null-byte (\x00) characters found."
 MY_CONF_PRE="FILE_NULLBYTE_"
 
 # Custom required binaries
-REQUIRED_CUST_BINS="sed"
+REQUIRED_CUST_BINS=""
 
 # Binaries required for fixing
-REQUIRED_FIX_BINS="sed"
+REQUIRED_FIX_BINS=""
 
 # Enable custom options (cmd arguments)
 # that can be parsed to the actual check binary?
@@ -52,7 +52,7 @@ MY_FIX_CMD="if cat -n \"\$1\" | sed -n \"/${MY_REG}/p\" | grep -aq \"^[[:space:]
 MY_INFO="file -v 2>&1 | grep -E '(([0-9]+)(\.))+'"
 
 # Command to be displayed for --info
-MY_FIX_INFO="dos2unix --version"
+MY_FIX_INFO=""
 
 
 
