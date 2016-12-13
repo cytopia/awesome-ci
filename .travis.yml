@@ -59,6 +59,7 @@ script:
   #------------------------------------------------------------
   # 2.) Output Info
   #------------------------------------------------------------
+  - bin/file-cr --info
   - bin/file-crlf --info
   - bin/file-empty --info
   - bin/file-nullbyte-char --info
@@ -89,6 +90,7 @@ script:
   #------------------------------------------------------------
   # 3.) Test the scripts in dry mode
   #------------------------------------------------------------
+  - bin/file-cr                      --path=. --config=etc/awesome-ci.conf --dry
   - bin/file-crlf                    --path=. --config=etc/awesome-ci.conf --dry
   - bin/file-empty                   --path=. --config=etc/awesome-ci.conf --dry
   - bin/file-nullbyte-char           --path=. --config=etc/awesome-ci.conf --dry
@@ -119,6 +121,10 @@ script:
   #------------------------------------------------------------
   # 4.) Test the scripts in real mode (without findings)
   #------------------------------------------------------------
+  - bin/file-cr                      --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --list
+  - bin/file-cr                      --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --verbose
+  - bin/file-cr                      --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
+
   - bin/file-crlf                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --list
   - bin/file-crlf                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --verbose
   - bin/file-crlf                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
@@ -216,6 +222,9 @@ script:
   #------------------------------------------------------------
   # 5.) Find errors
   #------------------------------------------------------------
+  - if bin/file-cr                      --path=test/err --config=etc/awesome-ci.conf --verbose; then false; else true; fi
+  - if bin/file-cr                      --path=test/err --config=etc/awesome-ci.conf;           then false; else true; fi
+
   - if bin/file-crlf                    --path=test/err --config=etc/awesome-ci.conf --verbose; then false; else true; fi
   - if bin/file-crlf                    --path=test/err --config=etc/awesome-ci.conf;           then false; else true; fi
 
@@ -291,6 +300,10 @@ script:
   #------------------------------------------------------------
   # 6.) Find Success
   #------------------------------------------------------------
+  - bin/file-cr                      --path=test/ok --config=etc/awesome-ci.conf --list
+  - bin/file-cr                      --path=test/ok --config=etc/awesome-ci.conf --verbose
+  - bin/file-cr                      --path=test/ok --config=etc/awesome-ci.conf
+
   - bin/file-crlf                    --path=test/ok --config=etc/awesome-ci.conf --list
   - bin/file-crlf                    --path=test/ok --config=etc/awesome-ci.conf --verbose
   - bin/file-crlf                    --path=test/ok --config=etc/awesome-ci.conf

@@ -35,6 +35,7 @@ All checks have the option to only check by one or more file **extensions**, by 
 |------|------|---------|-------------|
 | Git | [git-conflicts](bin/git-conflicts) | | Scan files and check if they contain git conflicts. |
 | Git | [git-ignored](bin/git-ignored) | | Scan git directory and see if ignored files are still in git cache. |
+| File | [file-cr](bin/file-cr) | ✓ | Scan files and check if they contain CR (Carriage Return only). |
 | File | [file-crlf](bin/file-crlf) | ✓ | Scan files and check if they contain CRLF (Windows Line Feeds). |
 | File | [file-empty](bin/file-empty) | | Scan files and check if they are empty (0 bytes). |
 | File | [file-nullbyte-char](bin/file-nullbyte-char) | ✓ | Scan files and check if they contain a null-byte character (\x00). |
