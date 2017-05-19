@@ -14,23 +14,27 @@ before_install:
   - sudo apt-get update -qq
 
   # Install
-  - sudo apt-get install -qq ruby2.1 ruby-switch shellcheck moreutils php5 dos2unix
+  - sudo apt-get install -qq ruby2.1 ruby-switch shellcheck moreutils php5 dos2unix nodejs npm
 
   # Set ruby version
   - sudo ruby-switch --set ruby2.1
 
+  # symlink alternative node binary
+  - sudo mkdir -p /usr/local/bin/
+  - ln -s "$(which nodejs)" /usr/local/bon/node
+
   #- sudo apt-get install -qq shellcheck moreutils nodejs npm php5
   #- sudo ln -s /usr/bin/nodejs /usr/bin/node
-  - sudo apt-get install -qq
+  #- sudo apt-get install -qq
 
   # NodeJS
-  - url=$(  wget -qO-  https://nodejs.org/en/download/current 2>/dev/null | grep -oE 'https://.*node.*linux.*x64.*tar.xz' )
-  - version=$( echo "${url}" | grep -oE 'v[0-9.]{3,5}' | sed 's/^v//g' | head -1 )
-  - sudo mkdir -p /usr/local/bin/ || true;
-  - sudo wget -P /usr/local/ https://nodejs.org/dist/v${version}/node-v${version}-linux-x64.tar.xz;
-  - sudo tar xvf /usr/local/node-v${version}-linux-x64.tar.xz -C /usr/local;
-  - sudo ln -s /usr/local/node-v${version}-linux-x64 /usr/local/node;
-  - sudo ln -s /usr/local/node/bin/* /usr/local/bin/ 2>/dev/null || true
+  #- url=$(  wget -qO-  https://nodejs.org/en/download/current 2>/dev/null | grep -oE 'https://.*node.*linux.*x64.*tar.xz' )
+  #- version=$( echo "${url}" | grep -oE 'v[0-9.]{3,5}' | sed 's/^v//g' | head -1 )
+  #- sudo mkdir -p /usr/local/bin/ || true;
+  #- sudo wget -P /usr/local/ https://nodejs.org/dist/v${version}/node-v${version}-linux-x64.tar.xz;
+  #- sudo tar xvf /usr/local/node-v${version}-linux-x64.tar.xz -C /usr/local;
+  #- sudo ln -s /usr/local/node-v${version}-linux-x64 /usr/local/node;
+  #- sudo ln -s /usr/local/node/bin/* /usr/local/bin/ 2>/dev/null || true
 
 
   - sudo npm install -g eslint
