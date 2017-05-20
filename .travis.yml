@@ -37,8 +37,8 @@ before_install:
   # NodeJS4
   - VERSION="$( curl -Lq https://nodejs.org 2>/dev/null | grep LTS | grep -Eo 'data-version.*.' | grep -oE 'v[0-9.]+' )"
   - sudo wget -P /usr/local/src https://nodejs.org/dist/${VERSION}/node-${VERSION}-linux-x64.tar.xz
-  - sudo tar xvf /usr/local/src/node-v${version}-linux-x64.tar.xz -C /usr/local/src
-  - sudo ln -s /usr/local/src/node-v${version}-linux-x64 /usr/local/node;
+  - sudo tar xvf /usr/local/src/node-v${VERSION}-linux-x64.tar.xz -C /usr/local/src
+  - sudo ln -s /usr/local/src/node-v${VERSION}-linux-x64 /usr/local/node;
   - sudo ln -s /usr/local/node/bin/* /usr/local/bin/
 
 
