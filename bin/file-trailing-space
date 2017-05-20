@@ -39,7 +39,7 @@ DEFAULT_CUST_OPS=""
 #      This will be replaced either with custom options
 #      or with the default options.
 MY_REG="^.*[[:space:]]+$"
-MY_CHECK="grep --color=always -inHE \"${MY_REG}\" \"\$1\" || true"
+MY_CHECK="LC_ALL=C grep --color=always -inHE \"${MY_REG}\" \"\$1\" || true"
 
 # Can this check fix the problems?
 ENABLE_FIX=1
@@ -62,8 +62,8 @@ MY_INFO="grep -V | grep -E '([0-9]+\.+)+'"
 #
 # Version
 #
-MY_VERSION="0.14"
-MY_DATE="2016-11-01"
+MY_VERSION="0.15"
+MY_DATE="2017-05-20"
 
 #
 # Credits
