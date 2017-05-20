@@ -62,8 +62,8 @@ MY_INFO="grep -V | grep -E '([0-9]+\.+)+'"
 #
 # Version
 #
-MY_VERSION="0.14"
-MY_DATE="2016-11-01"
+MY_VERSION="0.15"
+MY_DATE="2017-05-20"
 
 #
 # Credits
