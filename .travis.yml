@@ -5,6 +5,14 @@ sudo: required
 
 
 ###
+### Use latest node version
+###
+language: node_js
+node_js:
+  - node
+
+
+###
 ### Before install
 ###
 before_install:
