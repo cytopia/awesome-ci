@@ -1,8 +1,12 @@
-dist: trusty
+###
+### Enable sudo (required for docker service)
+###
 sudo: required
 
-language: bash
 
+###
+### Before install
+###
 before_install:
   # Add more modern repos
   - sudo apt-get update -qq
@@ -14,27 +18,28 @@ before_install:
   - sudo apt-get update -qq
 
   # Install
-  - sudo apt-get install -qq ruby2.1 ruby-switch shellcheck moreutils php5 dos2unix nodejs npm
+  - sudo apt-get install -qq ruby2.1 ruby-switch shellcheck moreutils php5 dos2unix
 
   # Set ruby version
   - sudo ruby-switch --set ruby2.1
 
+  # Create custom source/bin directory
+  - sudo mkdir -p /usr/local/bin
+  - sudo mkdir -p /usr/local/src
+
   # symlink alternative node binary
-  - sudo mkdir -p /usr/local/bin/
-  - sudo ln -s "$(which nodejs)" /usr/local/bin/node
+  #- sudo ln -s "$(which nodejs)" /usr/local/bin/node
 
   #- sudo apt-get install -qq shellcheck moreutils nodejs npm php5
   #- sudo ln -s /usr/bin/nodejs /usr/bin/node
   #- sudo apt-get install -qq
 
-  # NodeJS
-  #- url=$(  wget -qO-  https://nodejs.org/en/download/current 2>/dev/null | grep -oE 'https://.*node.*linux.*x64.*tar.xz' )
-  #- version=$( echo "${url}" | grep -oE 'v[0-9.]{3,5}' | sed 's/^v//g' | head -1 )
-  #- sudo mkdir -p /usr/local/bin/ || true;
-  #- sudo wget -P /usr/local/ https://nodejs.org/dist/v${version}/node-v${version}-linux-x64.tar.xz;
-  #- sudo tar xvf /usr/local/node-v${version}-linux-x64.tar.xz -C /usr/local;
-  #- sudo ln -s /usr/local/node-v${version}-linux-x64 /usr/local/node;
-  #- sudo ln -s /usr/local/node/bin/* /usr/local/bin/ 2>/dev/null || true
+  # NodeJS4
+  - VERSION="$( curl -Lq https://nodejs.org 2>/dev/null | grep LTS | grep -Eo 'data-version.*.' | grep -oE 'v[0-9.]+' )"
+  - sudo wget -P /usr/local/src https://nodejs.org/dist/${VERSION}/node-${VERSION}-linux-x64.tar.xz
+  - sudo tar xvf /usr/local/src/node-v${version}-linux-x64.tar.xz -C /usr/local/src
+  - sudo ln -s /usr/local/src/node-v${version}-linux-x64 /usr/local/node;
+  - sudo ln -s /usr/local/node/bin/* /usr/local/bin/
 
 
   - sudo npm install -g eslint
@@ -52,6 +57,9 @@ before_install:
   - sudo make install
 
 
+###
+### Checks
+###
 script:
 
   #------------------------------------------------------------
