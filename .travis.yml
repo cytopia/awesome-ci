@@ -45,7 +45,8 @@ before_install:
   - sudo npm install -g eslint
   - sudo npm install -g jsonlint
   - sudo gem install scss_lint
-  - sudo gem install mdl
+    #- sudo gem install mdl
+  - sudo gem install mdl -v 0.3.1
 
   # Symlink node binaries
   - sudo ln -s /usr/local/node/bin/* /usr/local/bin/ 2>/dev/null || true
