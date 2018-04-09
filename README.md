@@ -13,7 +13,6 @@
 [![OSX](https://raw.githubusercontent.com/cytopia/icons/master/64x64/osx.png)](https://www.apple.com/osx)
 
 
-
 Lot's of tools for git, file and static source code analysis.
 
 **Documentation**
@@ -60,6 +59,7 @@ All checks have the option to only check by one or more file **extensions**, by 
 | Regex | [regex-grep](bin/regex-grep) | | `egrep` (`grep -E`) regex version to scan files for an occurance. |
 | Regex | [regex-perl](bin/regex-perl) | | `perl` regex version to scan files for an occurance. |
 
+
 ## Learn / validate
 
 All of the above scripts offer the `--dry` option which will only show you the built command without actually executing it:
@@ -74,6 +74,7 @@ find . -type f -not \( -path "./.git*" -o -path "./.svn*" \) ! -size 0 -print0 |
    tr '\n' '\0' | \
    xargs -0 -P 8 -n1  sh -c 'if [ -f "${1}" ]; then grep --color=always -inHE "if[[:space:]]*\[\[" "$1" || true; fi' --
 ```
+
 
 ## Fix
 
@@ -94,7 +95,6 @@ find dump.sql -type f -print0 | \
 In order to give you an idea, have a look at the compiled [Regex Contributions](REGEX_CONTRIBUTIONS.md).
 
 Please use pull requests to add useful checks.
-
 
 
 ## General Usage
@@ -129,10 +129,7 @@ Please use pull requests to add useful checks.
   --help            # Show help
   --info            # Show version of required binaries
   --version         # Show tool version
-
 ```
-
-
 
 
 ## Installation
@@ -159,3 +156,10 @@ make install
 ./configure --prefix=/opt
 make install
 ```
+
+
+## License
+
+[MIT License](LICENSE.md)
+
+Copyright (c) 2016 [cytopia](https://github.com/cytopia)
