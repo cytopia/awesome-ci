@@ -61,8 +61,8 @@ MY_INFO="isutf8 --help | grep version"
 #
 # Version
 #
-MY_VERSION="0.14"
-MY_DATE="2016-11-01"
+MY_VERSION="0.15"
+MY_DATE="2018-04-09"
 
 #
 # Credits
