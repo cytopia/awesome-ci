@@ -57,8 +57,8 @@ MY_INFO="(sh --version >/dev/null 2>&1) && (sh --version|grep -E '(([0-9]+)(\.))
 #
 # Version
 #
-MY_VERSION="0.14"
-MY_DATE="2016-11-01"
+MY_VERSION="0.15"
+MY_DATE="2018-04-09"
 
 #
 # Credits
@@ -403,15 +403,10 @@ check_config_file() {
 # (defaults to 1 if impossible)
 #
 num_cpu() {
-	_num="$(getconf _NPROCESSORS_ONLN)"
-
-	# Worked
-	if [ "$?" = "0" ]; then
-		echo "${_num}"
-		return 0
-	else
+	if ! _num="$( getconf _NPROCESSORS_ONLN 2>/dev/null )"; then
 		echo "1"
-		return 1
+	else
+		echo "${_num}"
 	fi
 }
 
