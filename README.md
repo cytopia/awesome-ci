@@ -1,7 +1,9 @@
 # awesome-ci
 
 [![Build Status](https://travis-ci.org/cytopia/awesome-ci.svg?branch=master)](https://travis-ci.org/cytopia/awesome-ci)
-[![Latest Stable Version](https://poser.pugx.org/cytopia/awesome-ci/v/stable)](https://packagist.org/packages/cytopia/awesome-ci) [![Total Downloads](https://poser.pugx.org/cytopia/awesome-ci/downloads)](https://packagist.org/packages/cytopia/awesome-ci) [![Latest Unstable Version](https://poser.pugx.org/cytopia/awesome-ci/v/unstable)](https://packagist.org/packages/cytopia/awesome-ci) [![License](https://poser.pugx.org/cytopia/awesome-ci/license)](http://opensource.org/licenses/MIT)
+[![Latest Stable Version](https://poser.pugx.org/cytopia/awesome-ci/v/stable)](https://packagist.org/packages/cytopia/awesome-ci)
+[![Total Downloads](https://poser.pugx.org/cytopia/awesome-ci/downloads)](https://packagist.org/packages/cytopia/awesome-ci)
+[![License](https://poser.pugx.org/cytopia/awesome-ci/license)](http://opensource.org/licenses/MIT)
 [![Type](https://img.shields.io/badge/type-bash-red.svg)](https://en.wikipedia.org/wiki/Bash_%28Unix_shell%29)
 
 ---
@@ -22,6 +24,20 @@ Lot's of tools for git, file and static source code analysis.
 * [Regex Contributions](REGEX_CONTRIBUTIONS.md)
 
 ---
+
+**Table of Contents**
+
+1. [Tools](#tools)
+2. [Learn / Validate](#learn--validate)
+3. [Fix](#fix)
+4. [Custom regex contributions](#custom-regex-contributions)
+5. [General usage](#general-usage)
+6. [Installation](i#installation)
+    1. [Install OSX](#install-osx)
+    2. [Install Linux/BSD](#install-linuxbsd)
+7. [Awesome CI Docker image](#awesome-ci-docker-image)
+8. [License](#license)
+
 
 ## Tools
 
@@ -131,7 +147,6 @@ Please use pull requests to add useful checks.
   --version         # Show tool version
 ```
 
-
 ## Installation
 
 ### Install OSX
@@ -157,9 +172,17 @@ make install
 make install
 ```
 
+## Awesome CI Docker image
+
+Instead of installing it, you can also use the bundled Docker image:
+**[cytopia/awesome-ci](https://hub.docker.com/r/cytopia/awesome-ci/)**
+
+```bash
+docker run -v ${PWD}:/ac cytopia/awesome-ci file-crlf --path=/ac
+```
 
 ## License
 
 [MIT License](LICENSE.md)
 
-Copyright (c) 2016 [cytopia](https://github.com/cytopia)
+Copyright (c) 2018 [cytopia](https://github.com/cytopia)
