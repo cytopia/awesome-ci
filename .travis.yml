@@ -1,40 +1,54 @@
 ###
-### Enable sudo (required for docker service)
+### Choose OS
 ###
 sudo: required
+dist: trusty
 
 
 ###
-### Use latest node version
+### Choose Environment
 ###
-language: node_js
-node_js:
-  - node
+language: ruby
+rvm: 2.5.0
 
 
 ###
-### Before install
+### Install dependencies
 ###
 before_install:
   # Add more modern repos
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq python-software-properties
-  - sudo add-apt-repository ppa:brightbox/ruby-ng -y
-  - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ trusty-backports restricted main universe"
+  - max=100; i=0; while [ $i -lt $max ]; do if sudo apt-get update; then break; else i=$((i+1)); fi done
+  - max=100; i=0; while [ $i -lt $max ]; do if sudo apt-get -y install python-software-properties; then break; else i=$((i+1)); fi done
+  - sudo add-apt-repository -y ppa:brightbox/ruby-ng
+  - sudo add-apt-repository -y "deb http://archive.ubuntu.com/ubuntu/ trusty-backports restricted main universe"
 
-  # Update sources
-  - sudo apt-get update -qq
-
-  # Install
-  - sudo apt-get install -qq ruby2.3 ruby2.3-dev ruby-switch shellcheck moreutils php5 dos2unix
+  # Install dependencies
+  - max=100; i=0; while [ $i -lt $max ]; do if sudo apt-get update; then break; else i=$((i+1)); fi done
+  - max=100; i=0; while [ $i -lt $max ]; do if sudo apt-get -y install
+        gcc
+        gcc-multilib
+        make
+        ruby2.5
+        ruby2.5-dev
+        ruby-switch
+        moreutils
+        shellcheck
+        moreutils
+        php5-cli
+        dos2unix;
+        then break; else i=$((i+1)); fi done
 
   # Set ruby version
-  #- sudo ruby-switch --set ruby2.3
-  - sudo gem update bundler
-  - sudo gem pristine executable-hooks --version 1.3.2
-  - sudo gem pristine gem-wrappers --version 1.3.2
-  - sudo gem pristine nokogiri --version 1.8.1
-    #- sudo gem pristine ffi --version 1.9.23
+  - ruby-switch --list
+  - sudo ruby-switch --set ruby2.5
+  - ruby -v
+  - gem -v
+  #
+  #  - sudo gem update bundler
+  #  - sudo gem pristine executable-hooks --version 1.3.2
+  #  - sudo gem pristine gem-wrappers --version 1.3.2
+  #  - sudo gem pristine nokogiri --version 1.8.1
+  #  - sudo gem pristine ffi --version 1.9.25
 
   # Create custom source/bin directory
   - sudo mkdir -p /usr/local/bin
@@ -49,15 +63,18 @@ before_install:
 
   - sudo npm install -g eslint
   - sudo npm install -g jsonlint
+  - sudo npm install -g mdlint
   - sudo gem install scss_lint
-    #- sudo gem install mdl
-    #
-  - sudo gem install mdl -v 0.3.1
+  - sudo gem install mdl
 
   # Symlink node binaries
   - sudo ln -s /usr/local/node/bin/* /usr/local/bin/ 2>/dev/null || true
 
-  # Install scripts
+
+###
+### Install Awesome-CI
+###
+install:
   - ./configure
   - sudo make install
 
