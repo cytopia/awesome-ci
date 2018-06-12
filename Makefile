@@ -5,12 +5,23 @@ SHELL = /bin/sh
 
 MKDIR_P = mkdir -p
 
+# If ./configure has been run, include configure.in
+ifneq ("$(wildcard configure.in)","")
+include configure.in
+endif
+
+# 'test' directory exists, therefore force make to run test
+.PHONY: test
+
 
 ###
 ### Help
 ###
 help:
 	@echo Options
+	@echo "   make test"
+	@echo "      Test awesome-ci scripts"
+	@echo ""
 	@echo "   make install"
 	@echo "      Install everthing (requires sudo or root)"
 	@echo ""
@@ -61,3 +72,13 @@ clean:
 ###
 docker:
 	docker build -t cytopia/awesome-ci .
+
+
+###
+###
+###
+test:
+	./test/test.sh
+
+
+
