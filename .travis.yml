@@ -1,40 +1,71 @@
 ###
-### Enable sudo (required for docker service)
+### Choose OS
 ###
 sudo: required
+dist: trusty
 
 
 ###
-### Use latest node version
+### Choose Environment
 ###
-language: node_js
-node_js:
-  - node
+language: ruby
+rvm: 2.5.0
+services: docker
 
 
 ###
-### Before install
+### Env variables
+###
+env:
+  global:
+    - image=cytopia/awesome-ci
+    # travis encrypt DOCKER_USERNAME=user
+    # travis encrypt DOCKER_PASSWORD=pass
+    # Must be regenerated when repository name/owner changes
+    # DOCKER_USERNAME
+    - secure: "UUqp9snjT3BpAaFt7c6Q7xelG6YowlmlPep9/6xmKIFL0ezjAAb9caRO1lu511Z/f17RXq7RQJtvrmjstBYh3MndR5EYavva4V4O09jg2SPdPMJcez6aB9Hsl/uOL8bdsbra0jJdtftWfNaVOeVPGac0bmTIbLga17FCu/A6lxRhREnnOJcnHOpWnlufU1U/ccY/SvS9j+gHxV4Tj0/yDNi589yhrFMxCg4FpNdc3EEuf8GtHx3gtYUqkBfdKniHIab4SUyP4ZRydjb2WBQ5lnwSGRAuXvBEV3Zlo9bMKAgAr5q/9qW4FKbnETo/LzdwbUW1MC8EesT2+j5fsYJf0DE9yyvIaJbAfAf8YMkQp6f7H1negSbj/Fa0mMC53IRrO3uu/X957/jWrxwzGPZC/Eq4H+axiZ/7nQIHN9uoXpCWbGcbe2PHO9ohyCBQ60CHc/eA2Z/DwB8HsB15QU6Lr0rDAsZ8YpNBFAFgAuirleSXffzHXIlVrJ8ro325EYA248u9+/8MgZ/9VbI7bPMIv36OFVvZcpKzAd25ih8j1oqv8iSHMfp7hUL5/H8ReZtVs2H0OsrsvZ/lc3Xx45R0/ZNHj46vz7FBoZ7yHvtr5m6X2p7THx2hLGb011yvpw2q1Rg3xAhuvdfkc+TwgPdrZXY6Ty3LU4+MwwLtGRauC4Y="
+    # DOCKER_PASSWORD
+    - secure: "NRLUpUka7C3pHFJugilLzd+fpFOJ2Xv5x86ctyjwJkmWXDKXI6Bjo59AMbKilrUOTpfcFATPY4PX0NpJqCK1sRFcthjfjpA5FYigoiKOdlkohapnxaBghnYXippmDUrHorWd7WoFS0l5vgeOhAkhH7Gh8oac0BT7rbFygWNgFPtFmI4UaleF4w/46K/qiDyrjZFtb2kueEFZzt6iM5T1naJOq2/Werg0GJ10Z8TqPeG+0FjfUjFiV3+2nB4zO575qDoPayinhfjyBDZQuLtvdFugvLXeT2cX3DBW8A4wxgq/rrGtKXArjdoUHQeFQumFoGHkYdnUfIWIj6mcI3euUL7H1NzhAt3n969tgyz4mhrIVh0KVVlvs3eL3EaPDMu79OR2APN2vHK4/Mg0X3nu7FPOWxA7vpubbAqlQNYN3eJf/Q2rdkth3o4HXGVdHUFCbWfFcVvMfKF5PDCgmpiXuRnhoVrsRgizyrFcBxguHdCvEo89rnykmZ5zQZyBb9JNAc/Tdnxb0tLKsll8fFt+o3hl/FVLZiwfhLbV/bdbPLGY92epzOUDA6qGdYlYzB4H8XC168nR+chKyT1aF2cRfIoTk5uWoGFCQaT0fHwOKlaartNlqmCNGLv0Wr+hb6kB5Kpm77iHijRz0tpux5xiEwnlO4WyH1LBFPtbxaebO1o="
+
+
+###
+### Install dependencies
 ###
 before_install:
   # Add more modern repos
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq python-software-properties
-  - sudo add-apt-repository ppa:brightbox/ruby-ng -y
-  - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ trusty-backports restricted main universe"
+  - max=100; i=0; while [ $i -lt $max ]; do if sudo apt-get update; then break; else i=$((i+1)); fi done
+  - max=100; i=0; while [ $i -lt $max ]; do if sudo apt-get -y install python-software-properties; then break; else i=$((i+1)); fi done
+  - sudo add-apt-repository -y ppa:brightbox/ruby-ng
+  - sudo add-apt-repository -y "deb http://archive.ubuntu.com/ubuntu/ trusty-backports restricted main universe"
 
-  # Update sources
-  - sudo apt-get update -qq
-
-  # Install
-  - sudo apt-get install -qq ruby2.3 ruby2.3-dev ruby-switch shellcheck moreutils php5 dos2unix
+  # Install dependencies
+  - max=100; i=0; while [ $i -lt $max ]; do if sudo apt-get update; then break; else i=$((i+1)); fi done
+  - max=100; i=0; while [ $i -lt $max ]; do if sudo apt-get -y install
+        gcc
+        gcc-multilib
+        make
+        ruby2.5
+        ruby2.5-dev
+        ruby-switch
+        moreutils
+        shellcheck
+        moreutils
+        php5-cli
+        dos2unix
+        docker-ce;
+        then break; else i=$((i+1)); fi done
 
   # Set ruby version
-  #- sudo ruby-switch --set ruby2.3
-  - sudo gem update bundler
-  - sudo gem pristine executable-hooks --version 1.3.2
-  - sudo gem pristine gem-wrappers --version 1.3.2
-  - sudo gem pristine nokogiri --version 1.8.1
-    #- sudo gem pristine ffi --version 1.9.23
+  - ruby-switch --list
+  - sudo ruby-switch --set ruby2.5
+  - ruby -v
+  - gem -v
+  #
+  #  - sudo gem update bundler
+  #  - sudo gem pristine executable-hooks --version 1.3.2
+  #  - sudo gem pristine gem-wrappers --version 1.3.2
+  #  - sudo gem pristine nokogiri --version 1.8.1
+  #  - sudo gem pristine ffi --version 1.9.25
 
   # Create custom source/bin directory
   - sudo mkdir -p /usr/local/bin
@@ -49,15 +80,18 @@ before_install:
 
   - sudo npm install -g eslint
   - sudo npm install -g jsonlint
+  - sudo npm install -g mdlint
   - sudo gem install scss_lint
-    #- sudo gem install mdl
-    #
-  - sudo gem install mdl -v 0.3.1
+  - sudo gem install mdl
 
   # Symlink node binaries
   - sudo ln -s /usr/local/node/bin/* /usr/local/bin/ 2>/dev/null || true
 
-  # Install scripts
+
+###
+### Install Awesome-CI
+###
+install:
   - ./configure
   - sudo make install
 
@@ -65,351 +99,38 @@ before_install:
 ###
 ### Checks
 ###
-script:
+before_script:
 
   #------------------------------------------------------------
   # 1.) Validate coding guidelines of self
   #------------------------------------------------------------
   - shellcheck --exclude=SC1090,SC2001 --shell=bash bin/*
 
+  #------------------------------------------------------------
+  # 2.) Test awesome-ci
+  #------------------------------------------------------------
+  - make test
 
   #------------------------------------------------------------
-  # 2.) Output Info
+  # 3.) Build Docker image
   #------------------------------------------------------------
-  - bin/file-cr --info
-  - bin/file-crlf --info
-  - bin/file-empty --info
-  - bin/file-nullbyte-char --info
-  - bin/file-trailing-newline --info
-  - bin/file-trailing-single-newline --info
-  - bin/file-trailing-space --info
-  - bin/file-utf8 --info
-  - bin/file-utf8-bom --info
-  - bin/git-conflicts --info
-  - bin/git-ignored --info
-  - bin/inline-css --info
-  - bin/inline-js --info
-  - bin/regex-grep --info
-  - bin/regex-perl --info
-  - bin/syntax-bash --info
-  - bin/syntax-css --info
-  - bin/syntax-js --info
-  - bin/syntax-json --info
-    #- bin/syntax-markdown --info
-  - bin/syntax-perl --info
-  - bin/syntax-php --info
-  - bin/syntax-python --info
-  - bin/syntax-ruby --info
-  - bin/syntax-scss --info
-  - bin/syntax-sh --info
-
-
-  #------------------------------------------------------------
-  # 3.) Test the scripts in dry mode
-  #------------------------------------------------------------
-  - bin/file-cr                      --path=. --config=etc/awesome-ci.conf --dry
-  - bin/file-crlf                    --path=. --config=etc/awesome-ci.conf --dry
-  - bin/file-empty                   --path=. --config=etc/awesome-ci.conf --dry
-  - bin/file-nullbyte-char           --path=. --config=etc/awesome-ci.conf --dry
-  - bin/file-trailing-newline        --path=. --config=etc/awesome-ci.conf --dry
-  - bin/file-trailing-single-newline --path=. --config=etc/awesome-ci.conf --dry
-  - bin/file-trailing-space          --path=. --config=etc/awesome-ci.conf --dry
-  - bin/file-utf8                    --path=. --config=etc/awesome-ci.conf --dry
-  - bin/file-utf8-bom                --path=. --config=etc/awesome-ci.conf --dry
-  - bin/git-conflicts                --path=. --config=etc/awesome-ci.conf --dry
-  - bin/git-ignored                  --path=. --dry
-  - bin/inline-css                   --path=. --config=etc/awesome-ci.conf --dry
-  - bin/inline-js                    --path=. --config=etc/awesome-ci.conf --dry
-  - bin/regex-grep                   --path=. --config=etc/awesome-ci.conf --dry
-  - bin/regex-perl                   --path=. --config=etc/awesome-ci.conf --dry
-  - bin/syntax-bash                  --path=. --config=etc/awesome-ci.conf --dry
-  - bin/syntax-css                   --path=. --config=etc/awesome-ci.conf --dry
-  - bin/syntax-js                    --path=. --config=etc/awesome-ci.conf --dry
-  - bin/syntax-json                  --path=. --config=etc/awesome-ci.conf --dry
-    #- bin/syntax-markdown              --path=. --config=etc/awesome-ci.conf --dry
-  - bin/syntax-perl                  --path=. --config=etc/awesome-ci.conf --dry
-  - bin/syntax-php                   --path=. --config=etc/awesome-ci.conf --dry
-  - bin/syntax-python                --path=. --config=etc/awesome-ci.conf --dry
-  - bin/syntax-ruby                  --path=. --config=etc/awesome-ci.conf --dry
-  - bin/syntax-scss                  --path=. --config=etc/awesome-ci.conf --dry
-  - bin/syntax-sh                    --path=. --config=etc/awesome-ci.conf --dry
-
-
-  #------------------------------------------------------------
-  # 4.) Test the scripts in real mode (without findings)
-  #------------------------------------------------------------
-  - bin/file-cr                      --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --list
-  - bin/file-cr                      --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --verbose
-  - bin/file-cr                      --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
-
-  - bin/file-crlf                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --list
-  - bin/file-crlf                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --verbose
-  - bin/file-crlf                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
-
-  - bin/file-empty                   --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --list
-  - bin/file-empty                   --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --verbose
-  - bin/file-empty                   --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
-
-  - bin/file-nullbyte-char           --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --list
-  - bin/file-nullbyte-char           --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --verbose
-  - bin/file-nullbyte-char           --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
-
-  - bin/file-trailing-newline        --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --list
-  - bin/file-trailing-newline        --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --verbose
-  - bin/file-trailing-newline        --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
-
-  - bin/file-trailing-single-newline --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --list
-  - bin/file-trailing-single-newline --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --verbose
-  - bin/file-trailing-single-newline --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
-
-  - bin/file-trailing-space          --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --list
-  - bin/file-trailing-space          --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --verbose
-  - bin/file-trailing-space          --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
-
-  - bin/file-utf8                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --list
-  - bin/file-utf8                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --verbose
-  - bin/file-utf8                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
-
-  - bin/file-utf8-bom                --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --list
-  - bin/file-utf8-bom                --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --verbose
-  - bin/file-utf8-bom                --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
-
-  - bin/git-conflicts                --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --list
-  - bin/git-conflicts                --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --verbose
-  - bin/git-conflicts                --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
-
-  - bin/git-ignored                  --path=test/ok/
-
-  - bin/inline-css                   --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --list
-  - bin/inline-css                   --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --verbose
-  - bin/inline-css                   --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
-
-  - bin/inline-js                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --list
-  - bin/inline-js                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --verbose
-  - bin/inline-js                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
-
- #- bin/regex-grep                   --path=test/ok/ --config=etc/awesome-ci.conf
- #- bin/regex-perl                   --path=test/ok/ --config=etc/awesome-ci.conf
- #
-  - bin/syntax-bash                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --list
-  - bin/syntax-bash                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --verbose
-  - bin/syntax-bash                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
-
-  - bin/syntax-css                   --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --list
-  - bin/syntax-css                   --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --verbose
-  - bin/syntax-css                   --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
-
-  - bin/syntax-js                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --list
-  - bin/syntax-js                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --verbose
-  - bin/syntax-js                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
-
-  - bin/syntax-json                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --list
-  - bin/syntax-json                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --verbose
-  - bin/syntax-json                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
-
-    #- bin/syntax-markdown              --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --list
-    #- bin/syntax-markdown              --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --verbose
-    #- bin/syntax-markdown              --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
-
-  - bin/syntax-perl                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --list
-  - bin/syntax-perl                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --verbose
-  - bin/syntax-perl                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
-
-  - bin/syntax-php                   --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --list
-  - bin/syntax-php                   --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --verbose
-  - bin/syntax-php                   --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
-
-  - bin/syntax-python                --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --list
-  - bin/syntax-python                --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --verbose
-  - bin/syntax-python                --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
-
-  - bin/syntax-ruby                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --list
-  - bin/syntax-ruby                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --verbose
-  - bin/syntax-ruby                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
-
-  - bin/syntax-scss                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --list
-  - bin/syntax-scss                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --verbose
-  - bin/syntax-scss                  --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
-
-  - bin/syntax-sh                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --list
-  - bin/syntax-sh                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in" --verbose
-  - bin/syntax-sh                    --path=test/ok/ --config=etc/awesome-ci.conf --ignore=".git/,*.pyc,test/,configure.in"
-
-
-  #------------------------------------------------------------
-  # 5.) Find errors
-  #------------------------------------------------------------
-  - if bin/file-cr                      --path=test/err --config=etc/awesome-ci.conf --verbose; then false; else true; fi
-  - if bin/file-cr                      --path=test/err --config=etc/awesome-ci.conf;           then false; else true; fi
-
-  - if bin/file-crlf                    --path=test/err --config=etc/awesome-ci.conf --verbose; then false; else true; fi
-  - if bin/file-crlf                    --path=test/err --config=etc/awesome-ci.conf;           then false; else true; fi
-
-  - if bin/file-empty                   --path=test/err --config=etc/awesome-ci.conf --verbose; then false; else true; fi
-  - if bin/file-empty                   --path=test/err --config=etc/awesome-ci.conf;           then false; else true; fi
-
-  - if bin/file-nullbyte-char           --path=test/err --config=etc/awesome-ci.conf --verbose; then false; else true; fi
-  - if bin/file-nullbyte-char           --path=test/err --config=etc/awesome-ci.conf;           then false; else true; fi
-
-  - if bin/file-trailing-newline        --path=test/err --config=etc/awesome-ci.conf --verbose; then false; else true; fi
-  - if bin/file-trailing-newline        --path=test/err --config=etc/awesome-ci.conf;           then false; else true; fi
-
-  - if bin/file-trailing-single-newline --path=test/err --config=etc/awesome-ci.conf --verbose; then false; else true; fi
-  - if bin/file-trailing-single-newline --path=test/err --config=etc/awesome-ci.conf;           then false; else true; fi
-
-  - if bin/file-trailing-space          --path=test/err --config=etc/awesome-ci.conf --verbose; then false; else true; fi
-  - if bin/file-trailing-space          --path=test/err --config=etc/awesome-ci.conf;           then false; else true; fi
-
-  - if bin/file-utf8                    --path=test/err --config=etc/awesome-ci.conf --verbose; then false; else true; fi
-  - if bin/file-utf8                    --path=test/err --config=etc/awesome-ci.conf;           then false; else true; fi
-
-  - if bin/file-utf8-bom                --path=test/err --config=etc/awesome-ci.conf --verbose; then false; else true; fi
-  - if bin/file-utf8-bom                --path=test/err --config=etc/awesome-ci.conf;           then false; else true; fi
-
-  - if bin/git-conflicts                --path=test/err --config=etc/awesome-ci.conf --verbose; then false; else true; fi
-  - if bin/git-conflicts                --path=test/err --config=etc/awesome-ci.conf;           then false; else true; fi
-
- #- if bin/git-ignored                  --path=test/err
-
-  - if bin/inline-css                   --path=test/err --config=etc/awesome-ci.conf --verbose; then false; else true; fi
-  - if bin/inline-css                   --path=test/err --config=etc/awesome-ci.conf;           then false; else true; fi
-
-  - if bin/inline-js                    --path=test/err --config=etc/awesome-ci.conf --verbose; then false; else true; fi
-  - if bin/inline-js                    --path=test/err --config=etc/awesome-ci.conf;           then false; else true; fi
-
- #- if bin/regex-grep                   --path=test/err --config=etc/awesome-ci.conf; then false; else true; fi
- #- if bin/regex-perl                   --path=test/err --config=etc/awesome-ci.conf; then false; else true; fi
-
-  - if bin/syntax-bash                  --path=test/err --config=etc/awesome-ci.conf --verbose; then false; else true; fi
-  - if bin/syntax-bash                  --path=test/err --config=etc/awesome-ci.conf;           then false; else true; fi
-
-  - if bin/syntax-css                   --path=test/err --config=etc/awesome-ci.conf --verbose; then false; else true; fi
-  - if bin/syntax-css                   --path=test/err --config=etc/awesome-ci.conf;           then false; else true; fi
-
-  - if bin/syntax-js                    --path=test/err --config=etc/awesome-ci.conf --verbose; then false; else true; fi
-  - if bin/syntax-js                    --path=test/err --config=etc/awesome-ci.conf;           then false; else true; fi
-
-  - if bin/syntax-json                  --path=test/err --config=etc/awesome-ci.conf --verbose; then false; else true; fi
-  - if bin/syntax-json                  --path=test/err --config=etc/awesome-ci.conf;           then false; else true; fi
-
-    #- if bin/syntax-markdown              --path=test/err --config=etc/awesome-ci.conf --verbose; then false; else true; fi
-    #- if bin/syntax-markdown              --path=test/err --config=etc/awesome-ci.conf;           then false; else true; fi
-
-  - if bin/syntax-perl                  --path=test/err --config=etc/awesome-ci.conf --verbose; then false; else true; fi
-  - if bin/syntax-perl                  --path=test/err --config=etc/awesome-ci.conf;           then false; else true; fi
-
-  - if bin/syntax-php                   --path=test/err --config=etc/awesome-ci.conf --verbose; then false; else true; fi
-  - if bin/syntax-php                   --path=test/err --config=etc/awesome-ci.conf;           then false; else true; fi
-
-  - if bin/syntax-python                --path=test/err --config=etc/awesome-ci.conf --verbose; then false; else true; fi
-  - if bin/syntax-python                --path=test/err --config=etc/awesome-ci.conf;           then false; else true; fi
-
-  - if bin/syntax-ruby                  --path=test/err --config=etc/awesome-ci.conf --verbose; then false; else true; fi
-  - if bin/syntax-ruby                  --path=test/err --config=etc/awesome-ci.conf;           then false; else true; fi
-
-  - if bin/syntax-scss                  --path=test/err --config=etc/awesome-ci.conf --verbose; then false; else true; fi
-  - if bin/syntax-scss                  --path=test/err --config=etc/awesome-ci.conf;           then false; else true; fi
-
-  - if bin/syntax-sh                    --path=test/err --config=etc/awesome-ci.conf --verbose; then false; else true; fi
-  - if bin/syntax-sh                    --path=test/err --config=etc/awesome-ci.conf;           then false; else true; fi
-
-
-  #------------------------------------------------------------
-  # 6.) Find Success
-  #------------------------------------------------------------
-  - bin/file-cr                      --path=test/ok --config=etc/awesome-ci.conf --list
-  - bin/file-cr                      --path=test/ok --config=etc/awesome-ci.conf --verbose
-  - bin/file-cr                      --path=test/ok --config=etc/awesome-ci.conf
-
-  - bin/file-crlf                    --path=test/ok --config=etc/awesome-ci.conf --list
-  - bin/file-crlf                    --path=test/ok --config=etc/awesome-ci.conf --verbose
-  - bin/file-crlf                    --path=test/ok --config=etc/awesome-ci.conf
-
-  - bin/file-empty                   --path=test/ok --config=etc/awesome-ci.conf --list
-  - bin/file-empty                   --path=test/ok --config=etc/awesome-ci.conf --verbose
-  - bin/file-empty                   --path=test/ok --config=etc/awesome-ci.conf
-
-  - bin/file-nullbyte-char           --path=test/ok --config=etc/awesome-ci.conf --list
-  - bin/file-nullbyte-char           --path=test/ok --config=etc/awesome-ci.conf --verbose
-  - bin/file-nullbyte-char           --path=test/ok --config=etc/awesome-ci.conf
-
-  - bin/file-trailing-newline        --path=test/ok --config=etc/awesome-ci.conf --list
-  - bin/file-trailing-newline        --path=test/ok --config=etc/awesome-ci.conf --verbose
-  - bin/file-trailing-newline        --path=test/ok --config=etc/awesome-ci.conf
-
-  - bin/file-trailing-single-newline --path=test/ok --config=etc/awesome-ci.conf --list
-  - bin/file-trailing-single-newline --path=test/ok --config=etc/awesome-ci.conf --verbose
-  - bin/file-trailing-single-newline --path=test/ok --config=etc/awesome-ci.conf
-
-  - bin/file-trailing-space          --path=test/ok --config=etc/awesome-ci.conf --list
-  - bin/file-trailing-space          --path=test/ok --config=etc/awesome-ci.conf --verbose
-  - bin/file-trailing-space          --path=test/ok --config=etc/awesome-ci.conf
-
-  - bin/file-utf8                    --path=test/ok --config=etc/awesome-ci.conf --list
-  - bin/file-utf8                    --path=test/ok --config=etc/awesome-ci.conf --verbose
-  - bin/file-utf8                    --path=test/ok --config=etc/awesome-ci.conf
-
-  - bin/file-utf8-bom                --path=test/ok --config=etc/awesome-ci.conf --list
-  - bin/file-utf8-bom                --path=test/ok --config=etc/awesome-ci.conf --verbose
-  - bin/file-utf8-bom                --path=test/ok --config=etc/awesome-ci.conf
-
-  - bin/git-conflicts                --path=test/ok --config=etc/awesome-ci.conf --list
-  - bin/git-conflicts                --path=test/ok --config=etc/awesome-ci.conf --verbose
-  - bin/git-conflicts                --path=test/ok --config=etc/awesome-ci.conf
-
- #- bin/git-ignored                  --path=test/ok
-
-  - bin/inline-css                   --path=test/ok --config=etc/awesome-ci.conf --list
-  - bin/inline-css                   --path=test/ok --config=etc/awesome-ci.conf --verbose
-  - bin/inline-css                   --path=test/ok --config=etc/awesome-ci.conf
-
-  - bin/inline-js                    --path=test/ok --config=etc/awesome-ci.conf --list
-  - bin/inline-js                    --path=test/ok --config=etc/awesome-ci.conf --verbose
-  - bin/inline-js                    --path=test/ok --config=etc/awesome-ci.conf
-
- #- bin/regex-grep                   --path=test/ok --config=etc/awesome-ci.conf
- #- bin/regex-perl                   --path=test/ok --config=etc/awesome-ci.conf
-
-  - bin/syntax-bash                  --path=test/ok --config=etc/awesome-ci.conf --list
-  - bin/syntax-bash                  --path=test/ok --config=etc/awesome-ci.conf --verbose
-  - bin/syntax-bash                  --path=test/ok --config=etc/awesome-ci.conf
-
-  - bin/syntax-css                   --path=test/ok --config=etc/awesome-ci.conf --list
-  - bin/syntax-css                   --path=test/ok --config=etc/awesome-ci.conf --verbose
-  - bin/syntax-css                   --path=test/ok --config=etc/awesome-ci.conf
-
-  - bin/syntax-js                    --path=test/ok --config=etc/awesome-ci.conf --list
-  - bin/syntax-js                    --path=test/ok --config=etc/awesome-ci.conf --verbose
-  - bin/syntax-js                    --path=test/ok --config=etc/awesome-ci.conf
-
-  - bin/syntax-json                  --path=test/ok --config=etc/awesome-ci.conf --list
-  - bin/syntax-json                  --path=test/ok --config=etc/awesome-ci.conf --verbose
-  - bin/syntax-json                  --path=test/ok --config=etc/awesome-ci.conf
-
-    #- bin/syntax-markdown              --path=test/ok --config=etc/awesome-ci.conf --list
-    #- bin/syntax-markdown              --path=test/ok --config=etc/awesome-ci.conf --verbose
-    #- bin/syntax-markdown              --path=test/ok --config=etc/awesome-ci.conf
-
-  - bin/syntax-perl                  --path=test/ok --config=etc/awesome-ci.conf --list
-  - bin/syntax-perl                  --path=test/ok --config=etc/awesome-ci.conf --verbose
-  - bin/syntax-perl                  --path=test/ok --config=etc/awesome-ci.conf
-
-  - bin/syntax-php                   --path=test/ok --config=etc/awesome-ci.conf --list
-  - bin/syntax-php                   --path=test/ok --config=etc/awesome-ci.conf --verbose
-  - bin/syntax-php                   --path=test/ok --config=etc/awesome-ci.conf
-
-  - bin/syntax-python                --path=test/ok --config=etc/awesome-ci.conf --list
-  - bin/syntax-python                --path=test/ok --config=etc/awesome-ci.conf --verbose
-  - bin/syntax-python                --path=test/ok --config=etc/awesome-ci.conf
-
-  - bin/syntax-ruby                  --path=test/ok --config=etc/awesome-ci.conf --list
-  - bin/syntax-ruby                  --path=test/ok --config=etc/awesome-ci.conf --verbose
-  - bin/syntax-ruby                  --path=test/ok --config=etc/awesome-ci.conf
-
-  - bin/syntax-scss                  --path=test/ok --config=etc/awesome-ci.conf --list
-  - bin/syntax-scss                  --path=test/ok --config=etc/awesome-ci.conf --verbose
-  - bin/syntax-scss                  --path=test/ok --config=etc/awesome-ci.conf
-
-  - bin/syntax-sh                    --path=test/ok --config=etc/awesome-ci.conf --list
-  - bin/syntax-sh                    --path=test/ok --config=etc/awesome-ci.conf --verbose
-  - bin/syntax-sh                    --path=test/ok --config=etc/awesome-ci.conf
+  - make docker
+
+
+###
+### Deploy
+###
+script:
+  - if [ "${TRAVIS_PULL_REQUEST}" == "false" ]; then
+      echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USERNAME}" --password-stdin &&
+      if [ "${TRAVIS_BRANCH}" == "master" ]; then
+        docker push "${image}:latest";
+      elif [ -n "${TRAVIS_TAG}" ]; then
+        docker tag "${image}:latest" "${image}:${TRAVIS_TAG}";
+        docker push "${image}:${TRAVIS_TAG}";
+      else
+        echo "Skipping push to dockerhub on normal branches";
+      fi
+    else
+      echo "Skipping push to dockerhub on PR";
+    fi

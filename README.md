@@ -1,10 +1,10 @@
-# awesome-ci
+# [awesome-ci](https://github.com/cytopia/awesome-ci)
 
 [![Build Status](https://travis-ci.org/cytopia/awesome-ci.svg?branch=master)](https://travis-ci.org/cytopia/awesome-ci)
-[![Latest Stable Version](https://poser.pugx.org/cytopia/awesome-ci/v/stable)](https://packagist.org/packages/cytopia/awesome-ci) [![Total Downloads](https://poser.pugx.org/cytopia/awesome-ci/downloads)](https://packagist.org/packages/cytopia/awesome-ci) [![Latest Unstable Version](https://poser.pugx.org/cytopia/awesome-ci/v/unstable)](https://packagist.org/packages/cytopia/awesome-ci) [![License](https://poser.pugx.org/cytopia/awesome-ci/license)](http://opensource.org/licenses/MIT)
-[![Type](https://img.shields.io/badge/type-bash-red.svg)](https://en.wikipedia.org/wiki/Bash_%28Unix_shell%29)
-
----
+[![Latest Stable Version](https://poser.pugx.org/cytopia/awesome-ci/v/stable)](https://packagist.org/packages/cytopia/awesome-ci)
+[![Total Downloads](https://poser.pugx.org/cytopia/awesome-ci/downloads)](https://packagist.org/packages/cytopia/awesome-ci)
+[![Docker image](https://images.microbadger.com/badges/image/cytopia/awesome-ci.svg)](https://hub.docker.com/r/cytopia/awesome-ci)
+[![License](https://poser.pugx.org/cytopia/awesome-ci/license)](http://opensource.org/licenses/MIT)
 
 **Runs on**
 
@@ -12,16 +12,30 @@
 [![FreeBSD](https://raw.githubusercontent.com/cytopia/icons/master/64x64/freebsd.png)](https://www.freebsd.org)
 [![OSX](https://raw.githubusercontent.com/cytopia/icons/master/64x64/osx.png)](https://www.apple.com/osx)
 
+Continuous Integration command line tools for git repositories, file characteristics, syntax errors
+and static source code analysis.
 
-Lot's of tools for git, file and static source code analysis.
+Awesome-CI is capable of finding various problems in your code repository as well as fixing them
+automatically.
 
-**Documentation**
-
-* [Dependencies](dependencies/)
-* [Examples](EXAMPLES.md)
-* [Regex Contributions](REGEX_CONTRIBUTIONS.md)
 
 ---
+
+**Table of Contents**
+
+1. [Tools](#tools)
+2. [Learn / Validate](#learn--validate)
+3. [Fix](#fix)
+4. [Custom regex contributions](#custom-regex-contributions)
+5. [General usage](#general-usage)
+6. [Installation](i#installation)
+    1. [Requirements](#requirements)
+    2. [Install OSX](#install-osx)
+    3. [Install Linux/BSD](#install-linuxbsd)
+7. [Awesome CI Docker image](#awesome-ci-docker-image)
+8. [Documentation](#documentation)
+9. [License](#license)
+
 
 ## Tools
 
@@ -131,8 +145,24 @@ Please use pull requests to add useful checks.
   --version         # Show tool version
 ```
 
-
 ## Installation
+
+### Requirements
+
+Awesome-ci requires the following tools to be installed:
+
+* `dos2unix`
+* `eslint`
+* `file`
+* `git`
+* `jsonlint`
+* `mdl`
+* `perl`
+* `php`
+* `python`
+* `ruby`
+* `scss_lint`
+* `shellcheck`
 
 ### Install OSX
 
@@ -157,9 +187,45 @@ make install
 make install
 ```
 
+## Awesome CI Docker image
+
+[![Docker image](http://dockeri.co/image/cytopia/awesome-ci)](https://hub.docker.com/r/cytopia/awesome-ci)
+
+Instead of installing awesome-ci and all its required dependencies locally on your computer,
+you can also use the bundled Docker image 
+**[cytopia/awesome-ci](https://hub.docker.com/r/cytopia/awesome-ci/)** which has everything
+pre-installed and is built nightly by travis-ci.
+
+```bash
+docker run -v ${PWD}:/ac cytopia/awesome-ci file-crlf --path=/ac
+```
+
+The above example is using `file-crlf` to scan the current directory for files containing
+Windows newlines:
+
+* `${PWD}` (the current host directory) is mounted into the container's `/ac` directoy
+* `file-crlf` path then points (inside the container) to `/ac` (which is the current host directory)
+* `/ac` can actually be named by whatever name you want
+
+If you use an awesome-ci configuration which is not inside the directory you want to check, you
+will also have to mount that into the container:
+```bash
+docker run \
+    -v /host/path/to/awesome-ci.conf:/etc/awesome-ci.conf \
+	-v ${PWD}:/ac cytopia/awesome-ci file-crlf --path=/ac --config=/etc/awesome-ci.conf
+```
+
+## Documentation
+
+To find out more about awesome-ci, have a look at the following links.
+
+* [Dependencies](dependencies/)
+* [Examples](EXAMPLES.md)
+* [Regex Contributions](REGEX_CONTRIBUTIONS.md)
+
 
 ## License
 
 [MIT License](LICENSE.md)
 
-Copyright (c) 2016 [cytopia](https://github.com/cytopia)
+Copyright (c) 2018 [cytopia](https://github.com/cytopia)
