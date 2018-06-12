@@ -1,11 +1,12 @@
-# awesome-ci
+# [awesome-ci](https://github.com/cytopia/awesome-ci)
 
 [![Build Status](https://travis-ci.org/cytopia/awesome-ci.svg?branch=master)](https://travis-ci.org/cytopia/awesome-ci)
 [![Latest Stable Version](https://poser.pugx.org/cytopia/awesome-ci/v/stable)](https://packagist.org/packages/cytopia/awesome-ci)
 [![Total Downloads](https://poser.pugx.org/cytopia/awesome-ci/downloads)](https://packagist.org/packages/cytopia/awesome-ci)
+[![Docker image](https://images.microbadger.com/badges/image/cytopia/awesome-ci.svg)](https://hub.docker.com/r/cytopia/awesome-ci)
 [![License](https://poser.pugx.org/cytopia/awesome-ci/license)](http://opensource.org/licenses/MIT)
 
-**Runs on every good OS**
+**Runs on**
 
 [![Linux](https://raw.githubusercontent.com/cytopia/icons/master/64x64/linux.png)](https://www.kernel.org/)
 [![FreeBSD](https://raw.githubusercontent.com/cytopia/icons/master/64x64/freebsd.png)](https://www.freebsd.org)
@@ -187,6 +188,8 @@ make install
 ```
 
 ## Awesome CI Docker image
+
+[![Docker image](http://dockeri.co/image/cytopia/awesome-ci)](https://hub.docker.com/r/cytopia/awesome-ci)
 
 Instead of installing awesome-ci and all its required dependencies locally on your computer,
 you can also use the bundled Docker image 
