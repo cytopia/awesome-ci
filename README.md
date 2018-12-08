@@ -6,6 +6,8 @@
 [![Docker image](https://images.microbadger.com/badges/image/cytopia/awesome-ci.svg)](https://hub.docker.com/r/cytopia/awesome-ci)
 [![License](https://poser.pugx.org/cytopia/awesome-ci/license)](http://opensource.org/licenses/MIT)
 
+[![Docker image](http://dockeri.co/image/cytopia/awesome-ci)](https://hub.docker.com/r/cytopia/awesome-ci)
+
 **Runs on**
 
 [![Linux](https://raw.githubusercontent.com/cytopia/icons/master/64x64/linux.png)](https://www.kernel.org/)
@@ -212,7 +214,7 @@ will also have to mount that into the container:
 ```bash
 docker run \
     -v /host/path/to/awesome-ci.conf:/etc/awesome-ci.conf \
-	-v ${PWD}:/ac cytopia/awesome-ci file-crlf --path=/ac --config=/etc/awesome-ci.conf
+    -v ${PWD}:/ac cytopia/awesome-ci file-crlf --path=/ac --config=/etc/awesome-ci.conf
 ```
 
 ## Documentation
