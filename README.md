@@ -249,6 +249,9 @@ To find out more about awesome-ci, have a look at the following links.
 * [Examples](EXAMPLES.md)
 * [Regex Contributions](REGEX_CONTRIBUTIONS.md)
 
+## Dockerfile linter
+
+* Information about [dockerfile-linter](https://github.com/buddy-works/dockerfile-linter) in Buddy
 
 ## License
 
