@@ -45,7 +45,8 @@ MY_CHECK="awk \"/^\xEF\xBB\xBF/ {print FILENAME} {nextfile}\" \"\$1\" || true"
 ENABLE_FIX=1
 
 # Command for fixing
-MY_FIX_CMD="out=\"\$( awk \"/^\xEF\xBB\xBF/ {print FILENAME} {nextfile}\" \"\$1\" )\" || true; if [ \"\${out}\" != \"\" ]; then (sed -i\"\" -e \"1s/^\xEF\xBB\xBF//\" \"\$1\" && echo \"Fixing: \$1\" || echo \"FAILED: \$1\"); fi"
+TMP_FILE=$(mktemp)
+MY_FIX_CMD="out=\"\$( awk \"/^\xEF\xBB\xBF/ {print FILENAME} {nextfile}\" \"\$1\" )\" || true; if [ \"\${out}\" != \"\" ]; then (sed -e \"1s/^\xEF\xBB\xBF//\" \"\$1\" > "${TMP_FILE}" && mv "${TMP_FILE}" \"\$1\" && echo \"Fixing: \$1\" || echo \"FAILED: \$1\"); fi"
 
 # Command to be displayed for --info
 MY_INFO="(awk -Wversion 2>/dev/null || awk --version) | grep -E '(([0-9]+)(\.))+'"

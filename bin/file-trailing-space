@@ -45,7 +45,8 @@ MY_CHECK="LC_ALL=C grep --color=always -inHE \"${MY_REG}\" \"\$1\" || true"
 ENABLE_FIX=1
 
 # Command for fixing
-MY_FIX_CMD="grep --color=always -iqE \"${MY_REG}\" \"\$1\" && (sed -i\"\" \"s/[[:blank:]]*\$//\" \"\$1\" && echo \"Fixing: \$1\" || echo \"FAILED: \$1\") || true"
+TMP_FILE=$(mktemp)
+MY_FIX_CMD="grep --color=always -iqE \"${MY_REG}\" \"\$1\" && (sed \"s/[[:blank:]]*\$//\" \"\$1\" > "${TMP_FILE}" && mv "${TMP_FILE}" \"\$1\" && echo \"Fixing: \$1\" || echo \"FAILED: \$1\") || true"
 
 # Command to be displayed for --info
 MY_INFO="grep -V | grep -E '([0-9]+\.+)+'"

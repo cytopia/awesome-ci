@@ -45,7 +45,8 @@ MY_CHECK="aci-trailing-newline -1 \"\$1\" || echo \"\$1: Not exactly one trailin
 ENABLE_FIX=1
 
 # Command for fixing
-MY_FIX_CMD="aci-trailing-newline -1 \"\$1\" || ((echo \"\" >> \"\$1\" && sed -i\"\" -e :a -e \"/^\n*\\\$/{\\\$d;N;ba\" -e \"}\" \"\$1\") && echo \"Fixing: \$1\" || echo \"FAILED: \$1\")"
+TMP_FILE=$(mktemp)
+MY_FIX_CMD="aci-trailing-newline -1 \"\$1\" || ((echo \"\" >> \"\$1\" && sed -e :a -e \"/^\n*\\\$/{\\\$d;N;ba\" -e \"}\" \"\$1\" > "${TMP_FILE}" && mv "${TMP_FILE}" \"\$1\") && echo \"Fixing: \$1\" || echo \"FAILED: \$1\")"
 
 # Command to be displayed for --info
 MY_INFO="aci-trailing-newline -v"
