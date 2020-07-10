@@ -906,6 +906,18 @@ if [ "${MY_LST}" = "1" ]; then
 fi
 
 
+if [ "${MY_FIX}" = "1" ]; then
+	printf "%s\n" "${output}"
+
+	if [[ $output =~ ^FAILED\s: ]]; then
+		printf "${CLR_ERR}[ERR] %s${CLR_CLS}\n" "${MY_FINISH_ERR}"
+		exit 1
+	else
+		printf "${CLR_SUC}[OK]  %s${CLR_CLS}\n" "${MY_FINISH_OK}"
+		exit 0
+	fi
+fi
+
 if [ "${output}" != "" ]; then
 	printf "%s\n" "${output}"
 	printf "${CLR_ERR}[ERR] %s${CLR_CLS}\n" "${MY_FINISH_ERR}"
