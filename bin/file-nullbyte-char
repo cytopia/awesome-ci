@@ -45,9 +45,8 @@ MY_CHECK="if cat -n \"\$1\" | sed -n \"/${MY_REG}/p\" | grep -aq \"^[[:space:]]*
 # Can this check fix the problems?
 ENABLE_FIX=1
 
-TMP_FILE=$(mktemp)
-#MY_FIX_CMD="grep -aq \"${MY_REG}\" \"\$1\" && (sed \"s/${MY_REG}//g\" \"\$1\" > "${TMP_FILE}" && mv "${TMP_FILE}" \"\$1\" && echo \"Fixing: \$1\" || echo \"FAILED: \$1\") || true"
-MY_FIX_CMD="if cat -n \"\$1\" | sed -n \"/${MY_REG}/p\" | grep -aq \"^[[:space:]]*[0-9]\"; then (sed -i\"\" \"s/${MY_REG}//g\" \"\$1\" > "${TMP_FILE}" && mv "${TMP_FILE}" \"\$1\" && echo \"Fixing: \$1\" || echo \"FAILED: \$1\"); else true; fi"
+#MY_FIX_CMD="grep -aq \"${MY_REG}\" \"\$1\" && ((TMP_FILE=\$(mktemp); sed \"s/${MY_REG}//g\" \"\$1\" > \"\${TMP_FILE}\" && mv \"\${TMP_FILE}\" \"\$1\"; ec=\$?; rm -f \"\${TMP_FILE}\"; exit \$ec) && echo \"Fixing: \$1\" || echo \"FAILED: \$1\") || true"
+MY_FIX_CMD="if cat -n \"\$1\" | sed -n \"/${MY_REG}/p\" | grep -aq \"^[[:space:]]*[0-9]\"; then ((TMP_FILE=\$(mktemp); sed \"s/${MY_REG}//g\" \"\$1\" > \"\${TMP_FILE}\" && mv \"\${TMP_FILE}\" \"\$1\"; ec=\$?; rm -f \"\${TMP_FILE}\"; exit \$ec) && echo \"Fixing: \$1\" || echo \"FAILED: \$1\"); else true; fi"
 
 # Command to be displayed for --info
 MY_INFO="file -v 2>&1 | grep -E '(([0-9]+)(\.))+'"
