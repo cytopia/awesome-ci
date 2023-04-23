@@ -45,7 +45,7 @@ MY_CHECK="LC_ALL=C grep --color=always -inHE \"${MY_REG}\" \"\$1\" || true"
 ENABLE_FIX=1
 
 # Command for fixing
-MY_FIX_CMD="grep --color=always -iqE \"${MY_REG}\" \"\$1\" && (sed -i\"\" \"s/[[:blank:]]*\$//\" \"\$1\" && echo \"Fixing: \$1\" || echo \"FAILED: \$1\") || true"
+MY_FIX_CMD="grep --color=always -iqE \"${MY_REG}\" \"\$1\" && ((TMP_FILE=\$(mktemp); sed \"s/[[:blank:]]*\$//\" \"\$1\" > \"\${TMP_FILE}\" && mv \"\${TMP_FILE}\" \"\$1\"; ec=\$?; rm -f \"\${TMP_FILE}\"; exit \$ec) && echo \"Fixing: \$1\" || echo \"FAILED: \$1\") || true"
 
 # Command to be displayed for --info
 MY_INFO="grep -V | grep -E '([0-9]+\.+)+'"
@@ -906,6 +906,18 @@ if [ "${MY_LST}" = "1" ]; then
 	exit 0
 fi
 
+
+if [ "${MY_FIX}" = "1" ]; then
+	printf "%s\n" "${output}"
+
+	if [[ $output =~ ^FAILED\s: ]]; then
+		printf "${CLR_ERR}[ERR] %s${CLR_CLS}\n" "${MY_FINISH_ERR}"
+		exit 1
+	else
+		printf "${CLR_SUC}[OK]  %s${CLR_CLS}\n" "${MY_FINISH_OK}"
+		exit 0
+	fi
+fi
 
 if [ "${output}" != "" ]; then
 	printf "%s\n" "${output}"

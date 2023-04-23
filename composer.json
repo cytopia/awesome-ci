@@ -11,5 +11,34 @@
 			"homepage": "https://github.com/cytopia/awesome-ci",
 			"role": "Developer"
 		}
+	],
+	"bin": [
+		"bin/file-cr",
+		"bin/file-crlf",
+		"bin/file-empty",
+		"bin/file-nullbyte-char",
+		"bin/file-trailing-newline",
+		"bin/file-trailing-single-newline",
+		"bin/file-trailing-space",
+		"bin/file-utf8",
+		"bin/file-utf8-bom",
+		"bin/git-conflicts",
+		"bin/git-ignored",
+		"bin/inline-css",
+		"bin/inline-js",
+		"bin/regex-grep",
+		"bin/regex-grep-negative",
+		"bin/regex-perl",
+		"bin/syntax-bash",
+		"bin/syntax-css",
+		"bin/syntax-js",
+		"bin/syntax-json",
+		"bin/syntax-markdown",
+		"bin/syntax-perl",
+		"bin/syntax-php",
+		"bin/syntax-python",
+		"bin/syntax-ruby",
+		"bin/syntax-scss",
+		"bin/syntax-sh"
 	]
 }
